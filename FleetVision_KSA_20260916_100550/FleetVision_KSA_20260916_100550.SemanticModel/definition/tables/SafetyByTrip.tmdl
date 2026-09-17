@@ -1,0 +1,91 @@
+table SafetyByTrip
+	lineageTag: bb702ebd-6aea-4811-a42d-37f25a0c1dd9
+
+	column trip_id
+		dataType: string
+		lineageTag: 337f79d6-63e3-426d-b71c-daed77ed62d0
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column SafetyIncidents
+		dataType: double
+		formatString: 0
+		lineageTag: dfefca17-f055-46b6-9a8c-4cb8818ffc6a
+		summarizeBy: sum
+		sourceColumn: SafetyIncidents
+
+		annotation SummarizationSetBy = Automatic
+
+	column PreventableIncidents
+		dataType: double
+		formatString: 0
+		lineageTag: 3f55a02b-6ef7-4279-9ce2-f2c3e984652a
+		summarizeBy: sum
+		sourceColumn: PreventableIncidents
+
+		annotation SummarizationSetBy = Automatic
+
+	column InjuryIncidents
+		dataType: double
+		formatString: 0
+		lineageTag: 28cda04e-ab24-47d9-a515-f39fa2d7ff65
+		summarizeBy: sum
+		sourceColumn: InjuryIncidents
+
+		annotation SummarizationSetBy = Automatic
+
+	column AtFaultIncidents
+		dataType: double
+		formatString: 0
+		lineageTag: 6abd3f99-23e0-4d01-9eb8-c1f39674f002
+		summarizeBy: sum
+		sourceColumn: AtFaultIncidents
+
+		annotation SummarizationSetBy = Automatic
+
+	column VehicleDamageCost
+		dataType: double
+		lineageTag: 1ab8702b-f852-4be7-9208-7887c0a43697
+		summarizeBy: none
+		sourceColumn: VehicleDamageCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column CargoDamageCost
+		dataType: double
+		lineageTag: 982b38e0-b484-4603-94b2-9734560e2704
+		summarizeBy: none
+		sourceColumn: CargoDamageCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClaimAmount
+		dataType: double
+		lineageTag: f5656d77-679b-4cdd-ad00-d1870bb15f5b
+		summarizeBy: none
+		sourceColumn: ClaimAmount
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckNumber
+		dataType: string
+		lineageTag: b9ad7e39-88be-412a-8b46-fb6249937410
+		summarizeBy: none
+		sourceColumn: TruckNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SafetyByTrip = m
+		mode: import
+		source =
+				let
+				                Source = SafetyIncidents,
+				                #"Grouped Rows" = Table.Group(Source, {"trip_id"}, {{"SafetyIncidents", each List.Count(List.Distinct([incident_id])), type number}, {"PreventableIncidents", each List.Sum(List.Transform([preventable_flag], (x) => if x = 1 then 0 else null)), type number}, {"InjuryIncidents", each List.Sum(List.Transform([injury_flag], (x) => if x = 1 then 0 else null)), type number}, {"AtFaultIncidents", each List.Sum(List.Transform([at_fault_flag], (x) => if x = 1 then 0 else null)), type number}, {"VehicleDamageCost", each List.Sum([vehicle_damage_cost]), type number}, {"CargoDamageCost", each List.Sum([cargo_damage_cost]), type number}, {"ClaimAmount", each List.Sum([claim_amount]), type number}}),
+				                #"Added TruckNumber" = Table.AddColumn(#"Grouped Rows", "TruckNumber", each "Unknown", type text)
+				            in
+				                #"Added TruckNumber"
+
+	annotation PBI_ResultType = Table
+

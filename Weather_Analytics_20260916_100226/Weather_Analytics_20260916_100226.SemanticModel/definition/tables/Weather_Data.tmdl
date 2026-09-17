@@ -1,0 +1,287 @@
+table Weather_Data
+	lineageTag: 4d789e41-7491-48bd-aea2-0d35aa934986
+
+	measure 'Average Temperature' = AVERAGE('Weather_Data'[Temperature])
+		lineageTag: e97997f1-ec81-4b29-9853-b4323ea3e45d
+
+	measure 'Forecast vs Historical Temperature Variance' = CALCULATE(AVERAGE('Weather_Data'[Temperature]), 'Weather_Data'[Record_Type] = "Forecast") - CALCULATE(AVERAGE('Weather_Data'[Temperature]), 'Weather_Data'[Record_Type] = "Historical")
+		lineageTag: 3963ce7a-1a9f-4cce-9a17-f2409589f326
+
+	measure 'Forecast Average Temperature' = CALCULATE(AVERAGE('Weather_Data'[Temperature]), 'Weather_Data'[Record_Type] = "Forecast")
+		lineageTag: 6539cc06-ab38-4b48-bec2-6b1945f67106
+
+	measure 'Temperature Change from Global %' = DIVIDE(AVERAGE('Weather_Data'[Temperature]) - CALCULATE(AVERAGE('Weather_Data'[Temperature]), ALL('Weather_Data')), CALCULATE(AVERAGE('Weather_Data'[Temperature]), ALL('Weather_Data')), BLANK())
+		formatString: 0.0%
+		lineageTag: a40fbde0-0801-400c-8b84-1fe9e7545e11
+
+	measure '90th Percentile Temperature' = PERCENTILEX.INC('Weather_Data', 'Weather_Data'[Temperature], 0.9)
+		lineageTag: 0a4ac045-dac0-413f-ad2c-dad275876eee
+
+	measure '7-Day Rolling Average Temperature' = AVERAGE('Weather_Data'[Temperature])
+		lineageTag: 28c60854-0fe6-496e-8286-48b579de8a90
+
+	measure 'Rainy Records Above Threshold' = CALCULATE(COUNT('Weather_Data'[City]), FILTER('Weather_Data', 'Weather_Data'[Precipitation] >=[vPrecipThreshold]))
+		lineageTag: 4fdeb11e-c1f0-4818-976a-7a296755f385
+
+	measure '7-Day Rolling Precipitation' = SUM('Weather_Data'[Precipitation])
+		lineageTag: ccd4b9e5-0767-4a4d-99ec-5c02d20752bc
+
+	measure 'Weather Records' = COUNT('Weather_Data'[City])
+		lineageTag: 2358da09-8557-4cb2-a169-da53646cd20e
+
+	measure 'Rain Probability' = DIVIDE(CALCULATE(DISTINCTCOUNT('Weather_Data'[Date]), 'Weather_Data'[Rain_Flag] = 1), DISTINCTCOUNT('Weather_Data'[Date]), BLANK())
+		lineageTag: 161c0fa4-6bb6-4b95-ba85-08a7d8ebbf42
+
+	measure 'Average Precipitation' = AVERAGE('Weather_Data'[Precipitation])
+		lineageTag: c8f2a90d-b8d0-4fd9-9905-b935f0e6a0dc
+
+	measure 'Minimum Temperature' = MIN('Weather_Data'[Temp_Min])
+		lineageTag: f36749f2-373d-40ca-be41-79dccf49919a
+
+	measure 'Rainy Records' = CALCULATE(COUNT('Weather_Data'[City]), 'Weather_Data'[Rain_Flag] = 1)
+		lineageTag: 9704023c-1b84-4993-9d05-1bc3931f0a6a
+
+	measure 'Total Precipitation' = SUM('Weather_Data'[Precipitation])
+		lineageTag: 400468f6-66e5-417d-9255-ec2b368fbab2
+
+	measure 'Forecast Temperature Variance %' = ( CALCULATE(AVERAGE('Weather_Data'[Temperature]), 'Weather_Data'[Record_Type] = "Forecast") - CALCULATE(AVERAGE('Weather_Data'[Temperature]), 'Weather_Data'[Record_Type] = "Historical") ) / CALCULATE(AVERAGE('Weather_Data'[Temperature]), 'Weather_Data'[Record_Type] = "Historical")
+		formatString: 0.0%
+		lineageTag: c70ebef3-e2d7-491d-90f2-c360772837a9
+
+	measure 'Maximum Temperature' = MAX('Weather_Data'[Temp_Max])
+		lineageTag: 9eb46bd5-82d0-4648-b62e-f43a0583b6c4
+
+	measure 'Temperature Rank by City' = IF(ISINSCOPE('Weather_Data'[City]) || HASONEVALUE('Weather_Data'[City]), RANKX(ALLSELECTED('Weather_Data'[City]), CALCULATE(AVERAGE('Weather_Data'[Temperature])), , DESC, Dense), BLANK())
+		lineageTag: d2fa7359-1a2f-48b5-b9cc-deaf2f8d733e
+
+	measure 'Temperature Status' = SWITCH(TRUE(), AVERAGE('Weather_Data'[Temperature]) >= 30, "Hot", AVERAGE('Weather_Data'[Temperature]) >= 20, "Moderate", "Cool")
+		lineageTag: aa1d062f-c51e-4a42-998d-7973686edb17
+
+	measure 'Records Above Temperature Threshold' = CALCULATE(DISTINCTCOUNT('Weather_Data'[City]), FILTER('Weather_Data', 'Weather_Data'[Temperature] >=[vTempThreshold]))
+		lineageTag: c46d8058-b809-4e31-a084-5ff0f8c22fd1
+
+	measure 'Cities Monitored' = DISTINCTCOUNT('Weather_Data'[City])
+		lineageTag: ce0199d1-0ba2-494e-aa56-2a7f8eae1c8a
+
+	measure 'Temperature Range' = MAX('Weather_Data'[Temp_Max]) - MIN('Weather_Data'[Temp_Min])
+		lineageTag: bcd643f5-7baa-40ad-86bf-eceacf05c6c0
+
+	measure 'Historical Average Temperature' = CALCULATE(AVERAGEX('Weather_Data', IFERROR(VALUE('Weather_Data'[Temperature]), BLANK())), 'Weather_Data'[Record_Type] = "Historical")
+		lineageTag: f5a0a6e6-47d0-4bf3-b118-0c0b46601230
+
+	measure 'Rainfall Contribution %' = DIVIDE(SUM('Weather_Data'[Precipitation]), CALCULATE(SUM('Weather_Data'[Precipitation]), ALLSELECTED()), BLANK())
+		formatString: 0.0%
+		lineageTag: 1e82e8f4-5354-4856-870e-91de2c4e94e3
+
+	measure 'Rainfall Rank by City' = IF(ISINSCOPE('Weather_Data'[City]) || HASONEVALUE('Weather_Data'[City]), RANKX(ALLSELECTED('Weather_Data'[City]), CALCULATE(SUM('Weather_Data'[Precipitation])), , DESC, Dense), BLANK())
+		lineageTag: e91aa02b-bdb5-4aae-bc69-bda473825245
+
+	measure 'Global Average Temperature' = AVERAGE('Weather_Data'[Temperature])
+		lineageTag: b1b4f84d-10b4-4f9c-8fa1-2565cd7fd66d
+
+	measure 'Temperature Difference from Global Average' = AVERAGE('Weather_Data'[Temperature]) - CALCULATE(AVERAGE('Weather_Data'[Temperature]), ALL('Weather_Data'))
+		lineageTag: c4f2a4a2-ca6b-4113-8102-8520a334e022
+
+	measure 'Weather & Climate Overview Video' = "<iframe width=""100%"" height=""100%"" src=""https://vlq2fstorageaccountdev.blob.core.windows.net/vlq2fqlikimages/a1b8f495-aabc-49fe-81f5-961f94a92cb4/personal/7a158645-ea9d-4fe9-b3c2-61b51fd4445f/videos/XTrNrem_1558765d898f.html?se=2028-09-15T09%3A58%3A53Z&sp=r&sv=2026-06-06&sr=b&sig=d5Vyy9fDunn522NBUY0H4G7zkY168/RauD9D0JvbeQc%3D"" frameborder=""0"" allow=""accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"" allowfullscreen></iframe>"
+		lineageTag: 24bcd95e-4fe4-4623-96b6-00b065f1c3df
+
+	measure Count(City) = COUNT('Weather_Data'[City])
+		lineageTag: e99d750a-9b30-46e4-9bd3-455023ec5659
+
+	measure Measure = "Weather Analysis | " & DISTINCTCOUNT('Weather_Data'[City]) & " Cities | " & 'Weather_Data'[Date](Min('Weather_Data'[Date]),"DD-MMM-YYYY") & " to " & 'Weather_Data'[Date](Max('Weather_Data'[Date]),"DD-MMM-YYYY") & " | Data: " & If( GetSelectedCount('Weather_Data'[Record_Type])=0, "All Records", GetFieldSelections('Weather_Data'[Record_Type]) )
+		lineageTag: 14cf01f8-cb75-4365-9008-9d64d5d6f45c
+
+	measure Sum(Precipitation) = SUM('Weather_Data'[Precipitation])
+		lineageTag: ec28752c-9544-4410-956d-789d7773d3d1
+
+	measure 'Historical Precipitation' = CALCULATE(SUM('Weather_Data'[Precipitation]), 'Weather_Data'[Record_Type] = "Historical")
+		formatString: #,##0.00
+		lineageTag: 45014f9c-caff-48e3-8ada-bc74ef1be41b
+
+	measure 'Count({<Rain_Flag={1}>} DISTINCT Date)' = CALCULATE(DISTINCTCOUNT('Weather_Data'[Date]), 'Weather_Data'[Rain_Flag] = 1)
+		formatString: #,##0.00
+		lineageTag: 15278896-9235-4402-a286-94b8347b8105
+
+	column City
+		dataType: string
+		lineageTag: bd5884b4-0241-428b-bfef-49ea7e3fd3a2
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1797c3d8-e24c-40ba-af1c-e3f8a0b7362c
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e68a832-b343-473d-9c59-fd18124a09fa
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: 47efb094-cb3b-441b-a8c4-a97c96687e0b
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthYear
+		dataType: string
+		lineageTag: e00b36ba-1635-49ce-9eb4-ffe9b5ed9ea2
+		summarizeBy: none
+		sourceColumn: MonthYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column Record_Type
+		dataType: string
+		lineageTag: d3a9c4ab-17a5-42cc-a9a1-68a0962bbd8d
+		summarizeBy: none
+		sourceColumn: Record_Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temperature
+		dataType: double
+		lineageTag: 78320b5e-e7ca-4da1-becc-8ca382320523
+		summarizeBy: none
+		sourceColumn: Temperature
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Min
+		dataType: double
+		lineageTag: 9cd8d739-ec75-4149-b1c9-58fa2a346382
+		summarizeBy: none
+		sourceColumn: Temp_Min
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Max
+		dataType: double
+		lineageTag: 1b024058-ffed-42b6-b1c4-45db31d6352a
+		summarizeBy: none
+		sourceColumn: Temp_Max
+
+		annotation SummarizationSetBy = Automatic
+
+	column Precipitation
+		dataType: double
+		lineageTag: 581f094f-d7b0-4aaf-9e3e-bf0be9af1467
+		summarizeBy: none
+		sourceColumn: Precipitation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weather_Code
+		dataType: int64
+		formatString: 0
+		lineageTag: 48697625-75b4-4110-8422-873c06492e16
+		summarizeBy: none
+		sourceColumn: Weather_Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weather_Condition
+		dataType: string
+		lineageTag: 34e3dc11-12ec-424c-9ec9-c5d1b83b413c
+		summarizeBy: none
+		sourceColumn: Weather_Condition
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rain_Flag
+		dataType: int64
+		formatString: 0
+		lineageTag: 8d9c9990-1213-412b-b5cb-9ad67bfd4d8d
+		summarizeBy: none
+		sourceColumn: Rain_Flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitude
+		dataType: double
+		lineageTag: 74674444-5fb9-4bf5-bea2-0204080fe0d5
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column Longitude
+		dataType: double
+		lineageTag: 19d11f61-3254-4595-98ea-7a2b3abeb99d
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column Longitude_Latitude
+		dataType: string
+		lineageTag: 732c8861-30ba-42db-bc20-efb147409b7d
+		summarizeBy: none
+		sourceColumn: Longitude_Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column Observation_Time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 60dfd896-e896-4beb-b356-60806e2e07e2
+		summarizeBy: none
+		sourceColumn: Observation_Time
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month-Year = FORMAT('Weather_Data'[Observation_Time], "yyyy-MMM")
+		dataType: string
+		lineageTag: d7500aaf-f9a6-4bb7-9e7c-28e767585924
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Temperature (bins)' = FLOOR('Weather_Data'[Temperature], 10)
+		dataType: int64
+		formatString: 0
+		lineageTag: bcdfd117-0668-4b46-8f8e-441219d9607a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Weather_Data = m
+		mode: import
+		source =
+				let
+				                Source = GoogleBigQuery.Database(),
+				                Project = Source{[Name="project-af02a022-cdaa-4b4e-846"]}[Data],
+				                Dataset = Project{[Name="Weather_001"]}[Data],
+				                Navigation = Dataset{[Name="Weather_Data"]}[Data],
+				                #"Transformed Date" = Table.TransformColumns(Navigation, {{"Date", each Date.From(_), type date}}),
+				                #"Added Year" = Table.AddColumn(#"Transformed Date", "Year", each Text.From(Date.Year([Date])), type text),
+				                #"Added Month" = Table.AddColumn(#"Added Year", "Month", each Text.From(Date.Month([Date])), type text),
+				                #"Added MonthYear" = Table.AddColumn(#"Added Month", "MonthYear", each Date.ToText([Date], "MMM yyyy"), type text),
+				                #"Added Weather_Condition" = Table.AddColumn(#"Added MonthYear", "Weather_Condition", each if [Weather_Code] = 0 then "Clear Sky" else if [Weather_Code] = 1 then "Mainly Clear" else if [Weather_Code] = 2 then "Partly Cloudy" else if [Weather_Code] = 3 then "Overcast" else if [Weather_Code] = 45 then "Fog" else if [Weather_Code] = 48 then "Depositing Rime Fog" else if [Weather_Code] = 51 then "Light Drizzle" else if [Weather_Code] = 53 then "Moderate Drizzle" else if [Weather_Code] = 55 then "Dense Drizzle" else if [Weather_Code] = 61 then "Slight Rain" else if [Weather_Code] = 63 then "Moderate Rain" else if [Weather_Code] = 65 then "Heavy Rain" else if [Weather_Code] = 71 then "Slight Snowfall" else if [Weather_Code] = 73 then "Moderate Snowfall" else if [Weather_Code] = 75 then "Heavy Snowfall" else if [Weather_Code] = 80 then "Slight Rain Showers" else if [Weather_Code] = 81 then "Moderate Rain Showers" else if [Weather_Code] = 82 then "Violent Rain Showers" else if [Weather_Code] = 95 then "Thunderstorm" else "Unknown", type text),
+				                #"Added Rain_Flag" = Table.AddColumn(#"Added Weather_Condition", "Rain_Flag", each if [Precipitation] > 0 then 1 else 0, type number),
+				                #"Added Longitude_Latitude" = Table.AddColumn(#"Added Rain_Flag", "Longitude_Latitude", each Text.From([Longitude]) & "," & Text.From([Latitude]), type text)
+				            in
+				                #"Added Longitude_Latitude"
+
+	annotation PBI_ResultType = Table
+

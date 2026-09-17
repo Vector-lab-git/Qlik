@@ -1,0 +1,47 @@
+table 'Top N Customers'
+	lineageTag: 590d564d-a6c7-4c7c-8705-e9f2f32d04df
+
+	measure 'Top N Customers Value' = SELECTEDVALUE('Top N Customers'[Value], 5)
+		lineageTag: 6d1baa46-76ff-47bd-a7d5-cdfdc33ff0dd
+
+	measure 'Top N Customers' = [Top N Customers Value]
+		lineageTag: 97149e60-8233-4296-a7f4-22af35b2b50c
+
+	measure 'Show Top N Customer' =
+			VAR SelectedTopN = COALESCE([Top N Customers Value], 5)
+			VAR CurrentRank =
+			    RANKX(
+			        ALLSELECTED('Customers'[customer_name]),
+			        CALCULATE(DIVIDE(SUM('Loads'[revenue]), 1000000, BLANK())),
+			        ,
+			        DESC
+			    )
+			RETURN
+			    IF(ISBLANK([Total Revenue]), 0, IF(CurrentRank <= SelectedTopN, 1, 0))
+		formatString: 0
+		lineageTag: b0037453-1177-4309-b9e0-4c96a88eb1b5
+
+	column Value
+		dataType: int64
+		lineageTag: 87e5e89d-4868-4284-a338-a763bbab8f94
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Top N Customers' = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Value", INTEGER,
+				    {
+				        { 5 },
+				        { 10 },
+				        { 15 },
+				        { 20 }
+				    }
+				)
+
+	annotation PBI_Id = cfb20c58-cd3f-4a12-b523-134d6ceff903
+

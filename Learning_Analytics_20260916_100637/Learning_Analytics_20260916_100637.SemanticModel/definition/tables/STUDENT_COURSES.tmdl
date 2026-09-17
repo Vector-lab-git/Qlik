@@ -1,0 +1,31 @@
+table STUDENT_COURSES
+	lineageTag: 2aa89112-1ee8-416b-8b77-47a3a43d8d27
+
+	column COURSE_ID
+		dataType: string
+		lineageTag: 141c7adb-bd0b-47ce-bddc-871a08468924
+		summarizeBy: none
+		sourceColumn: COURSE_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column STUDENT_ID
+		dataType: string
+		lineageTag: 9d8a795d-cc15-4783-a3b9-f00e73f61294
+		summarizeBy: none
+		sourceColumn: STUDENT_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition STUDENT_COURSES = m
+		mode: import
+		source =
+				let
+				                Source = Snowflake.Databases("ZLDAGWO-PW94760.snowflakecomputing.com", "COMPUTE_WH"),
+				                Db = Source{[Name="LEARNING_ANALYTICS",Kind="Database"]}[Data],
+				                Result = Value.NativeQuery(Db, "SELECT ""STUDENT_ID"", ""COURSE_ID"" FROM ""LEARNING_ANALYTICS"".""PUBLIC"".""STUDENT_COURSES""", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,94 @@
+table Organizations
+	lineageTag: 009fd693-451a-48ff-88f0-7a8a2365997c
+
+	column OrganizationId
+		dataType: string
+		lineageTag: 9673750b-f49e-4f35-b0bb-2d816c50f450
+		summarizeBy: none
+		sourceColumn: OrganizationId
+
+		annotation SummarizationSetBy = Automatic
+
+	column NAME
+		dataType: string
+		lineageTag: 0a753561-b7c2-4cb3-90fa-94bf43098a96
+		summarizeBy: none
+		sourceColumn: NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column ADDRESS
+		dataType: string
+		lineageTag: bb8710be-826d-4989-abc7-11bb5bab3eb6
+		dataCategory: Address
+		summarizeBy: none
+		sourceColumn: ADDRESS
+
+		annotation SummarizationSetBy = Automatic
+
+	column CITY
+		dataType: string
+		lineageTag: cad36d39-3537-4b88-bc53-9a2972112610
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: CITY
+
+		annotation SummarizationSetBy = Automatic
+
+	column STATE
+		dataType: string
+		lineageTag: 85415ea1-8b4e-468e-80bf-87d9cbc92e95
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: STATE
+
+		annotation SummarizationSetBy = Automatic
+
+	column ZIP
+		dataType: int64
+		formatString: 0
+		lineageTag: 1bf98c28-c463-4e6d-a8fb-cc698b2e2a79
+		dataCategory: PostalCode
+		summarizeBy: none
+		sourceColumn: ZIP
+
+		annotation SummarizationSetBy = Automatic
+
+	column LAT
+		dataType: double
+		lineageTag: 9d81c453-49fa-4c7c-9bd9-4e27942e9991
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: LAT
+
+		annotation SummarizationSetBy = Automatic
+
+	column LON
+		dataType: double
+		lineageTag: be9964c7-6f36-4666-853d-8c87cd60b3e4
+		summarizeBy: none
+		sourceColumn: LON
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Organization Name' = 'Organizations'[NAME]
+		dataType: string
+		lineageTag: 3bd62d42-a18b-4ae7-b2a2-890de4862716
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Organizations = m
+		mode: import
+		source =
+				let
+				                Source = GoogleSheets.Contents("https://docs.google.com/spreadsheets/d/1E3FUeo5rHa6_WlF2J-swYE24IocA3n4nPMiuWic4RbQ/edit"),
+				                #"Selected Sheet" = try Source{[name="Sheet1", ItemKind="Table"]}[Data] otherwise try Source{[Item="Sheet1"]}[Data] otherwise Source{0}[Data],
+				                Navigation = Table.PromoteHeaders(#"Selected Sheet", [PromoteAllScalars=true]),
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"Id", "OrganizationId"}, {"NAME", "NAME"}, {"ADDRESS", "ADDRESS"}, {"CITY", "CITY"}, {"STATE", "STATE"}, {"ZIP", "ZIP"}, {"LAT", "LAT"}, {"LON", "LON"}}, MissingField.Ignore),
+				                #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns", {{"OrganizationId", type text}, {"NAME", type text}, {"ADDRESS", type text}, {"CITY", type text}, {"STATE", type text}, {"ZIP", type number}, {"LAT", type number}, {"LON", type number}})
+				            in
+				                #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

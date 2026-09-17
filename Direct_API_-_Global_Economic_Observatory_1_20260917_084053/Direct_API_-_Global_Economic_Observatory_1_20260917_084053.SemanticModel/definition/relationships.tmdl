@@ -1,0 +1,27 @@
+relationship rel_Fact_Countries_CountryISO3
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: Fact.CountryISO3
+	toColumn: Countries.CountryISO3
+
+relationship rel_Fact_Indicators_IndicatorCode
+	crossFilteringBehavior: bothDirections
+	fromColumn: Fact.IndicatorCode
+	toColumn: Indicators.IndicatorCode
+
+relationship rel_Fact_Years_Year
+	crossFilteringBehavior: bothDirections
+	fromColumn: Fact.Year
+	toColumn: Years.Year
+
+relationship ec338604-1f1a-4f39-a498-da7d44a4e239
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Years.YearEndDate
+	toColumn: LocalDateTable_cb2d76d9-ba00-4fe2-9130-e7b7cd5d99dc.Date
+
+relationship AutoDetected_4218c68c-72cd-46c7-b9d3-55d03c84452d
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Targets.CountryISO3
+	toColumn: Countries.CountryISO3
+

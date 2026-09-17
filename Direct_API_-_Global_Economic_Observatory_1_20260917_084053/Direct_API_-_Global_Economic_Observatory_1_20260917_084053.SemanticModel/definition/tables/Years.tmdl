@@ -1,0 +1,107 @@
+table Years
+	lineageTag: df1fdf0d-3658-4e0c-9a5e-f6274c8d33a4
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: b78d2a45-9c58-4c3a-87dd-610fa896bff4
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Time Drill' = 'Years'[Decade]
+		dataType: string
+		lineageTag: 799c0f97-d718-4188-b064-ceda70db2dff
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearEndDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 04df6f89-7a46-4690-883a-ee97558b4a7d
+		summarizeBy: none
+		sourceColumn: YearEndDate
+
+		variation Variation
+			isDefault
+			relationship: ec338604-1f1a-4f39-a498-da7d44a4e239
+			defaultHierarchy: LocalDateTable_cb2d76d9-ba00-4fe2-9130-e7b7cd5d99dc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Decade
+		dataType: string
+		lineageTag: 895b7bd2-e669-4289-b880-eecb920f8c35
+		summarizeBy: none
+		sourceColumn: Decade
+
+		annotation SummarizationSetBy = Automatic
+
+	column FiveYearBand
+		dataType: string
+		lineageTag: 41d6f1b6-16e0-4394-b6b4-b33ba6241c28
+		summarizeBy: none
+		sourceColumn: FiveYearBand
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsLatestYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f5da1ef-d420-41ec-9868-07711bfaef81
+		summarizeBy: sum
+		sourceColumn: IsLatestYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsLast10Years
+		dataType: int64
+		formatString: 0
+		lineageTag: f7ca8809-c3a7-4ff1-8660-0a5a25672021
+		summarizeBy: sum
+		sourceColumn: IsLast10Years
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsLast5Years
+		dataType: string
+		lineageTag: fc23606d-dbf9-4c91-a65a-07f32cabd861
+		summarizeBy: none
+		sourceColumn: IsLast5Years
+
+		annotation SummarizationSetBy = Automatic
+
+	column EconomicEra
+		dataType: string
+		lineageTag: dc370f8a-67ed-445f-96ec-95c1f35287f9
+		summarizeBy: none
+		sourceColumn: EconomicEra
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Years = m
+		mode: import
+		source =
+				let
+				                StartYear = 1990,
+				                EndYear = 2024,
+				                Count = EndYear - StartYear + 1,
+				                YearList = List.Numbers(StartYear, Count),
+				                #"Converted to Table" = Table.FromList(YearList, Splitter.SplitByNothing(), {"Year"}, null),
+				                #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table", {{"Year", Int64.Type}}),
+				                #"Added YearEndDate" = Table.AddColumn(#"Changed Type", "YearEndDate", each #date([Year], 12, 31), type date),
+				                #"Added Decade" = Table.AddColumn(#"Added YearEndDate", "Decade", each Text.From(Number.IntegerDivide([Year], 10) * 10) & "s", type text),
+				                #"Added FiveYearBand" = Table.AddColumn(#"Added Decade", "FiveYearBand", each Text.From(Number.IntegerDivide([Year], 5) * 5) & "-" & Text.From(Number.IntegerDivide([Year], 5) * 5 + 4), type text),
+				                #"Added IsLatestYear" = Table.AddColumn(#"Added FiveYearBand", "IsLatestYear", each if [Year] = EndYear then 1 else 0, Int64.Type),
+				                #"Added IsLast10Years" = Table.AddColumn(#"Added IsLatestYear", "IsLast10Years", each if [Year] >= EndYear - 9 then 1 else 0, Int64.Type),
+				                #"Added IsLast5Years" = Table.AddColumn(#"Added IsLast10Years", "IsLast5Years", each Text.From(Number.IntegerDivide([Year], 5) * 5) & "-" & Text.From(Number.IntegerDivide([Year], 5) * 5 + 4), type text),
+				                #"Added EconomicEra" = Table.AddColumn(#"Added IsLast5Years", "EconomicEra", each Text.From(Number.IntegerDivide([Year], 10) * 10) & "s", type text)
+				            in
+				                #"Added EconomicEra"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,51 @@
+table COURSE_INSTRUCTORS
+	lineageTag: 73816ac3-0c5f-4ca3-b766-eab1989af376
+
+	measure 'Assignment Duration' = AVERAGEX(FILTER('COURSE_INSTRUCTORS', NOT(ISBLANK('COURSE_INSTRUCTORS'[ASSIGNED_DATE]))), (TODAY() - 'COURSE_INSTRUCTORS'[ASSIGNED_DATE]))
+		lineageTag: ae121c93-003e-4534-8122-dbbcc5d13b33
+
+	measure 'Rolling 12-month assignments' = VAR _MaxLoadedDate = MAX('COURSE_INSTRUCTORS'[ASSIGNED_DATE]) VAR _StartDate = EDATE(DATE(YEAR(_MaxLoadedDate), MONTH(_MaxLoadedDate), 1), -11) VAR _EndDate = EOMONTH(_MaxLoadedDate, 0) RETURN CALCULATE(COUNTROWS('COURSE_INSTRUCTORS'), 'COURSE_INSTRUCTORS'[ASSIGNED_DATE] >= _StartDate, 'COURSE_INSTRUCTORS'[ASSIGNED_DATE] <= _EndDate)
+		lineageTag: 15706726-bf94-4632-8420-d055a7be257a
+
+	measure 'Courses per Instructor' = DIVIDE(COUNT('COURSE_INSTRUCTORS'[COURSE_ID]), DISTINCTCOUNT('COURSE_INSTRUCTORS'[INSTRUCTOR_ID]), BLANK())
+		lineageTag: 89046d38-c368-47b2-85f0-13d4fb25df13
+
+	column COURSE_ID
+		dataType: string
+		lineageTag: 98c5560b-35ca-4c6d-96de-f46f627766db
+		summarizeBy: none
+		sourceColumn: COURSE_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column INSTRUCTOR_ID
+		dataType: string
+		lineageTag: 5825cf31-5fdb-4ff3-9467-bc47275ab763
+		summarizeBy: none
+		sourceColumn: INSTRUCTOR_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ASSIGNED_DATE
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b292e5b1-3b14-4aa6-9154-d7941f1afc2f
+		summarizeBy: none
+		sourceColumn: ASSIGNED_DATE
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition COURSE_INSTRUCTORS = m
+		mode: import
+		source =
+				let
+				                Source = Snowflake.Databases("ZLDAGWO-PW94760.snowflakecomputing.com", "COMPUTE_WH"),
+				                Db = Source{[Name="LEARNING_ANALYTICS",Kind="Database"]}[Data],
+				                Result = Value.NativeQuery(Db, "SELECT ""COURSE_ID"", ""INSTRUCTOR_ID"", ""ASSIGNED_DATE"" FROM ""LEARNING_ANALYTICS"".""PUBLIC"".""COURSE_INSTRUCTORS""", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

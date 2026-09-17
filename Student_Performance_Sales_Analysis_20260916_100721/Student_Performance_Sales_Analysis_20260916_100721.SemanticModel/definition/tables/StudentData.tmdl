@@ -1,0 +1,121 @@
+table StudentData
+	lineageTag: 641be3f0-2014-49d0-9444-ab25c050f5c3
+
+	measure 'Best Performing Subject' = VAR _SummaryTable = ADDCOLUMNS(VALUES('StudentData'[Subject]), "_AvgMarks", CALCULATE(AVERAGE('StudentData'[Marks]))) RETURN SELECTCOLUMNS(TOPN(1, _SummaryTable,[_AvgMarks], DESC), "Subject", 'StudentData'[Subject])
+		lineageTag: a207fe55-62fb-4c23-b17f-17ba5edd0ae2
+
+	measure 'Best Performing City' = VAR _SummaryTable = ADDCOLUMNS(VALUES('StudentData'[City]), "@SortMetric", CALCULATE(AVERAGE('StudentData'[Marks]))) RETURN MAXX(_SummaryTable,[@SortMetric])
+		lineageTag: fdf8698e-3a96-46de-902d-dc6e83ffc61d
+
+	measure 'Highest Marks' = MAX('StudentData'[Marks])
+		lineageTag: 9bdbddda-2e85-40d0-a86d-dba6c8b6322a
+
+	measure 'Average Marks' = AVERAGE('StudentData'[Marks])
+		lineageTag: c1c1dd5a-c61e-42cd-94eb-54bb82edcd9c
+
+	measure 'Top Student Marks' = MAX('StudentData'[Marks])
+		lineageTag: 0ba1b0c9-5481-46fd-ac9a-ee92e54f903a
+
+	measure 'Total Students' = DISTINCTCOUNT('StudentData'[ID])
+		lineageTag: 4b544b9d-bfa2-4a71-a5b6-343a64877947
+
+	measure 'Lowest Marks' = MIN('StudentData'[Marks])
+		lineageTag: c35cdb24-9cd0-44cd-9ef4-0b1c1b90c870
+
+	measure 'Selected Performance Metric' = VAR SelectedMetric =[Selected Metric] RETURN SWITCH(SelectedMetric, "Marks", AVERAGE('StudentData'[Marks]), "Sales", SUM('SalesData'[Sales]), BLANK())
+		lineageTag: 98587c53-f7c2-44c7-af74-6f2d361d674f
+
+	column ID
+		dataType: double
+		formatString: 0
+		lineageTag: 0e83c145-3352-4667-87b9-7ef8c119d9fd
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StudentName
+		dataType: string
+		lineageTag: f75991af-ce71-435d-80cc-bcade046ce7b
+		summarizeBy: none
+		sourceColumn: StudentName
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 9869a774-6fe2-4083-a5d4-fa967822317b
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Marks
+		dataType: double
+		formatString: 0
+		lineageTag: 0ae5a3b5-0a9e-4881-9fcb-f7598a1ad47e
+		summarizeBy: sum
+		sourceColumn: Marks
+
+		annotation SummarizationSetBy = Automatic
+
+	column Grade
+		dataType: string
+		lineageTag: 780647b0-c518-485a-9844-703afcb66474
+		summarizeBy: none
+		sourceColumn: Grade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subject
+		dataType: string
+		lineageTag: 60ae210b-30df-4974-a8e7-f6f9f8552dc5
+		summarizeBy: none
+		sourceColumn: Subject
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c63c9003-e2ee-47ab-afb7-9e02b539dcca
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Performance Band' = SWITCH(TRUE(), 'StudentData'[Marks] >= 90, "Excellent", 'StudentData'[Marks] >= 75, "Good", 'StudentData'[Marks] >= 60, "Average", "Needs Improvement" )
+		dataType: string
+		lineageTag: b8cf27c6-1b5b-40a5-b749-a0a477245cbb
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Marks (bins)' = FLOOR('StudentData'[Marks], 10)
+		dataType: int64
+		formatString: 0
+		lineageTag: f741ec5c-7db7-44b4-8e42-e90698077f0f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition StudentData = m
+		mode: import
+		source =
+				let
+				                Source = SharePoint.Files("https://aoscaustralia.sharepoint.com/sites/TableautoFabricMigration", [ApiVersion = 15]),
+				                #"Filtered Files" = Table.SelectRows(Source, each [Name] = "sample_sharepoint_education.xlsx"),
+				                FileContent = #"Filtered Files"{0}[Content],
+				                #"Imported Excel" = Excel.Workbook(FileContent, null, true),
+				                #"Selected Sheet" = #"Imported Excel"{[Item="StudentData"]}[Data],
+				                Navigation = Table.PromoteHeaders(#"Selected Sheet", [PromoteAllScalars=true]),
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"Student Name", "StudentName"}}, MissingField.Ignore),
+				                #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns", {{"ID", type number}, {"StudentName", type text}, {"City", type text}, {"Marks", type number}, {"Grade", type text}, {"Subject", type text}, {"Date", type date}})
+				            in
+				                #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

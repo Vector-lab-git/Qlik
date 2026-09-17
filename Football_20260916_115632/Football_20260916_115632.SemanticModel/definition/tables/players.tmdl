@@ -1,0 +1,138 @@
+table players
+	lineageTag: 218ab05a-4760-49af-bcdb-229471cefcc5
+
+	column player_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 45832877-d879-44b2-837f-5f08eb1efb96
+		summarizeBy: none
+		sourceColumn: player_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column player_name
+		dataType: string
+		lineageTag: d74cc0ee-d6e2-41f1-977a-d216927f03b4
+		summarizeBy: none
+		sourceColumn: player_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column nationality
+		dataType: string
+		lineageTag: 875f4fb3-5de5-415b-a39f-2a28696870c4
+		summarizeBy: none
+		sourceColumn: nationality
+
+		annotation SummarizationSetBy = Automatic
+
+	column birth_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fb8927e0-b1fd-4934-bed9-e2e63a6adaa4
+		summarizeBy: none
+		sourceColumn: birth_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column position
+		dataType: string
+		lineageTag: 1a63b11a-c2ee-49d5-b70a-9d9585b9bb7d
+		summarizeBy: none
+		sourceColumn: position
+
+		annotation SummarizationSetBy = Automatic
+
+	column jersey_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 154fc4dc-4fc7-4b9c-89ae-ccb29deb40fe
+		summarizeBy: none
+		sourceColumn: jersey_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column height_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 515d4b7e-35e5-4273-9b15-60fce9d6afbf
+		summarizeBy: none
+		sourceColumn: height_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column weight_kg
+		dataType: int64
+		formatString: 0
+		lineageTag: 3aab7655-0c81-4c29-8a72-300aa6f4c7ea
+		summarizeBy: none
+		sourceColumn: weight_kg
+
+		annotation SummarizationSetBy = Automatic
+
+	column player_age
+		dataType: double
+		formatString: 0
+		lineageTag: ed7dabf4-9a19-408f-957d-37c6fb79cedc
+		summarizeBy: none
+		sourceColumn: player_age
+
+		annotation SummarizationSetBy = Automatic
+
+	column player_age_group
+		dataType: string
+		lineageTag: 6de0e84f-5477-438e-b7ea-1188bfb0a4a9
+		summarizeBy: none
+		sourceColumn: player_age_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column position_group
+		dataType: string
+		lineageTag: f4cad92b-cb93-45ed-b7a5-ec74d84ab32b
+		summarizeBy: none
+		sourceColumn: position_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column PositionGroup = 'players'[position_group]
+		dataType: string
+		lineageTag: fd5e5e7d-3320-4663-adab-53a5c3fecc73
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Player = 'players'[player_name]
+		dataType: string
+		lineageTag: 4841e65c-a140-48ab-8070-1c37333f99bf
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 72038bbc-a11c-4b6e-92ad-6ea04bf6b17b
+		summarizeBy: none
+		sourceColumn: team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition players = m
+		mode: import
+		source =
+				let
+				                Source = PostgreSQL.Database("t2f-postgre-server.postgres.database.azure.com", "test"),
+				                #"Navigation 1" = Source{[Schema = "public", Item = "players"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(#"Navigation 1", {{"name", "player_name"}}, MissingField.Ignore),
+				                #"Transformed birth_date" = Table.TransformColumns(#"Renamed Columns", {{"birth_date", each Date.From(_), type date}}),
+				                #"Added player_age" = Table.AddColumn(#"Transformed birth_date", "player_age", each Number.RoundDown((Date.From(DateTime.LocalNow()) - [birth_date]) / 365.25), type number),
+				                #"Added player_age_group" = Table.AddColumn(#"Added player_age", "player_age_group", each if [player_age] < 21 then "U21" else if [player_age] < 25 then "21-24" else if [player_age] < 30 then "25-29" else if [player_age] < 35 then "30-34" else "35+", type text),
+				                #"Added position_group" = Table.AddColumn(#"Added player_age_group", "position_group", each if [position] = "GK" then "Goalkeeper" else if List.Contains({"DF", "CB", "LB", "RB", "LWB", "RWB"}, [position]) then "Defender" else if List.Contains({"MF", "CM", "CDM", "CAM", "LM", "RM"}, [position]) then "Midfielder" else if List.Contains({"FW", "ST", "CF", "LW", "RW"}, [position]) then "Forward" else "Other", type text)
+				            in
+				                #"Added position_group"
+
+	annotation PBI_ResultType = Table
+

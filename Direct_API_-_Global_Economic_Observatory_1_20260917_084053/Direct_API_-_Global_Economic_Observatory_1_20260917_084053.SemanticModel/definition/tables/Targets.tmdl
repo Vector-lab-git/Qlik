@@ -1,0 +1,163 @@
+table Targets
+	lineageTag: 3568aff1-bd60-4774-bad2-ce334e5392d3
+
+	measure 'Inflation vs Target' = DIVIDE([vInflation] - AVERAGE('Targets'[TargetInflation]), 100, BLANK())
+		lineageTag: ca0bc221-06e5-4769-8b6a-01d25bbf12ec
+
+	measure 'Growth vs Target' = DIVIDE([vGDPGrowth] - AVERAGE('Targets'[TargetGDPGrowth]), 100, BLANK())
+		lineageTag: 14367e7d-5ad5-497d-8794-6fe6be9f13f1
+
+	column TargetGDPGrowth
+		dataType: double
+		lineageTag: a1c1f644-06a5-4336-83b4-21fb0030b6ab
+		summarizeBy: sum
+		sourceColumn: TargetGDPGrowth
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetInflation
+		dataType: double
+		lineageTag: 4eef9f4c-e192-4760-929f-132f9a5688c2
+		summarizeBy: sum
+		sourceColumn: TargetInflation
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetUnemployment
+		dataType: double
+		lineageTag: 8f09944a-61d9-49fa-aabd-0083e8fb0d26
+		summarizeBy: sum
+		sourceColumn: TargetUnemployment
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryISO3
+		dataType: string
+		lineageTag: 739f9195-17a4-441e-9fa7-b093132089b5
+		summarizeBy: none
+		sourceColumn: CountryISO3
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryISO2
+		dataType: string
+		lineageTag: 20d09b6b-647e-4a11-b1ce-675ed8c478f3
+		summarizeBy: none
+		sourceColumn: CountryISO2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 591bc966-c945-4d67-aaa3-4f3cab82b642
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column CapitalCity
+		dataType: string
+		lineageTag: 5e90008f-cc63-4ae9-af58-20057041c60c
+		summarizeBy: none
+		sourceColumn: CapitalCity
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryLong
+		dataType: double
+		lineageTag: 0bb0b6e2-67c4-459e-a760-4c74090cd000
+		summarizeBy: sum
+		sourceColumn: CountryLong
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CountryLat
+		dataType: double
+		lineageTag: ba14e87a-9787-48e6-b860-8bfb8aecadd1
+		summarizeBy: sum
+		sourceColumn: CountryLat
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Region
+		dataType: string
+		lineageTag: c0ca316e-1db3-4d15-b1ff-f58fe1ced58e
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncomeGroup
+		dataType: string
+		lineageTag: f6727cd2-ad38-4166-8cce-dc7293f7f425
+		summarizeBy: none
+		sourceColumn: IncomeGroup
+
+		annotation SummarizationSetBy = Automatic
+
+	column LendingType
+		dataType: string
+		lineageTag: 2c2f73d0-4feb-47d7-be4c-90316b526c81
+		summarizeBy: none
+		sourceColumn: LendingType
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryType
+		dataType: string
+		lineageTag: 8b948933-4f9e-4c39-a66b-591b88ee0e36
+		summarizeBy: none
+		sourceColumn: CountryType
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryPoint
+		dataType: string
+		lineageTag: 10332839-6d4a-463f-8013-93ede155f34e
+		summarizeBy: none
+		sourceColumn: CountryPoint
+
+		annotation SummarizationSetBy = Automatic
+
+	column %REGION_ACCESS
+		dataType: string
+		lineageTag: 84c04330-8cef-4e18-af87-cbf37fef7074
+		summarizeBy: none
+		sourceColumn: %REGION_ACCESS
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncomeRank
+		dataType: string
+		lineageTag: 2a5b0552-276f-4dae-9bd3-10a78e0ee8f7
+		summarizeBy: none
+		sourceColumn: IncomeRank
+
+		annotation SummarizationSetBy = Automatic
+
+	column %RegionYearKey
+		dataType: string
+		lineageTag: cbb3b647-fe10-4c6f-998f-0805adc9c811
+		summarizeBy: none
+		sourceColumn: %RegionYearKey
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Targets = m
+		mode: import
+		source =
+				let
+				                Source = Countries,
+				                #"Added %RegionYearKey" = Table.AddColumn(Source, "%RegionYearKey", each [TargetRegion] & "|" & null, type text),
+				                #"Added TargetGDPGrowth" = Table.AddColumn(#"Added %RegionYearKey", "TargetGDPGrowth", each null, type number),
+				                #"Added TargetInflation" = Table.AddColumn(#"Added TargetGDPGrowth", "TargetInflation", each null, type number),
+				                #"Added TargetUnemployment" = Table.AddColumn(#"Added TargetInflation", "TargetUnemployment", each null, type number)
+				            in
+				                #"Added TargetUnemployment"
+
+	annotation PBI_ResultType = Table
+

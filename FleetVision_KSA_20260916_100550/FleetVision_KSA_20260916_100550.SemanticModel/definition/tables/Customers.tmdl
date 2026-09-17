@@ -1,0 +1,97 @@
+table Customers
+	lineageTag: 6d4b0e3b-6a60-48c1-94ab-7cd8339d8dc2
+
+	measure 'Average Revenue per Customer' = DIVIDE(SUM('Loads'[revenue]), DISTINCTCOUNT('Customers'[customer_id]), BLANK())
+		formatString: $#,##0
+		lineageTag: 4aa5d58c-3876-494f-9b41-67743cc57805
+
+	measure 'Total Customers' = DISTINCTCOUNT('Customers'[customer_id])
+		lineageTag: 3e983baa-ba4f-4941-897a-9bc60e56501c
+
+	column customer_id
+		dataType: string
+		lineageTag: 359f0afa-be1d-4f44-b7e1-e54e636a6f4f
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_name
+		dataType: string
+		lineageTag: 9f181587-121c-4e29-9518-ba609afe29a8
+		summarizeBy: none
+		sourceColumn: customer_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_type
+		dataType: string
+		lineageTag: f8225e4d-3613-4081-bff7-22cd1778dbb5
+		summarizeBy: none
+		sourceColumn: customer_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column credit_terms_days
+		dataType: int64
+		formatString: 0
+		lineageTag: e31aa474-6d67-4996-a1ee-9bc214eb052b
+		summarizeBy: none
+		sourceColumn: credit_terms_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column primary_freight_type
+		dataType: string
+		lineageTag: 404be901-8303-451a-be04-a79498b43476
+		summarizeBy: none
+		sourceColumn: primary_freight_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_status
+		dataType: string
+		lineageTag: c93a2351-f0f6-46b8-9be5-5cca91a26fb8
+		summarizeBy: none
+		sourceColumn: account_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column contract_start_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ab5d3fca-615e-480d-8272-5088740da769
+		summarizeBy: none
+		sourceColumn: contract_start_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column annual_revenue_potential
+		dataType: int64
+		formatString: 0
+		lineageTag: cf7c8591-6d74-4410-9294-49753579afde
+		summarizeBy: none
+		sourceColumn: annual_revenue_potential
+
+		annotation SummarizationSetBy = Automatic
+
+	column Customer = 'Customers'[customer_name]
+		dataType: string
+		lineageTag: 13c8dea1-8008-4d91-a8c6-2e60e0d8294c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customers = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Result = Value.NativeQuery(Source, "SELECT * FROM fleetvision.customers", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

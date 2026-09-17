@@ -1,0 +1,142 @@
+table view_team_standings
+	lineageTag: b94b8738-9d5f-446f-baef-20f2d273d991
+
+	measure 'Total Losses' = SUM('view_team_standings'[losses])
+		lineageTag: 72c876da-cd63-4dbb-a316-181f142beaf5
+
+	measure 'Total Wins' = SUM('view_team_standings'[wins])
+		lineageTag: 91ecf8e8-c664-471e-b9e8-4bdb329cdbe8
+
+	measure 'Total Draws' = SUM('view_team_standings'[draws])
+		lineageTag: 9f87318f-da5d-4386-8235-c26b9bb0a597
+
+	measure 'Pass Completion %' = DIVIDE(SUM('view_team_standings'[wins]), SUM('view_team_standings'[matches_played]), BLANK())
+		formatString: 0.0%
+		lineageTag: 29db384f-5810-4046-aa73-574776dc414b
+
+	measure 'Win Rate' = ROUND(DIVIDE(SUM('view_team_standings'[wins]), SUM('view_team_standings'[matches_played]), BLANK()) * 100, 0)
+		lineageTag: 3bfe3d14-161e-4230-8722-2a83e56f349e
+
+	measure 'Goals Conceded' = SUM('view_team_standings'[goals_conceded])
+		lineageTag: 416a55c1-98e5-44ba-b7f5-a2a628721e93
+
+	measure 'Total Points' = SUM('view_team_standings'[points])
+		lineageTag: b2eacf96-55b4-4c82-903f-4966756954ef
+
+	column team_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e2f63b00-b44b-452f-9b57-f867d8fc35a6
+		summarizeBy: none
+		sourceColumn: team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column standings_season
+		dataType: string
+		lineageTag: d596e2dd-8abf-42e0-90f8-96ae448a3250
+		summarizeBy: none
+		sourceColumn: standings_season
+
+		annotation SummarizationSetBy = Automatic
+
+	column matches_played
+		dataType: int64
+		formatString: 0
+		lineageTag: e5a62dc1-71b9-4e12-a3c1-223ddc1a5b9f
+		summarizeBy: none
+		sourceColumn: matches_played
+
+		annotation SummarizationSetBy = Automatic
+
+	column wins
+		dataType: int64
+		formatString: 0
+		lineageTag: 9b373ce3-a44b-4105-80bf-039a6cabb3a5
+		summarizeBy: none
+		sourceColumn: wins
+
+		annotation SummarizationSetBy = Automatic
+
+	column draws
+		dataType: int64
+		formatString: 0
+		lineageTag: 62818476-2bc8-4bb8-a5db-7d12ae405952
+		summarizeBy: none
+		sourceColumn: draws
+
+		annotation SummarizationSetBy = Automatic
+
+	column losses
+		dataType: int64
+		formatString: 0
+		lineageTag: 52ac9e3d-ac48-4e26-bfba-e43c36d7ce4b
+		summarizeBy: none
+		sourceColumn: losses
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals_scored
+		dataType: int64
+		formatString: 0
+		lineageTag: bde258da-143f-4d15-978d-bf5230d16698
+		summarizeBy: none
+		sourceColumn: goals_scored
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals_conceded
+		dataType: int64
+		formatString: 0
+		lineageTag: a03d55b4-e2e0-481d-9c2f-cccd7c49deea
+		summarizeBy: none
+		sourceColumn: goals_conceded
+
+		annotation SummarizationSetBy = Automatic
+
+	column standings_goal_difference
+		dataType: int64
+		formatString: 0
+		lineageTag: 9c5cfc2d-2ed6-48e2-be02-22d269fa53b3
+		summarizeBy: none
+		sourceColumn: standings_goal_difference
+
+		annotation SummarizationSetBy = Automatic
+
+	column points
+		dataType: int64
+		formatString: 0
+		lineageTag: 4a1b7d29-aaeb-4535-8027-261bd4b0657a
+		summarizeBy: none
+		sourceColumn: points
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_name
+		dataType: string
+		lineageTag: a69e81e2-1e4f-4cd1-9fe8-539b8c425996
+		summarizeBy: none
+		sourceColumn: team_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column short_name
+		dataType: string
+		lineageTag: f7e4d992-1949-44e0-9acc-54c7a7c176b1
+		summarizeBy: none
+		sourceColumn: short_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition view_team_standings = m
+		mode: import
+		source =
+				let
+				                Source = PostgreSQL.Database("t2f-postgre-server.postgres.database.azure.com", "test"),
+				                #"Navigation 1" = Source{[Schema = "public", Item = "view_team_standings"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(#"Navigation 1", {{"season", "standings_season"}, {"goal_difference", "standings_goal_difference"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

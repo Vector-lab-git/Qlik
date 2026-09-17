@@ -1,0 +1,128 @@
+table Trucks
+	lineageTag: f4066079-dd73-4765-9cd7-622ed8d835dc
+
+	measure 'Active Trucks' = CALCULATE(DISTINCTCOUNT('Trucks'[truck_id]), 'Trucks'[truck_status] = "Active")
+		lineageTag: e680c415-8b5f-45fe-b3d3-9acdbe6185b4
+
+	measure 'Diesel Trucks' = CALCULATE(DISTINCTCOUNT('Trucks'[truck_id]), 'Trucks'[fuel_type] = "Diesel")
+		lineageTag: a2b86ea1-0e08-4c73-b6d2-55de33510baa
+
+	measure 'Fleet Size' = DISTINCTCOUNT('Trucks'[truck_id])
+		lineageTag: 17af9c35-f203-449b-a2be-716fa45c88ef
+
+	column truck_id
+		dataType: string
+		lineageTag: 0ecb0b08-79ec-4bb1-8c98-295e6eb5e6b3
+		summarizeBy: none
+		sourceColumn: truck_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_number
+		dataType: int64
+		formatString: 0
+		lineageTag: d4f326b9-e585-43b0-9ca8-c63a1312259e
+		summarizeBy: none
+		sourceColumn: unit_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column make
+		dataType: string
+		lineageTag: 4db00ddb-15e1-45db-bf05-0397c978d6f9
+		summarizeBy: none
+		sourceColumn: make
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_model_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 6fa701ce-941b-469e-b2af-cac5647202c4
+		summarizeBy: none
+		sourceColumn: truck_model_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_vin
+		dataType: string
+		lineageTag: fe2850b5-cc0e-4923-99df-7a7cc4b5da67
+		summarizeBy: none
+		sourceColumn: truck_vin
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_acquisition_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fe895b1d-1b6e-44a3-83df-833167d650e6
+		summarizeBy: none
+		sourceColumn: truck_acquisition_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column acquisition_mileage
+		dataType: int64
+		formatString: 0
+		lineageTag: 6b6e7cec-c23e-4ce5-baef-114fb527121b
+		summarizeBy: none
+		sourceColumn: acquisition_mileage
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_type
+		dataType: string
+		lineageTag: 03ff6ee9-1726-42a1-bfe1-9a50dbe03c08
+		summarizeBy: none
+		sourceColumn: fuel_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column tank_capacity_gallons
+		dataType: int64
+		formatString: 0
+		lineageTag: 57971262-c5cd-4e7d-b67f-52ef0a112743
+		summarizeBy: none
+		sourceColumn: tank_capacity_gallons
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_status
+		dataType: string
+		lineageTag: 7e4b7f63-69fc-427e-833a-ab1c75d618e9
+		summarizeBy: none
+		sourceColumn: truck_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_home_terminal
+		dataType: string
+		lineageTag: 34225218-2a4e-4f08-b69f-7de57475b200
+		summarizeBy: none
+		sourceColumn: truck_home_terminal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Truck = 'Trucks'[unit_number]
+		dataType: int64
+		formatString: 0
+		lineageTag: c9c7416c-978a-4f4d-ae0a-01c5d19b581e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Trucks = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Schema = Source{[Name="fleetvision",Kind="Schema"]}[Data],
+				                Navigation = Schema{[Name="trucks"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"model_year", "truck_model_year"}, {"vin", "truck_vin"}, {"acquisition_date", "truck_acquisition_date"}, {"status", "truck_status"}, {"home_terminal", "truck_home_terminal"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Direct_API_-_Global_Economic_Observatory_1_20260916_120158"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ea574ccb-c2b5-951f-47bb-06e953998f37"
+  }
+}

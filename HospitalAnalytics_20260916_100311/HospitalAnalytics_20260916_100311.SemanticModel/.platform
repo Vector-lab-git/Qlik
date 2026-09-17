@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "HospitalAnalytics_20260916_100311"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "27671817-a741-8384-4f86-8401794154a9"
+  }
+}

@@ -1,0 +1,183 @@
+table Fact
+	lineageTag: aded7630-d833-4dcb-99fb-3e90df172a4e
+
+	measure 'Avg Annual GDP' = DIVIDE(SUM('Fact'[IndicatorValue]), DISTINCTCOUNT('Years'[Year]), BLANK())
+		lineageTag: 11d28ce0-f9e3-427b-bc5b-dc560167768e
+
+	measure GDP = SUM('Fact'[IndicatorValue])
+		lineageTag: b1bbb7bf-751f-4570-93e8-784dd8d86bb8
+
+	measure 'GDP per Capita' = DIVIDE(SUM('Fact'[IndicatorValue]), SUM('Fact'[CountryISO3]), BLANK())
+		lineageTag: b2c3c3ac-9006-4b2c-b23c-21f9db40bed0
+
+	measure 'Avg Annual GDP — 5yr Moving Avg' = VAR _CurrentYear = MAX('Fact'[Year]) VAR _YearWindow = FILTER('Years', 'Years'[Year] <= _CurrentYear && 'Years'[Year] > _CurrentYear - 5) VAR _GDPAvg = AVERAGEX(_YearWindow, CALCULATE([vGDP], 'Fact'[Year] = 'Years'[Year])) RETURN AVERAGE(_GDPAvg)
+		lineageTag: 5dfb4db2-b424-4156-8212-2b943b16b2b6
+
+	measure 'GDP Rank' = IF(ISINSCOPE('Countries'[Country]) || HASONEVALUE('Countries'[Country]), RANKX(ALLSELECTED('Countries'[Country]), CALCULATE(SUM('Fact'[IndicatorValue]), 'Fact'[IndicatorCode] = "NY.GDP.MKTP.CD"), , DESC, Dense), BLANK())
+		lineageTag: 213978f6-d4e9-473f-a0e3-0f900764e49f
+
+	measure 'Imports (Latest Year)' = VAR _LatestYear = CALCULATE(MAX('Fact'[Year]), ALLSELECTED()) RETURN CALCULATE(SUM('Fact'[IndicatorValue]), 'Fact'[Year] = _LatestYear, 'Fact'[IndicatorCode] = "NE.IMP.GNFS.CD")
+		lineageTag: 9b476286-55e0-432e-bd2c-104323723aec
+
+	measure 'GDP CAGR 10yr' = VAR _FirstYear = MIN('Fact'[Year]) VAR _LastYear = MAX('Fact'[Year]) VAR _FirstGDP = CALCULATE(MIN('Fact'[IndicatorValue]), 'Fact'[Year] = _FirstYear, 'Fact'[IndicatorCode] = "NY.GDP.MKTP.CD") VAR _LastGDP = CALCULATE(MAX('Fact'[IndicatorValue]), 'Fact'[Year] = _LastYear, 'Fact'[IndicatorCode] = "NY.GDP.MKTP.CD") VAR _Periods = _LastYear - _FirstYear RETURN IF(_Periods > 0 && NOT(ISBLANK(_FirstGDP)) && NOT(ISBLANK(_LastGDP)), (POWER(DIVIDE(_LastGDP, _FirstGDP, BLANK()), DIVIDE(1, _Periods, BLANK())) - 1), BLANK())
+		lineageTag: cf7e8bc5-9d41-465e-be14-842ec08b067e
+
+	measure 'GDP (US$)' = CALCULATE(SUM('Fact'[IndicatorValue]), 'Fact'[IndicatorCode] = "NY.GDP.MKTP.CD", FILTER('Fact', 'Fact'[Year] = MAX('Fact'[Year])))
+		lineageTag: a5f8eb33-9093-48f7-92e3-6b8958c5074b
+
+	measure 'Top 10 Share of World GDP' = DIVIDE([vTopNEconomies_10], CALCULATE(SUM('Fact'[IndicatorValue]), 'Fact'[IndicatorCode] = "NY.GDP.MKTP.CD"), BLANK())
+		lineageTag: 7d0e58ca-ed9e-4ec4-9e03-292618501af4
+
+	measure 'Life Expectancy' = AVERAGEX('Fact', 'Fact'[IndicatorValue])
+		lineageTag: 1d2d28e1-eecb-45f8-9c65-bef71347e414
+
+	measure 'Population (Latest Year)' = VAR _LatestYear = MAX('Fact'[Year]) RETURN CALCULATE(SUM('Fact'[IndicatorValue]), 'Fact'[Year] = _LatestYear, 'Fact'[IndicatorCode] = "SP.POP.TOTL")
+		lineageTag: abaa6e08-cd08-453e-9e87-0d12b4fa243a
+
+	measure 'Exports (Latest Year)' = VAR _LatestYear = CALCULATE(MAX('Fact'[Year]), ALL('Fact')) RETURN CALCULATE(SUM('Fact'[IndicatorValue]), 'Fact'[Year] = _LatestYear, 'Fact'[IndicatorCode] = "NE.EXP.GNFS.CD")
+		lineageTag: c8346e31-c5a3-4b22-b24a-9a45466c53c0
+
+	measure 'GDP (Latest Year)' = CALCULATE(SUM('Fact'[IndicatorValue]), 'Fact'[Year] = CALCULATE(MAX('Fact'[Year]), ALL('Fact')), 'Fact'[IndicatorCode] = "NY.GDP.MKTP.CD")
+		lineageTag: add596d5-b447-4b9b-9ad3-ae50575519d3
+
+	measure 'GDP Growth % (Latest Year)' = DIVIDE(CALCULATE(AVERAGEX('Fact', IFERROR(VALUE('Fact'[IndicatorValue]), BLANK())), 'Fact'[IndicatorCode] = "NY.GDP.MKTP.KD.ZG", 'Fact'[Year] = CALCULATE(MAX('Fact'[Year]), ALL('Fact'))), 100, BLANK())
+		formatString: 0.0%
+		lineageTag: a1d39e03-8f31-4ef6-9ca7-c183ad6b52df
+
+	measure 'World GDP Share %' = DIVIDE([vGDP], CALCULATE(SUM('Fact'[IndicatorValue]), ALLSELECTED(), 'Fact'[IndicatorCode] = "NY.GDP.MKTP.CD"), BLANK())
+		formatString: 0.0%
+		lineageTag: 38ee3a63-7caa-426c-8a51-31961874ed30
+
+	measure Sum(IndicatorValue) = SUM('Fact'[IndicatorValue])
+		lineageTag: 5325b106-a0b6-477a-b0e6-f03c0567478c
+
+	column CountryISO3
+		dataType: double
+		lineageTag: 802b1c74-9344-4ce4-9092-c760a4801a7f
+		summarizeBy: none
+		sourceColumn: CountryISO3
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 77c96257-3d51-49f5-be86-18c54d0d2af5
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column IndicatorCode
+		dataType: string
+		lineageTag: e3a6f7cc-2b8a-4b25-963e-738f8ca6702e
+		summarizeBy: none
+		sourceColumn: IndicatorCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column IndicatorValue
+		dataType: double
+		lineageTag: a4b853c6-4196-484d-b6c7-ff5048a2cf1b
+		summarizeBy: none
+		sourceColumn: IndicatorValue
+
+		annotation SummarizationSetBy = Automatic
+
+	column GDPGrowthValue
+		dataType: double
+		lineageTag: b473a3c9-2d49-4435-9bc7-3b44502a0134
+		summarizeBy: none
+		sourceColumn: GDPGrowthValue
+
+		annotation SummarizationSetBy = Automatic
+
+	column %RegionYearKey
+		dataType: string
+		lineageTag: 0bd5ca58-a4f4-4afe-bc29-0735e23f9ea2
+		summarizeBy: none
+		sourceColumn: '%RegionYearKey'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact = m
+		mode: import
+		source =
+				let
+				                // 1. Get the list of indicator codes at runtime from the Indicators query
+				    IndicatorCodes = List.Distinct(Table.Column(AllIndicators, "IndicatorCode")),
+				                // 2. Define the base URL and query parameters
+				    BaseUrl = "https://api.worldbank.org",
+				                RelPathTemplate = "v2/country/all/indicator/",
+				                QueryParams = [
+				                    format = "json",
+				                    per_page = "20000",
+				                    date = "1990:2024"
+				                ],
+				                // 3. Helper to fetch and parse a single indicator's data (with pagination)
+				    FetchIndicator = (IndicatorCode as text) as table =>
+				                    let
+				                        // Helper to fetch a single page
+				    GetPage = (PageNum as number) as list =>
+				                            let
+				                                Response = Web.Contents(
+				                                    BaseUrl,
+				                                    [
+				                                        RelativePath = RelPathTemplate & IndicatorCode,
+				                                        Query = Record.Combine({QueryParams, [page = Number.ToText(PageNum)]})
+				                                    ]
+				                                ),
+				                                Json = Json.Document(Response),
+				                                Meta = if List.Count(Json) > 0 then Json{0} else [],
+				                                Data = if List.Count(Json) > 1 then (try Json{1} otherwise {}) else {}
+				                            in
+				                                Data,
+				                        // Fetch page 1 to get total pages
+				    FirstResponse = Web.Contents(
+				                            BaseUrl,
+				                            [
+				                                RelativePath = RelPathTemplate & IndicatorCode,
+				                                Query = QueryParams
+				                            ]
+				                        ),
+				                        FirstJson = Json.Document(FirstResponse),
+				                        FirstMeta = if List.Count(FirstJson) > 0 then FirstJson{0} else [],
+				                        TotalPages = try Number.From(FirstMeta[pages]) otherwise 1,
+				                        // Fetch all pages and combine
+				    AllData = (try List.Combine(List.Transform({1..TotalPages}, each GetPage(_))) otherwise Table.Combine(List.Transform({1..TotalPages}, each GetPage(_)))),
+				                        // Convert to table
+				    DataTable = (if Value.Is(AllData, type table) then AllData else Table.FromRecords(AllData)),
+				                        // Remove rows with null __FK_root or value_u1 or empty countryiso3code
+				    Filtered = Table.SelectRows(DataTable, each Record.HasFields(_, "value_u1") and _[value_u1] <> null and Record.HasFields(_, "countryiso3code") and Text.Length(Text.Trim(_[countryiso3code])) > 0),
+				                        // Add IndicatorCode column
+				    WithIndicator = Table.AddColumn(Table.RemoveColumns(Filtered, {"IndicatorCode"}, MissingField.Ignore), "IndicatorCode", each IndicatorCode, type text),
+				                        // Add Year column (numeric from 2024)
+				    WithYear = Table.AddColumn(Table.RemoveColumns(WithIndicator, {"Year"}, MissingField.Ignore), "Year", each try 2024 otherwise null, Int64.Type),
+				                        // Add IndicatorValue column (numeric from [value_u1])
+				    WithValue = Table.AddColumn(Table.RemoveColumns(WithYear, {"IndicatorValue"}, MissingField.Ignore), "IndicatorValue", each try Number.From([value_u1]) otherwise null, type number),
+				                        // Add GDPGrowthValue column (only for NY.GDP.MKTP.KD.ZG)
+				    WithGDPGrowth = Table.AddColumn(Table.RemoveColumns(WithValue, {"GDPGrowthValue"}, MissingField.Ignore), "GDPGrowthValue", each if IndicatorCode = "NY.GDP.MKTP.KD.ZG" then [IndicatorValue] else null, type number),
+				                        // Add %RegionYearKey column (region mapping not available, so use countryiso3code|date)
+				    WithRegionYearKey = Table.AddColumn(Table.RemoveColumns(WithGDPGrowth, {"%RegionYearKey"}, MissingField.Ignore), "%RegionYearKey", each [countryiso3code] & "|" & Text.From(2024), type text),
+				                        // Rename columns to match model
+				    Renamed = Table.RenameColumns(WithRegionYearKey, {{"countryiso3code", "CountryISO3"}})
+				                    in
+				                        Renamed,
+				                // 4. Fetch and combine all indicators
+				    AllIndicators = List.Transform(IndicatorCodes, each FetchIndicator(_)),
+				                Combined = Table.Combine(AllIndicators),
+				                // 5. Select and type columns
+				    Final = Table.SelectColumns(Combined, {"CountryISO3", "Year", "IndicatorCode", "IndicatorValue", "GDPGrowthValue", "%RegionYearKey"}, MissingField.Ignore),
+				                Typed = Table.TransformColumnTypes(List.Accumulate({"CountryISO3", "Year", "IndicatorCode", "IndicatorValue", "GDPGrowthValue", "%RegionYearKey"}, Final, (state, col) => if Table.HasColumns(state, col) then state else Table.AddColumn(state, col, each null)), {
+				                    {"CountryISO3", type text},
+				                    {"Year", Int64.Type},
+				                    {"IndicatorCode", type text},
+				                    {"IndicatorValue", type number},
+				                    {"GDPGrowthValue", type number},
+				                    {"%RegionYearKey", type text}
+				                })
+				            in
+				                Typed
+
+	annotation PBI_ResultType = Table
+

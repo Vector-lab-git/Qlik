@@ -1,0 +1,136 @@
+table DeliveryEvents
+	lineageTag: 0cc59237-0ab4-4180-a407-d9bea1793a42
+
+	measure 'On-Time Delivery %' = AVERAGEX('DeliveryEvents', IFERROR(VALUE('DeliveryEvents'[on_time_flag]), BLANK()))
+		formatString: 0.0%
+		lineageTag: fc1c0b78-4295-46e1-be64-779457429ce7
+
+	column facility_id
+		dataType: string
+		lineageTag: 3c02affd-3180-4376-a919-a9ce6b95ca58
+		summarizeBy: none
+		sourceColumn: facility_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column trip_id
+		dataType: string
+		lineageTag: 32be498a-e71b-49da-93b4-ab8285e8e34e
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_id
+		dataType: string
+		lineageTag: 21fc9405-6a5d-48b4-8059-f333752ffbc2
+		summarizeBy: none
+		sourceColumn: event_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_type
+		dataType: string
+		lineageTag: ade8b8e8-c7d0-4d92-84e4-a52e8400b034
+		summarizeBy: none
+		sourceColumn: event_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column scheduled_datetime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f653cc63-b4e8-4c9a-ac1f-7ee9e458d49c
+		summarizeBy: none
+		sourceColumn: scheduled_datetime
+
+		variation Variation
+			isDefault
+			relationship: 3bef7160-6917-4628-bbba-08dc1b01f417
+			defaultHierarchy: LocalDateTable_fdc5f814-779e-44c2-98e4-f3830526b71d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_datetime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 05b99f88-de3c-44c7-b884-a73b031d8f2f
+		summarizeBy: none
+		sourceColumn: actual_datetime
+
+		variation Variation
+			isDefault
+			relationship: 5e95392a-32c3-42a7-b47a-395525d64f20
+			defaultHierarchy: LocalDateTable_2ba4fa7a-efe1-4882-8523-9f56ea7f89c2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column detention_minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: f222f344-7932-4d6f-a826-3c51cddd4f1c
+		summarizeBy: sum
+		sourceColumn: detention_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column on_time_flag
+		dataType: string
+		lineageTag: 55ff2b0b-c304-4e51-ba83-be012bcfa581
+		summarizeBy: none
+		sourceColumn: on_time_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_city
+		dataType: string
+		lineageTag: 8cf37c81-7b7a-432a-b1a1-5ed9cd913829
+		summarizeBy: none
+		sourceColumn: delivery_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_state
+		dataType: string
+		lineageTag: b43c225b-ae4f-4210-864d-26a1f725788f
+		summarizeBy: none
+		sourceColumn: delivery_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth = FORMAT('DeliveryEvents'[actual_datetime], "yyyy-MMM")
+		dataType: string
+		lineageTag: e7c284ee-1de8-4ef0-a557-4f7365f79713
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year = YEAR('DeliveryEvents'[actual_datetime])
+		dataType: int64
+		formatString: 0
+		lineageTag: f4e8ac09-ba48-4bfc-9728-c9331d03baf2
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_id
+		dataType: string
+		lineageTag: 9a6fd1d7-a1cf-456f-8055-2ec1997c6973
+		summarizeBy: none
+		sourceColumn: load_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DeliveryEvents = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Schema = Source{[Name="fleetvision",Kind="Schema"]}[Data],
+				                Navigation = Schema{[Name="delivery_events"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"location_city", "delivery_city"}, {"location_state", "delivery_state"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

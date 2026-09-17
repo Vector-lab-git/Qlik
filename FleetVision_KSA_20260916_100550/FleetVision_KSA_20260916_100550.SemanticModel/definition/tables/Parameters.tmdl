@@ -1,0 +1,136 @@
+table Parameters
+	lineageTag: da6ba131-d2f1-4701-a08b-b1b75f2d0dd2
+
+	measure MoneyThousandSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyThousandSep")
+		lineageTag: 54567551-9a69-499e-8eb1-7f0b6cef5e09
+
+	measure ThousandSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ThousandSep")
+		lineageTag: 93d810f8-de13-492a-9ac6-16c493249686
+
+	measure MoneyFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyFormat")
+		lineageTag: c5230eb7-f743-46ce-98ff-67cd5ba8671c
+
+	measure TimeFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "TimeFormat")
+		lineageTag: aff5fab6-351c-420d-801e-b01e5c1bf9a6
+
+	measure BrokenWeeks = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "BrokenWeeks")), 1)
+		lineageTag: ddbac7db-1285-4e11-84f6-5adb8821b437
+
+	measure CreateSearchIndexOnReload = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "CreateSearchIndexOnReload")), 1)
+		lineageTag: 75e77327-6549-4c8a-ba2a-5c5bbbbfee9d
+
+	measure MonthNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MonthNames")
+		lineageTag: 7669aaa2-5bf7-45c8-a036-fd8a33df3260
+
+	measure LongDayNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "LongDayNames")
+		lineageTag: 891afc27-9a34-4003-a834-e1e5eb033ee5
+
+	measure ScriptError = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptError")), 1)
+		lineageTag: 0fcc010a-eb5f-4a74-a572-a48173a513b5
+
+	measure ScriptErrorCount = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptErrorCount")), 0)
+		lineageTag: e5e7d1f4-0163-4cd2-9f46-80f0e12da0e7
+
+	measure ScriptErrorList = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptErrorList")), 1)
+		lineageTag: edd9d923-afcd-4270-a819-a3e316745ba2
+
+	measure DateFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DateFormat")
+		lineageTag: cb8f8601-0fba-4073-b7ce-bbff8a9931c9
+
+	measure ReferenceDay = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ReferenceDay")), 0)
+		lineageTag: 0433e6a6-79bd-4201-9a50-b21d6fb85941
+
+	measure FirstMonthOfYear = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "FirstMonthOfYear")), 1)
+		lineageTag: 6f5423fa-6c9e-48d0-976d-9ab715d18b6a
+
+	measure ErrorMode = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ErrorMode")), 1)
+		lineageTag: eaf5f1ce-fdc5-4986-b963-d1cb53f3e12b
+
+	measure StripComments = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "StripComments")), 1)
+		lineageTag: 854a3ef3-fb06-4483-96fc-615baa9a1439
+
+	measure OpenUrlTimeout = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "OpenUrlTimeout")), 86400)
+		lineageTag: dcfe665c-03ab-4ae1-988b-aac4710a0aeb
+
+	measure DecimalSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DecimalSep")
+		lineageTag: d8f3ecf5-f89f-42cd-bee7-491375697b35
+
+	measure TimestampFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "TimestampFormat")
+		lineageTag: f51990cd-a38f-452d-b9f6-733ab7dd813f
+
+	measure FirstWeekDay = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "FirstWeekDay")), 6)
+		lineageTag: 690ea719-bd33-4635-8a53-7a6ac0a5d514
+
+	measure CollationLocale = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "CollationLocale")
+		lineageTag: 7ae3e5af-f3b1-477a-8014-4766453e41eb
+
+	measure LongMonthNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "LongMonthNames")
+		lineageTag: 44bbb509-dbaa-49bf-814e-1bdd9cc7c1a3
+
+	measure DayNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DayNames")
+		lineageTag: 6e23b4af-dfa7-490a-9b10-c00da742a033
+
+	measure NumericalAbbreviation = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "NumericalAbbreviation")
+		lineageTag: c63e84ca-0b5b-48e3-a765-cf8eb0007948
+
+	measure MoneyDecimalSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyDecimalSep")
+		lineageTag: 62f098b6-eb94-4398-bbb6-20c9ef11f17c
+
+	measure vMinDate = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vMinDate")), 44562)
+		lineageTag: c60c8253-d406-4f1c-b1e7-818a4fac49e9
+
+	measure vMaxDate = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vMaxDate")), 45657)
+		lineageTag: bd4eee7e-a5bd-4776-8266-c0e453875e77
+
+	measure vMeasure = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vMeasure")), 1)
+		lineageTag: d9538d78-b370-40c7-bf80-396edcb1b3e3
+
+	column Parameter
+		lineageTag: aa39c691-c92e-44dc-ab79-9e54d1f9dde9
+		isNameInferred
+		sourceColumn: [Parameter]
+
+	column Value
+		lineageTag: cfa96ed0-b6a2-4969-bff1-4db90b4d5c01
+		isNameInferred
+		sourceColumn: [Value]
+
+	partition Parameters = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Parameter", STRING, "Value", STRING,
+				    {
+				        { "MoneyThousandSep", "," },
+				        { "ThousandSep", "," },
+				        { "MoneyFormat", "$ ###0.00;-$ ###0.00" },
+				        { "TimeFormat", "h:mm:ss TT" },
+				        { "BrokenWeeks", "1" },
+				        { "CreateSearchIndexOnReload", "1" },
+				        { "MonthNames", "Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec" },
+				        { "LongDayNames", "Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday" },
+				        { "ScriptError", "1" },
+				        { "ScriptErrorCount", "0" },
+				        { "ScriptErrorList", "1" },
+				        { "DateFormat", "M/D/YYYY" },
+				        { "ReferenceDay", "0" },
+				        { "FirstMonthOfYear", "1" },
+				        { "ErrorMode", "1" },
+				        { "StripComments", "1" },
+				        { "OpenUrlTimeout", "86400" },
+				        { "DecimalSep", "." },
+				        { "TimestampFormat", "M/D/YYYY h:mm:ss[.fff] TT" },
+				        { "FirstWeekDay", "6" },
+				        { "CollationLocale", "en-US" },
+				        { "LongMonthNames", "January;February;March;April;May;June;July;August;September;October;November;December" },
+				        { "DayNames", "Mon;Tue;Wed;Thu;Fri;Sat;Sun" },
+				        { "NumericalAbbreviation", "3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y" },
+				        { "MoneyDecimalSep", "." },
+				        { "vMinDate", "44562" },
+				        { "vMaxDate", "45657" },
+				        { "vMeasure", "1" }
+				    }
+				)
+
+	annotation PBI_Id = 68f2d403-e922-4708-afa8-c2cb07c79ea0
+

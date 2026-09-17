@@ -1,0 +1,41 @@
+table Departments
+	lineageTag: 079fea98-6a20-48b1-a03a-a22554fd17d0
+
+	column Location
+		dataType: string
+		lineageTag: 5ab94650-ec44-4347-ba74-d33656edbad9
+		summarizeBy: none
+		sourceColumn: Location
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Department Id (Departments)'
+		dataType: double
+		lineageTag: e0a449d7-38e4-4e4a-989b-d30f13c86645
+		summarizeBy: count
+		sourceColumn: Department Id (Departments)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Department Name'
+		dataType: string
+		lineageTag: 13bb840c-3d56-4402-8e6d-45e57dcdb63f
+		summarizeBy: none
+		sourceColumn: Department Name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Departments = m
+		mode: import
+		source =
+				let
+				                Source = Oracle.Database("20.70.170.10:1521/XEPDB1", [Query = "SELECT * FROM SYSTEM.DEPARTMENTS"]),
+				                #"Changed Type" = Table.TransformColumnTypes(Source, {{"DEPARTMENT_ID", type number}, {"DEPARTMENT_NAME", type text}, {"LOCATION", type text}}),
+				                #"Renamed Columns" = Table.RenameColumns(#"Changed Type", {{"DEPARTMENT_ID", "Department Id (Departments)"}, {"DEPARTMENT_NAME", "Department Name"}, {"LOCATION", "Location"}})
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

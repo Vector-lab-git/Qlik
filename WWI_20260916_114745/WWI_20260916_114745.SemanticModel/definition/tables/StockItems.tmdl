@@ -1,0 +1,230 @@
+table StockItems
+	lineageTag: d041f7b2-9ca0-4b96-a5e6-e3f1fba85909
+
+	column StockItemID
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d42f4bd-36e8-4122-868f-10006b299d92
+		summarizeBy: none
+		sourceColumn: StockItemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockItemName
+		dataType: string
+		lineageTag: 3adf4e65-4b7f-431e-bb54-93b26e3977d0
+		summarizeBy: none
+		sourceColumn: StockItemName
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierID
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e95d0c6-0199-492b-8e70-a4583a6bbede
+		summarizeBy: count
+		sourceColumn: SupplierID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ColorID
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f6c6bc4-0738-42b4-8060-2963ae154617
+		summarizeBy: count
+		sourceColumn: ColorID
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitPackageID
+		dataType: int64
+		formatString: 0
+		lineageTag: 3d5507fb-eaf4-4c17-9d05-e6403dbb7d5c
+		summarizeBy: count
+		sourceColumn: UnitPackageID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OuterPackageID
+		dataType: int64
+		formatString: 0
+		lineageTag: fa964d24-251a-4d3e-9357-7802034e7739
+		summarizeBy: count
+		sourceColumn: OuterPackageID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Brand
+		dataType: string
+		lineageTag: d51574ca-d439-487c-875a-5bfd2bfcf1cd
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column Size
+		dataType: string
+		lineageTag: 54556a6e-5d9f-489f-9fa7-a94343b6dded
+		summarizeBy: none
+		sourceColumn: Size
+
+		annotation SummarizationSetBy = Automatic
+
+	column LeadTimeDays
+		dataType: int64
+		formatString: 0
+		lineageTag: 428a59b0-c7f5-45f0-83bd-9d5491870930
+		summarizeBy: sum
+		sourceColumn: LeadTimeDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column QuantityPerOuter
+		dataType: int64
+		formatString: 0
+		lineageTag: c30a70c0-e35d-4317-b710-6711773eac78
+		summarizeBy: sum
+		sourceColumn: QuantityPerOuter
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsChillerStock
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d9471004-afd9-4ef5-823a-cdca5fcb6dbd
+		summarizeBy: none
+		sourceColumn: IsChillerStock
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductTaxRate
+		dataType: double
+		formatString: 0
+		lineageTag: 980a5e64-f555-4b64-8fd3-983566d0753e
+		summarizeBy: sum
+		sourceColumn: ProductTaxRate
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductUnitPrice
+		dataType: double
+		lineageTag: ce53563e-a288-4bfa-a3bd-87c7fa1d9eca
+		summarizeBy: sum
+		sourceColumn: ProductUnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+	column RecommendedRetailPrice
+		dataType: double
+		lineageTag: f9123fbc-df74-4556-84fe-ea552c33b11b
+		summarizeBy: sum
+		sourceColumn: RecommendedRetailPrice
+
+		annotation SummarizationSetBy = Automatic
+
+	column TypicalWeightPerUnit
+		dataType: double
+		lineageTag: cebd13f9-ae4b-403f-b0e8-c478b4130a0a
+		summarizeBy: sum
+		sourceColumn: TypicalWeightPerUnit
+
+		annotation SummarizationSetBy = Automatic
+
+	column Barcode
+		dataType: string
+		lineageTag: 01fa3c36-e64c-4dac-9042-2bcc645a1536
+		summarizeBy: none
+		sourceColumn: Barcode
+
+		annotation SummarizationSetBy = Automatic
+
+	column MarketingComments
+		dataType: string
+		lineageTag: a80ce8ec-a89c-4256-a9b6-6203e9474c19
+		summarizeBy: none
+		sourceColumn: MarketingComments
+
+		annotation SummarizationSetBy = Automatic
+
+	column InternalComments
+		dataType: string
+		lineageTag: b017c1fc-25cb-482c-85f2-9165d7e53a5e
+		summarizeBy: none
+		sourceColumn: InternalComments
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomFields
+		dataType: string
+		lineageTag: 2aa78766-6717-439f-bb1a-0b30c432f213
+		summarizeBy: none
+		sourceColumn: CustomFields
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tags
+		dataType: string
+		lineageTag: 5ce64dd8-55ed-46b3-a55b-7923b0e58dee
+		summarizeBy: none
+		sourceColumn: Tags
+
+		annotation SummarizationSetBy = Automatic
+
+	column SearchDetails
+		dataType: string
+		lineageTag: 9b4b6c40-b1a3-4c37-84b6-9d6eb7dd9779
+		summarizeBy: none
+		sourceColumn: SearchDetails
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastEditedBy
+		dataType: int64
+		formatString: 0
+		lineageTag: ac114c6c-93d7-4a5b-b092-92ecf26ad291
+		summarizeBy: sum
+		sourceColumn: LastEditedBy
+
+		annotation SummarizationSetBy = Automatic
+
+	column ValidFrom
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4cdaf820-8c34-45ea-a118-3185bda24a25
+		summarizeBy: none
+		sourceColumn: ValidFrom
+
+		variation Variation
+			isDefault
+			relationship: 0c379f8e-c4df-4734-b57c-931d50938354
+			defaultHierarchy: LocalDateTable_58088a9c-adb8-4750-a3fd-c863488d5cad.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ValidTo
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 81a8da0a-7d6d-4255-8f04-62f1c468178b
+		summarizeBy: none
+		sourceColumn: ValidTo
+
+		variation Variation
+			isDefault
+			relationship: 3c7ffcb9-8fad-424c-a4ac-2ffd8fdfc77d
+			defaultHierarchy: LocalDateTable_92627219-239f-402e-adad-da020ac6938a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition StockItems = m
+		mode: import
+		source =
+				let
+				                Source = Sql.Database("vl-t2f-sql-server-dev.database.windows.net", "vl-t2f-sql-db-dev-wwi"),
+				                #"Navigation 1" = Source{[Schema = "Warehouse", Item = "StockItems"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(#"Navigation 1", {{"TaxRate", "ProductTaxRate"}, {"UnitPrice", "ProductUnitPrice"}}, MissingField.Ignore),
+				                #"Transformed Brand" = Table.TransformColumns(#"Renamed Columns", {{"Brand", each if Text.Length(Text.Trim(_)) = 0 then "Unbranded" else Text.Trim(_), type text}})
+				            in
+				                #"Transformed Brand"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,139 @@
+table SafetyIncidents
+	lineageTag: 884f6608-4da1-48cf-b1ce-2af2010ff1dd
+
+	column trip_id
+		dataType: string
+		lineageTag: 55358f8f-8041-483c-ac04-5cb2693d4b66
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_id
+		dataType: string
+		lineageTag: bfa54927-a4cb-4887-9c3c-b903619f8fd2
+		summarizeBy: none
+		sourceColumn: incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 445059bd-9de3-4404-ba5b-18e76bcb7346
+		summarizeBy: none
+		sourceColumn: incident_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_type
+		dataType: string
+		lineageTag: 5cbfef4c-85db-4cf3-bb85-18d8ee72d57d
+		summarizeBy: none
+		sourceColumn: incident_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_city
+		dataType: string
+		lineageTag: 6f41641d-6f56-4b68-8aec-ef0453bfdba3
+		summarizeBy: none
+		sourceColumn: incident_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_state
+		dataType: string
+		lineageTag: 439f5a12-5354-44b4-8040-b882e51311c8
+		summarizeBy: none
+		sourceColumn: incident_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column at_fault_flag
+		dataType: string
+		lineageTag: 5a76d95f-2262-4969-af07-fdee534303d6
+		summarizeBy: none
+		sourceColumn: at_fault_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column injury_flag
+		dataType: string
+		lineageTag: f6e07685-796e-452c-a133-b3e31af0aab4
+		summarizeBy: none
+		sourceColumn: injury_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column vehicle_damage_cost
+		dataType: double
+		lineageTag: afd07035-ec66-4253-a388-b1899d3ff9b6
+		summarizeBy: none
+		sourceColumn: vehicle_damage_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	column cargo_damage_cost
+		dataType: double
+		lineageTag: 8aaecaab-da32-48a2-90f4-01d1d7e0cc23
+		summarizeBy: none
+		sourceColumn: cargo_damage_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	column claim_amount
+		dataType: double
+		lineageTag: e4347bf8-9982-49fe-9989-dc66fa2faaaf
+		summarizeBy: none
+		sourceColumn: claim_amount
+
+		annotation SummarizationSetBy = Automatic
+
+	column preventable_flag
+		dataType: string
+		lineageTag: 9bf3f707-4377-487e-bd20-0deaddc275a3
+		summarizeBy: none
+		sourceColumn: preventable_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: b835fe41-763b-41ef-90b3-01eaaea6798d
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_id
+		dataType: string
+		lineageTag: 287ed3f0-080a-42f7-9d0c-279255b5bbad
+		summarizeBy: none
+		sourceColumn: truck_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column driver_id
+		dataType: string
+		lineageTag: 6f91507d-c278-4aaa-9432-f4b2fd1069a2
+		summarizeBy: none
+		sourceColumn: driver_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SafetyIncidents = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Schema = Source{[Name="fleetvision",Kind="Schema"]}[Data],
+				                Navigation = Schema{[Name="safety_incidents"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"location_city", "incident_city"}, {"location_state", "incident_state"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,198 @@
+table Patients
+	lineageTag: 816eb687-62e8-4673-8337-43f7a7e3f2fd
+
+	measure 'Total Patients' = DISTINCTCOUNT('Patients'[PatientId])
+		lineageTag: 5de388f4-8a88-48e5-8c9c-3f1a689fab5c
+
+	measure 'Encounters per Patient' = DIVIDE(DISTINCTCOUNT('Encounters'[Id]), DISTINCTCOUNT('Patients'[PatientId]), BLANK())
+		lineageTag: 4e33eac6-ae7b-4870-afe6-a2350a8ad5f1
+
+	measure 'Average Patient Age' = AVERAGEX(FILTER('Patients', NOT(ISBLANK('Patients'[BIRTHDATE]))), (TODAY() - 'Patients'[BIRTHDATE]) / 365.25)
+		lineageTag: 0d2bf559-40ca-4ef5-9015-83d96899d06a
+
+	column PatientId
+		dataType: string
+		lineageTag: cae09696-69e5-4fe3-aaa5-db73baa7d618
+		summarizeBy: none
+		sourceColumn: PatientId
+
+		annotation SummarizationSetBy = Automatic
+
+	column BIRTHDATE
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 03c499e9-412e-44a6-a302-e03d50a22f15
+		summarizeBy: none
+		sourceColumn: BIRTHDATE
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column DEATHDATE
+		dataType: string
+		lineageTag: 17e9dd20-766d-488c-902c-6d666579f10a
+		summarizeBy: none
+		sourceColumn: DEATHDATE
+
+		annotation SummarizationSetBy = Automatic
+
+	column PREFIX
+		dataType: string
+		lineageTag: bc1f7fe2-1547-4ff4-97d5-9264ac21987f
+		summarizeBy: none
+		sourceColumn: PREFIX
+
+		annotation SummarizationSetBy = Automatic
+
+	column FIRST
+		dataType: string
+		lineageTag: cd360022-6ec6-47df-9e8a-9eb0b3aa9f21
+		summarizeBy: none
+		sourceColumn: FIRST
+
+		annotation SummarizationSetBy = Automatic
+
+	column LAST
+		dataType: string
+		lineageTag: bdfa8361-c24c-4162-b5b2-a34177a11cef
+		summarizeBy: none
+		sourceColumn: LAST
+
+		annotation SummarizationSetBy = Automatic
+
+	column SUFFIX
+		dataType: string
+		lineageTag: 2d7efd97-4857-4535-b187-b497c0b1e948
+		summarizeBy: none
+		sourceColumn: SUFFIX
+
+		annotation SummarizationSetBy = Automatic
+
+	column MAIDEN
+		dataType: string
+		lineageTag: 8d1811db-591f-4113-9f7f-68ace8e7b638
+		summarizeBy: none
+		sourceColumn: MAIDEN
+
+		annotation SummarizationSetBy = Automatic
+
+	column MARITAL
+		dataType: string
+		lineageTag: 0f5b6fec-0498-4d6d-a539-d33c9bc6c916
+		summarizeBy: none
+		sourceColumn: MARITAL
+
+		annotation SummarizationSetBy = Automatic
+
+	column RACE
+		dataType: string
+		lineageTag: 1eba0294-a5c8-4be6-9661-22a49661f9a4
+		summarizeBy: none
+		sourceColumn: RACE
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETHNICITY
+		dataType: string
+		lineageTag: b92eb3cc-9b87-4405-a822-1f7bf2a24a64
+		summarizeBy: none
+		sourceColumn: ETHNICITY
+
+		annotation SummarizationSetBy = Automatic
+
+	column GENDER
+		dataType: string
+		lineageTag: d784ae6f-c17e-433b-8bf9-8cc90738f8e1
+		summarizeBy: none
+		sourceColumn: GENDER
+
+		annotation SummarizationSetBy = Automatic
+
+	column BIRTHPLACE
+		dataType: string
+		lineageTag: 399dfa9b-1820-4739-a8af-019162f4c8bf
+		summarizeBy: none
+		sourceColumn: BIRTHPLACE
+
+		annotation SummarizationSetBy = Automatic
+
+	column ADDRESS
+		dataType: string
+		lineageTag: 7342995e-a2e2-4a17-8371-704d3b9f7c00
+		dataCategory: Address
+		summarizeBy: none
+		sourceColumn: ADDRESS
+
+		annotation SummarizationSetBy = Automatic
+
+	column CITY
+		dataType: string
+		lineageTag: 45791bad-5ae6-42d7-ae5b-233cd842dc46
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: CITY
+
+		annotation SummarizationSetBy = Automatic
+
+	column STATE
+		dataType: string
+		lineageTag: 3e3d13a3-07bf-487a-87ce-702bc1824779
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: STATE
+
+		annotation SummarizationSetBy = Automatic
+
+	column COUNTY
+		dataType: string
+		lineageTag: b5a77b83-964e-4a69-95e8-7039b59c8e55
+		dataCategory: County
+		summarizeBy: none
+		sourceColumn: COUNTY
+
+		annotation SummarizationSetBy = Automatic
+
+	column ZIP
+		dataType: string
+		lineageTag: 96003167-e345-4ce9-a005-a91fdd71c77e
+		dataCategory: PostalCode
+		summarizeBy: none
+		sourceColumn: ZIP
+
+		annotation SummarizationSetBy = Automatic
+
+	column LAT
+		dataType: double
+		lineageTag: 56e221fb-ad1a-43cd-8c9c-c8987c76d986
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: LAT
+
+		annotation SummarizationSetBy = Automatic
+
+	column LON
+		dataType: double
+		lineageTag: 54b112e4-9b0d-4441-b422-5b9b60b81cbb
+		summarizeBy: none
+		sourceColumn: LON
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Patients = m
+		mode: import
+		source =
+				let
+				                Source = GoogleSheets.Contents("https://docs.google.com/spreadsheets/d/1F6O5TFV3fDHfhBcrYxvKq5cDcl-B2wXOcqFs8IBYcpI/edit"),
+				                #"Selected Sheet" = try Source{[name="Patients", ItemKind="Table"]}[Data] otherwise try Source{[Item="Patients"]}[Data] otherwise Source{0}[Data],
+				                Navigation = Table.PromoteHeaders(#"Selected Sheet", [PromoteAllScalars=true]),
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"Id", "PatientId"}, {"BIRTHDATE", "BIRTHDATE"}, {"DEATHDATE", "DEATHDATE"}, {"PREFIX", "PREFIX"}, {"FIRST", "FIRST"}, {"LAST", "LAST"}, {"SUFFIX", "SUFFIX"}, {"MAIDEN", "MAIDEN"}, {"MARITAL", "MARITAL"}, {"RACE", "RACE"}, {"ETHNICITY", "ETHNICITY"}, {"GENDER", "GENDER"}, {"BIRTHPLACE", "BIRTHPLACE"}, {"ADDRESS", "ADDRESS"}, {"CITY", "CITY"}, {"STATE", "STATE"}, {"COUNTY", "COUNTY"}, {"ZIP", "ZIP"}, {"LAT", "LAT"}, {"LON", "LON"}}, MissingField.Ignore),
+				                #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns", {{"PatientId", type text}, {"BIRTHDATE", type date}, {"DEATHDATE", type text}, {"PREFIX", type text}, {"FIRST", type text}, {"LAST", type text}, {"SUFFIX", type text}, {"MAIDEN", type text}, {"MARITAL", type text}, {"RACE", type text}, {"ETHNICITY", type text}, {"GENDER", type text}, {"BIRTHPLACE", type text}, {"ADDRESS", type text}, {"CITY", type text}, {"STATE", type text}, {"COUNTY", type text}, {"ZIP", type text}, {"LAT", type number}, {"LON", type number}}),
+				                #"Added PatientStatus" = Table.AddColumn(#"Changed Type", "PatientStatus", each if [DEATHDATE] = null or Text.Length(Text.Trim([DEATHDATE])) = 0 then "Alive" else "Deceased", type text),
+				                #"Added PatientAge" = Table.AddColumn(#"Added PatientStatus", "PatientAge", each Number.RoundDown((Date.From(DateTime.LocalNow()) - [BIRTHDATE]) / 365.25), type number),
+				                #"Added AgeGroup" = Table.AddColumn(#"Added PatientAge", "AgeGroup", each let age = Number.RoundDown((Date.From(DateTime.LocalNow()) - [BIRTHDATE]) / 365.25) in if age < 18 then "0-17" else if age < 35 then "18-34" else if age < 50 then "35-49" else if age < 65 then "50-64" else "65+", type text)
+				            in
+				                #"Added AgeGroup"
+
+	annotation PBI_ResultType = Table
+

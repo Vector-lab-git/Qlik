@@ -1,0 +1,28 @@
+relationship rel_Procedures_Patients_PatientId
+	fromColumn: Procedures.PatientId
+	toColumn: Patients.PatientId
+
+relationship rel_Procedures_Encounters_PatientId
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: Procedures.PatientId
+	toColumn: Encounters.PatientId
+
+	annotation AmbiguousPaths = "PATIENTS->PROCEDURES | PATIENTS->ENCOUNTERS->PROCEDURES"
+
+relationship rel_Encounters_Patients_PatientId
+	crossFilteringBehavior: bothDirections
+	fromColumn: Encounters.PatientId
+	toColumn: Patients.PatientId
+
+relationship rel_Encounters_Payers_PayerId
+	crossFilteringBehavior: bothDirections
+	fromColumn: Encounters.PayerId
+	toColumn: Payers.PayerId
+
+relationship rel_Encounters_Organizations_OrganizationId
+	crossFilteringBehavior: bothDirections
+	fromColumn: Encounters.OrganizationId
+	toColumn: Organizations.OrganizationId
+

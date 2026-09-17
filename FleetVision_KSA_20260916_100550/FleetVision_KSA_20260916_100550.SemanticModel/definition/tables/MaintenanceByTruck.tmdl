@@ -1,0 +1,92 @@
+table MaintenanceByTruck
+	lineageTag: b2f63973-bd3c-436b-90ac-9ee4365c53c3
+
+	column truck_id
+		dataType: string
+		lineageTag: b04845cb-6fcd-42ad-826f-7c7ac40eb373
+		summarizeBy: none
+		sourceColumn: truck_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column MaintenanceEvents
+		dataType: double
+		formatString: 0
+		lineageTag: b8c0f790-9bf2-4310-ae4d-d9abbb2dd7e6
+		summarizeBy: sum
+		sourceColumn: MaintenanceEvents
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalMaintenanceCost
+		dataType: double
+		lineageTag: 161a05a2-a148-4151-b3e1-619cff734f95
+		summarizeBy: none
+		sourceColumn: TotalMaintenanceCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalDowntimeHours
+		dataType: double
+		lineageTag: fa9125ce-d544-4c80-b853-2acf8409a52d
+		summarizeBy: sum
+		sourceColumn: TotalDowntimeHours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AvgDowntimeHours
+		dataType: double
+		lineageTag: ed818944-3ad6-4505-961e-05f46bb4cc67
+		summarizeBy: sum
+		sourceColumn: AvgDowntimeHours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TotalLaborCost
+		dataType: double
+		lineageTag: c324b026-3b01-4408-aaf5-eecd431daff5
+		summarizeBy: none
+		sourceColumn: TotalLaborCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalPartsCost
+		dataType: double
+		lineageTag: 326081f6-c82b-44be-a05a-79739e7c219a
+		summarizeBy: none
+		sourceColumn: TotalPartsCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvgLaborHours
+		dataType: double
+		lineageTag: a6bf1eaa-44cd-4a74-aa92-f61a519c7327
+		summarizeBy: none
+		sourceColumn: AvgLaborHours
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckNumber
+		dataType: string
+		lineageTag: cafd0a39-237e-4dbf-9cb5-9794646fb30c
+		summarizeBy: none
+		sourceColumn: TruckNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MaintenanceByTruck = m
+		mode: import
+		source =
+				let
+				                Source = Maintenance,
+				                #"Grouped Rows" = Table.Group(Source, {"truck_id"}, {{"MaintenanceEvents", each List.Count(List.Distinct([maintenance_id])), type number}, {"TotalMaintenanceCost", each List.Sum([maintenance_total_cost]), type number}, {"TotalDowntimeHours", each List.Sum([downtime_hours]), type number}, {"AvgDowntimeHours", each List.Average([downtime_hours]), type number}, {"TotalLaborCost", each List.Sum([labor_cost]), type number}, {"TotalPartsCost", each List.Sum([parts_cost]), type number}, {"AvgLaborHours", each List.Average([labor_hours]), type number}}),
+				                #"Added TruckNumber" = Table.AddColumn(#"Grouped Rows", "TruckNumber", each "Unknown", type text)
+				            in
+				                #"Added TruckNumber"
+
+	annotation PBI_ResultType = Table
+

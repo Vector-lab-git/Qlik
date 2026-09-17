@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Weather_Analytics_20260916_100226"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "45727110-78e0-8c5b-4552-56db2ff92173"
+  }
+}

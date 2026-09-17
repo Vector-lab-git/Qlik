@@ -1,0 +1,223 @@
+table Countries
+	lineageTag: eda23512-6641-46d3-b9ce-028af96f3bfa
+
+	measure 'Countries Reporting' = Countries Reporting
+		lineageTag: 202d821f-0034-4d19-8236-415cdce6b7a2
+
+	column CountryISO3
+		dataType: string
+		lineageTag: 22673946-70d8-417f-b267-5cafcf5e746f
+		summarizeBy: none
+		sourceColumn: CountryISO3
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryISO2
+		dataType: string
+		lineageTag: 48e32119-b7d2-4c53-86d4-77679290b7cd
+		summarizeBy: none
+		sourceColumn: CountryISO2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 903f6234-e9ac-4be6-bfed-f7230f6f3763
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column CapitalCity
+		dataType: string
+		lineageTag: 6ac724ba-876b-425a-904e-e68dfc7a87ac
+		summarizeBy: none
+		sourceColumn: CapitalCity
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryLong
+		dataType: double
+		lineageTag: 72176764-4c7c-493f-b9a9-91100574d6ba
+		summarizeBy: none
+		sourceColumn: CountryLong
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryLat
+		dataType: double
+		lineageTag: 1b1dcedf-483d-47de-b795-8edec5a28590
+		summarizeBy: none
+		sourceColumn: CountryLat
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 7ec4b34f-0399-43ab-a6f8-ee67c2d8f2bd
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncomeGroup
+		dataType: string
+		lineageTag: 91b5dab1-9611-4fd0-bf1b-df65a93700e9
+		summarizeBy: none
+		sourceColumn: IncomeGroup
+
+		annotation SummarizationSetBy = Automatic
+
+	column LendingType
+		dataType: string
+		lineageTag: 9f6416c1-bb04-4f78-8413-1bba023d65c4
+		summarizeBy: none
+		sourceColumn: LendingType
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryType
+		dataType: string
+		lineageTag: dab3a325-dcbb-4730-b291-42fe67bb414c
+		summarizeBy: none
+		sourceColumn: CountryType
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryPoint
+		dataType: string
+		lineageTag: 85287a35-a1b9-4810-9d3c-e4d248a9a391
+		summarizeBy: none
+		sourceColumn: CountryPoint
+
+		annotation SummarizationSetBy = Automatic
+
+	column %REGION_ACCESS
+		dataType: string
+		lineageTag: 5fc7afde-b0d7-4315-b756-db05a1c514f1
+		summarizeBy: none
+		sourceColumn: '%REGION_ACCESS'
+
+		annotation SummarizationSetBy = Automatic
+
+	column IncomeRank
+		dataType: string
+		lineageTag: efd24bbd-2c9f-4453-849f-d3a572cba637
+		summarizeBy: none
+		sourceColumn: IncomeRank
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Geography Drill' = 'Countries'[Region]
+		dataType: string
+		lineageTag: 1110c567-3ee9-4c0f-891b-9516c0930b98
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Development Drill' = 'Countries'[IncomeGroup]
+		dataType: string
+		lineageTag: 756f1cd2-c61d-4d96-8a9a-5a3e845a383e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Economy Size Band' = VAR gdp_fact = CALCULATE( SUM(RELATED('Fact'[IndicatorValue])), RELATED('Fact'[IndicatorCode]) = "GDP", 'Countries'[CountryISO3] = 'Countries'[CountryISO3] ) VAR gdp_billion = DIVIDE(gdp_fact, 1000000000) VAR band_floor = FLOOR(gdp_billion, 500) VAR band_text = COALESCE(band_floor, 0) & " bn USD" RETURN band_text
+		dataType: string
+		lineageTag: 8f7f9e8c-7bd0-4f1d-8ae7-9dae4556882f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Income Group' = SWITCH(TRUE(), 'Countries'[CountryType] = "Country", 'Countries'[IncomeGroup], BLANK())
+		dataType: string
+		lineageTag: 0d11de6b-9c90-4d18-9159-00ccdb09c169
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Region (Countries Only)' = SWITCH(TRUE(), 'Countries'[CountryType] = "Country", 'Countries'[Region], BLANK() )
+		dataType: string
+		lineageTag: b595a118-825e-4687-97ae-bfab5012f739
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Lending Type' = 'Countries'[LendingType]
+		dataType: string
+		lineageTag: 0c29cd3e-c5ba-4970-8926-39955850ea52
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trade Position' = VAR Exports = CALCULATE( SUM(RELATED('Fact'[IndicatorValue])), RELATED('Fact'[IndicatorCode]) = "EXPORTS" ) VAR Imports = CALCULATE( SUM(RELATED('Fact'[IndicatorValue])), RELATED('Fact'[IndicatorCode]) = "IMPORTS" ) RETURN SWITCH(TRUE(), Exports > Imports * 1.1, "Strong Surplus", Exports > Imports, "Surplus", Imports > Exports * 1.1, "Strong Deficit", "Deficit" )
+		dataType: string
+		lineageTag: da60a766-c284-4e09-a88b-31b9ae9917cc
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Countries = m
+		mode: import
+		source =
+				let
+				                // Base URL and endpoint for World Bank Countries REST API
+				    BaseUrl = "https://api.worldbank.org",
+				                RelPath = "v2/country",
+				                QueryParams = [format = "json", per_page = "1000"],
+				                // Helper to fetch a single page and return the JSON list of country records
+				    GetPage = (PageNumber as number) as list =>
+				                    let
+				                        Response = Web.Contents(BaseUrl, [
+				                            RelativePath = RelPath,
+				                            Query = Record.Combine({QueryParams, [page = Number.ToText(PageNumber)]})
+				                        ]),
+				                        Json = Json.Document(Response),
+				                        Data = if List.Count(Json) > 1 then (try Json{1} otherwise {}) else {}
+				                    in
+				                        Data,
+				                // Fetch first page to determine total number of pages
+				    FirstPageResponse = Web.Contents(BaseUrl, [RelativePath = RelPath, Query = QueryParams]),
+				                FirstPageJson = Json.Document(FirstPageResponse),
+				                Meta = if List.Count(FirstPageJson) > 0 then FirstPageJson{0} else [],
+				                TotalPages = try Meta[pages] otherwise 1,
+				                Pages = {1..TotalPages},
+				                // Fetch all pages and combine
+				    AllData = (try List.Combine(List.Transform(Pages, each GetPage(_))) otherwise Table.Combine(List.Transform(Pages, each GetPage(_)))),
+				                CountriesRaw = (if Value.Is(AllData, type table) then AllData else Table.FromRecords(AllData)),
+				                // Expand nested fields and select/rename columns
+				    Countries1 = (try Table.ExpandRecordColumn(CountriesRaw, "region", {"value"}, {"Region"}) otherwise Table.AddColumn(Table.RemoveColumns(CountriesRaw, {"Region"}, MissingField.Ignore), "Region", each null)),
+				                Countries2 = (try Table.ExpandRecordColumn(Countries1, "adminregion", {"value"}, {"AdminRegion"}) otherwise Table.AddColumn(Table.RemoveColumns(Countries1, {"AdminRegion"}, MissingField.Ignore), "AdminRegion", each null)),
+				                Countries3 = (try Table.ExpandRecordColumn(Countries2, "incomeLevel", {"value"}, {"IncomeGroup"}) otherwise Table.AddColumn(Table.RemoveColumns(Countries2, {"IncomeGroup"}, MissingField.Ignore), "IncomeGroup", each null)),
+				                Countries4 = (try Table.ExpandRecordColumn(Countries3, "lendingType", {"value"}, {"LendingType"}) otherwise Table.AddColumn(Table.RemoveColumns(Countries3, {"LendingType"}, MissingField.Ignore), "LendingType", each null)),
+				                Countries5 = Table.RenameColumns(Countries4, {{"id", "CountryISO3"}, {"iso2Code", "CountryISO2"}, {"name", "Country"}, {"capitalCity", "CapitalCity"}, {"longitude", "CountryLong"}, {"latitude", "CountryLat"}}),
+				                // Add CountryType column
+				    Countries6 = Table.AddColumn(Table.RemoveColumns(Countries5, {"CountryType"}, MissingField.Ignore), "CountryType", each if Text.Length(Text.Trim([Region])) = 0 or [Region] = "Aggregates" then "Aggregate" else "Country"),
+				                // Add CountryPoint column (WKT POINT if both lat/long are numbers)
+				    Countries7 = Table.AddColumn(Table.RemoveColumns(Countries6, {"CountryPoint"}, MissingField.Ignore), "CountryPoint", each if Value.Is([CountryLat], type number) and Value.Is([CountryLong], type number) then "POINT(" & Number.ToText([CountryLong]) & " " & Number.ToText([CountryLat]) & ")" else null),
+				                // Add %REGION_ACCESS column (uppercase region)
+				    Countries8 = Table.AddColumn(Table.RemoveColumns(Countries7, {"%REGION_ACCESS"}, MissingField.Ignore), "%REGION_ACCESS", each Text.Upper([Region])),
+				                // Add IncomeRank column
+				    Countries9 = Table.AddColumn(Table.RemoveColumns(Countries8, {"IncomeRank"}, MissingField.Ignore), "IncomeRank", each if [CountryType] = "Aggregate" then "Aggregate" else if [IncomeGroup] = "High income" then "1. High" else if [IncomeGroup] = "Upper middle income" then "2. Upper Middle" else if [IncomeGroup] = "Lower middle income" then "3. Lower Middle" else if [IncomeGroup] = "Low income" then "4. Low" else "5. Unclassified"),
+				                // Final column selection and type enforcement
+				    Countries = Table.TransformColumnTypes(List.Accumulate({"CountryISO3", "CountryISO2", "Country", "CapitalCity", "CountryLong", "CountryLat", "Region", "IncomeGroup", "LendingType", "CountryType", "CountryPoint", "%REGION_ACCESS", "IncomeRank"}, Table.SelectColumns(Countries9, {"CountryISO3", "CountryISO2", "Country", "CapitalCity", "CountryLong", "CountryLat", "Region", "IncomeGroup", "LendingType", "CountryType", "CountryPoint", "%REGION_ACCESS", "IncomeRank"}, MissingField.Ignore), (state, col) => if Table.HasColumns(state, col) then state else Table.AddColumn(state, col, each null)), {
+				                        {"CountryISO3", type text},
+				                        {"CountryISO2", type text},
+				                        {"Country", type text},
+				                        {"CapitalCity", type text},
+				                        {"CountryLong", type number},
+				                        {"CountryLat", type number},
+				                        {"Region", type text},
+				                        {"IncomeGroup", type text},
+				                        {"LendingType", type text},
+				                        {"CountryType", type text},
+				                        {"CountryPoint", type text},
+				                        {"%REGION_ACCESS", type text},
+				                        {"IncomeRank", type text}
+				                    })
+				            in
+				                Countries
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,292 @@
+table Customers
+	lineageTag: 9460df5a-7e8a-465b-ad3c-148228aa11fc
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		lineageTag: 7d505bf0-426f-441f-b9af-4aa87f1603e9
+		summarizeBy: count
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerName
+		dataType: string
+		lineageTag: 1e7e1771-7de3-4e44-8e3b-0940b589aa09
+		summarizeBy: none
+		sourceColumn: CustomerName
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerCategoryID
+		dataType: int64
+		formatString: 0
+		lineageTag: 109f6840-9586-4876-9f6f-4f766a2f5527
+		summarizeBy: none
+		sourceColumn: CustomerCategoryID
+
+		annotation SummarizationSetBy = Automatic
+
+	column BuyingGroupID
+		dataType: int64
+		formatString: 0
+		lineageTag: cdefec77-d943-4ac4-883e-17763b687c2e
+		summarizeBy: none
+		sourceColumn: BuyingGroupID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerDeliveryCityID
+		dataType: int64
+		formatString: 0
+		lineageTag: b52815a2-ef5c-4121-8525-ae86b830bb3e
+		summarizeBy: count
+		sourceColumn: CustomerDeliveryCityID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreditLimit
+		dataType: double
+		lineageTag: 523c6bcc-3e38-4e06-aff7-33abd7c2d390
+		summarizeBy: sum
+		sourceColumn: CreditLimit
+
+		annotation SummarizationSetBy = Automatic
+
+	column AccountOpenedDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 35886f69-0140-443c-beba-27a8979acae9
+		summarizeBy: none
+		sourceColumn: AccountOpenedDate
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column StandardDiscountPercentage
+		dataType: double
+		formatString: 0
+		lineageTag: f4741202-c942-49fe-93b0-c4effb7c6d7d
+		summarizeBy: sum
+		sourceColumn: StandardDiscountPercentage
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsOnCreditHold
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 485e5edd-1303-4f2d-a512-4da72f0eb404
+		summarizeBy: none
+		sourceColumn: IsOnCreditHold
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerPaymentDays
+		dataType: int64
+		formatString: 0
+		lineageTag: b3aff7d9-6a29-4ff6-a825-afa1dc439f31
+		summarizeBy: sum
+		sourceColumn: CustomerPaymentDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column BillToCustomerID
+		dataType: int64
+		formatString: 0
+		lineageTag: e8afb946-26fe-42d6-9860-99c97ae025d1
+		summarizeBy: count
+		sourceColumn: BillToCustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PrimaryContactPersonID
+		dataType: int64
+		formatString: 0
+		lineageTag: 8785f430-d86f-4e2f-b597-ccf6741516a5
+		summarizeBy: count
+		sourceColumn: PrimaryContactPersonID
+
+		annotation SummarizationSetBy = Automatic
+
+	column AlternateContactPersonID
+		dataType: int64
+		formatString: 0
+		lineageTag: 5fd9b481-062a-40a7-b002-67dffa4bf0ca
+		summarizeBy: count
+		sourceColumn: AlternateContactPersonID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryMethodID
+		dataType: int64
+		formatString: 0
+		lineageTag: 258a3857-b407-450b-858d-431ed3a48484
+		summarizeBy: count
+		sourceColumn: DeliveryMethodID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PostalCityID
+		dataType: int64
+		formatString: 0
+		lineageTag: 049371e4-49fa-4192-b43b-3d81be5922ca
+		summarizeBy: count
+		sourceColumn: PostalCityID
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsStatementSent
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ad092006-9f37-449a-b234-05a874a25212
+		summarizeBy: none
+		sourceColumn: IsStatementSent
+
+		annotation SummarizationSetBy = Automatic
+
+	column PhoneNumber
+		dataType: string
+		lineageTag: 76e48093-c23d-4188-bc45-a2d550de9939
+		summarizeBy: none
+		sourceColumn: PhoneNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column FaxNumber
+		dataType: string
+		lineageTag: 715550db-c41e-4224-9be0-d52255872089
+		summarizeBy: none
+		sourceColumn: FaxNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryRun
+		dataType: string
+		lineageTag: 7a06ab38-0562-4913-8da0-5134da42ac6f
+		summarizeBy: none
+		sourceColumn: DeliveryRun
+
+		annotation SummarizationSetBy = Automatic
+
+	column RunPosition
+		dataType: string
+		lineageTag: d85bd08f-e127-4382-b24d-e8d6a117a2d9
+		summarizeBy: none
+		sourceColumn: RunPosition
+
+		annotation SummarizationSetBy = Automatic
+
+	column WebsiteURL
+		dataType: string
+		lineageTag: 86b02a8c-6c2d-41ef-9edd-6c8afa768307
+		summarizeBy: none
+		sourceColumn: WebsiteURL
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryAddressLine1
+		dataType: string
+		lineageTag: 3a935ab9-63a6-4be1-8efd-83b556ecc394
+		summarizeBy: none
+		sourceColumn: DeliveryAddressLine1
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryAddressLine2
+		dataType: string
+		lineageTag: ec5e8be0-1d1b-401f-b752-3f00c20adfd5
+		summarizeBy: none
+		sourceColumn: DeliveryAddressLine2
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryPostalCode
+		dataType: string
+		lineageTag: 0c96c469-d01d-4f6d-952f-4a9597f0392e
+		summarizeBy: none
+		sourceColumn: DeliveryPostalCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryLocation
+		dataType: string
+		lineageTag: 65932660-d155-49f9-83a2-a5e2ac114e4b
+		summarizeBy: none
+		sourceColumn: DeliveryLocation
+
+		annotation SummarizationSetBy = Automatic
+
+	column PostalAddressLine1
+		dataType: string
+		lineageTag: 245f4f63-4924-46fc-94f7-51f9742b2616
+		summarizeBy: none
+		sourceColumn: PostalAddressLine1
+
+		annotation SummarizationSetBy = Automatic
+
+	column PostalAddressLine2
+		dataType: string
+		lineageTag: e2e5ede8-113a-4dbd-9a82-ad33e29ace6e
+		summarizeBy: none
+		sourceColumn: PostalAddressLine2
+
+		annotation SummarizationSetBy = Automatic
+
+	column PostalPostalCode
+		dataType: string
+		lineageTag: 15676970-49e1-45c3-94aa-e5031edf5d4c
+		summarizeBy: none
+		sourceColumn: PostalPostalCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastEditedBy
+		dataType: int64
+		formatString: 0
+		lineageTag: d39780b0-8266-45f0-bd4b-dc6b46e45c0c
+		summarizeBy: sum
+		sourceColumn: LastEditedBy
+
+		annotation SummarizationSetBy = Automatic
+
+	column ValidFrom
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 2628e0c5-d669-40d8-985c-9baa3248898d
+		summarizeBy: none
+		sourceColumn: ValidFrom
+
+		variation Variation
+			isDefault
+			relationship: 395ea0f2-3e56-4e88-ad3e-1adf59b14b20
+			defaultHierarchy: LocalDateTable_676f1041-a20a-4982-bb65-67eacd4c4a8d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ValidTo
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: cfebbde2-28ad-48fe-a0aa-be4b6288b1a1
+		summarizeBy: none
+		sourceColumn: ValidTo
+
+		variation Variation
+			isDefault
+			relationship: 317a7ddf-60cf-4105-bab9-4f0d223bf9aa
+			defaultHierarchy: LocalDateTable_9cc3df94-79ab-476b-81d1-71d49fedb6a0.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customers = m
+		mode: import
+		source =
+				let
+				                Source = Sql.Database("vl-t2f-sql-server-dev.database.windows.net", "vl-t2f-sql-db-dev-wwi"),
+				                #"Navigation 1" = Source{[Schema = "Sales", Item = "Customers"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(#"Navigation 1", {{"DeliveryCityID", "CustomerDeliveryCityID"}, {"PaymentDays", "CustomerPaymentDays"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,62 @@
+table Faculty
+	lineageTag: b96853b2-29f2-4ce1-9233-d19fb0e20eb8
+
+	measure 'Total Faculty' = DISTINCTCOUNT('Faculty'[Faculty Id (Faculty)])
+		lineageTag: 9ebc525b-2761-433e-b8d8-c2ed8c019df8
+
+	column 'Faculty Id (Faculty)'
+		dataType: double
+		lineageTag: d352fb88-38f3-4a5e-94a2-933c16bb522d
+		summarizeBy: count
+		sourceColumn: Faculty Id (Faculty)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Faculty Name'
+		dataType: string
+		lineageTag: c520ff24-68dc-4e1c-b275-a4dc5652fbfa
+		summarizeBy: none
+		sourceColumn: Faculty Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Email (Faculty)'
+		dataType: string
+		lineageTag: 03965ca8-60d9-4170-a295-d4f47508cd07
+		summarizeBy: none
+		sourceColumn: Email (Faculty)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Phone (Faculty)'
+		dataType: string
+		lineageTag: ba486140-7fd4-440b-aebb-3ae3b518d3d3
+		summarizeBy: none
+		sourceColumn: Phone (Faculty)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Department Id (Faculty)'
+		dataType: double
+		lineageTag: dda32559-3ee3-4edf-807b-2d12cb3649fe
+		summarizeBy: count
+		sourceColumn: Department Id (Faculty)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Faculty = m
+		mode: import
+		source =
+				let
+				                Source = Oracle.Database("20.70.170.10:1521/XEPDB1", [Query = "SELECT * FROM SYSTEM.FACULTY"]),
+				                #"Changed Type" = Table.TransformColumnTypes(Source, {{"FACULTY_ID", type number}, {"FACULTY_NAME", type text}, {"EMAIL", type text}, {"PHONE", type text}, {"DEPARTMENT_ID", type number}}),
+				                #"Renamed Columns" = Table.RenameColumns(#"Changed Type", {{"FACULTY_ID", "Faculty Id (Faculty)"}, {"FACULTY_NAME", "Faculty Name"}, {"EMAIL", "Email (Faculty)"}, {"PHONE", "Phone (Faculty)"}, {"DEPARTMENT_ID", "Department Id (Faculty)"}})
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

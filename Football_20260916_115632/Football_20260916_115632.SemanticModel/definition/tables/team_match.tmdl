@@ -1,0 +1,79 @@
+table team_match
+	lineageTag: e24d85ea-7221-4902-b36b-2e1b4bf7be55
+
+	measure 'Team Goal Difference' = IF(HASONEVALUE('teams'[team_name]), SUM('team_match'[goals_for]) - SUM('team_match'[goals_against]), BLANK())
+		lineageTag: b39b1cc5-4bc9-4e57-b2fc-98e7068268db
+
+	measure 'Dynamic Team Metric' = VAR SelectedMetric =[PerformanceMetric] RETURN SWITCH(SelectedMetric, "Goals", SUM('team_match'[goals_for]), "Points", SUM('view_team_standings'[points]), SUM('matches'[attendance]))
+		lineageTag: 7a341730-b172-4ce9-9251-51c870727813
+
+	measure Sum(goals_for) = SUM('team_match'[goals_for])
+		lineageTag: fa44cf9e-f497-4048-b761-d5afd55362fe
+
+	measure Sum(goals_against) = SUM('team_match'[goals_against])
+		lineageTag: 361eed8e-e26f-45d8-b91d-9f3b27d721a0
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d05dd16-1d2b-498e-8725-ba01ac3d01ac
+		summarizeBy: none
+		sourceColumn: match_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_id
+		dataType: int64
+		formatString: 0
+		lineageTag: bcc72f2c-ac96-4b3b-8c69-a57b3f20a6ac
+		summarizeBy: none
+		sourceColumn: team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column home_away
+		dataType: string
+		lineageTag: 7a413637-6101-4f1b-9817-fb131d8f6a68
+		summarizeBy: none
+		sourceColumn: home_away
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals_for
+		dataType: int64
+		formatString: 0
+		lineageTag: 59fe08d8-7112-44eb-aa51-5467c7f693fb
+		summarizeBy: none
+		sourceColumn: goals_for
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals_against
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d130086-3bde-4421-a5d5-258299039178
+		summarizeBy: none
+		sourceColumn: goals_against
+
+		annotation SummarizationSetBy = Automatic
+
+	partition team_match = m
+		mode: import
+		source =
+				let
+				                Source = PostgreSQL.Database("t2f-postgre-server.postgres.database.azure.com", "test"),
+				                #"Navigation 1" = Source{[Schema = "public", Item = "matches"]}[Data],
+				                #"HomeRenamed" = Table.RenameColumns(#"Navigation 1", {{"home_team_id", "team_id"}, {"home_score", "goals_for"}, {"away_score", "goals_against"}, {"home_points", "team_points"}}, MissingField.Ignore),
+				                #"HomeAdded" = Table.AddColumn(#"HomeRenamed", "home_away", each "Home", type text),
+				                #"HomeSelected" = Table.SelectColumns(#"HomeAdded", {"match_id", "team_id", "home_away", "goals_for", "goals_against", "team_points"}, MissingField.Ignore),
+				                #"AwayRenamed" = Table.RenameColumns(#"Navigation 1", {{"away_team_id", "team_id"}, {"away_score", "goals_for"}, {"home_score", "goals_against"}, {"away_points", "team_points"}}, MissingField.Ignore),
+				                #"AwayAdded" = Table.AddColumn(#"AwayRenamed", "home_away", each "Away", type text),
+				                #"AwaySelected" = Table.SelectColumns(#"AwayAdded", {"match_id", "team_id", "home_away", "goals_for", "goals_against", "team_points"}, MissingField.Ignore),
+				                #"HomeSelectedBuffered" = Table.Buffer(#"HomeSelected"),
+				                #"AwaySelectedBuffered" = Table.Buffer(#"AwaySelected"),
+				                #"Appended" = Table.Combine({#"HomeSelectedBuffered", #"AwaySelectedBuffered"})
+				            in
+				                #"Appended"
+
+	annotation PBI_ResultType = Table
+

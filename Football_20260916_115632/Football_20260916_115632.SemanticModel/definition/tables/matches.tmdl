@@ -1,0 +1,205 @@
+table matches
+	lineageTag: 0a0a4a5c-6ed3-483d-824a-be2ffe93a04f
+
+	measure 'Total Goals' = SUM('matches'[total_goals])
+		lineageTag: 56cbca3f-9463-416a-81e8-981d324cd292
+
+	measure 'Average Goals / Match' = ROUND(DIVIDE(SUM('matches'[total_goals]), DISTINCTCOUNT('matches'[match_id]), BLANK()), 1)
+		lineageTag: 0719bf5e-91d6-4053-b38f-bc72e1422f17
+
+	measure 'Matches Played' = DISTINCTCOUNT('matches'[match_id])
+		lineageTag: f799480a-b9d9-4379-a4f3-c46b242e39ad
+
+	measure 'Total Attendance' = SUM('matches'[attendance])
+		lineageTag: 98d46260-68fe-4cc7-9b9f-27c53622f5ba
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e381e3d6-0367-441b-90a0-d3013be3d637
+		summarizeBy: none
+		sourceColumn: match_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column season
+		dataType: string
+		lineageTag: 6503a525-c6a7-4876-a580-ea225df96724
+		summarizeBy: none
+		sourceColumn: season
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_week
+		dataType: int64
+		formatString: 0
+		lineageTag: dacf33cd-b6c0-4f8e-85d3-f9d52212a77a
+		summarizeBy: none
+		sourceColumn: match_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7d8ec354-5b1e-4d2c-9a50-b2a1ba3c3d7a
+		summarizeBy: none
+		sourceColumn: match_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column home_team_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 5ef79c76-a398-4994-b014-25e1a81904db
+		summarizeBy: none
+		sourceColumn: home_team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column away_team_id
+		dataType: int64
+		formatString: 0
+		lineageTag: fca3272f-517c-4bee-8704-ca5223c5e777
+		summarizeBy: none
+		sourceColumn: away_team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column home_score
+		dataType: int64
+		formatString: 0
+		lineageTag: 2b0003c8-c6ad-40b7-b569-5f505cf912a1
+		summarizeBy: none
+		sourceColumn: home_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column away_score
+		dataType: int64
+		formatString: 0
+		lineageTag: b32ff58b-59e7-4c8f-b47e-03e985be3342
+		summarizeBy: none
+		sourceColumn: away_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_stadium
+		dataType: string
+		lineageTag: 5962c59b-46d5-4c14-b119-9a1fed545444
+		summarizeBy: none
+		sourceColumn: match_stadium
+
+		annotation SummarizationSetBy = Automatic
+
+	column attendance
+		dataType: int64
+		formatString: 0
+		lineageTag: 775c8978-4355-40d0-8a1a-a2c22f2add17
+		summarizeBy: none
+		sourceColumn: attendance
+
+		annotation SummarizationSetBy = Automatic
+
+	column referee
+		dataType: string
+		lineageTag: 3f4105ee-0701-44b3-ae57-a2d3f853b17f
+		summarizeBy: none
+		sourceColumn: referee
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_goals
+		dataType: double
+		formatString: 0
+		lineageTag: 942e9d40-4df4-4a23-a667-462447e4e0c0
+		summarizeBy: sum
+		sourceColumn: total_goals
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_goal_difference
+		dataType: double
+		formatString: 0
+		lineageTag: 11d840cd-fc79-4b6b-a460-180cce40ac35
+		summarizeBy: sum
+		sourceColumn: match_goal_difference
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_result
+		dataType: string
+		lineageTag: 7083498b-e257-40b3-844b-fd47aa0f68e9
+		summarizeBy: none
+		sourceColumn: match_result
+
+		annotation SummarizationSetBy = Automatic
+
+	column home_points
+		dataType: double
+		formatString: 0
+		lineageTag: d12bb82f-df60-4112-9bfa-bc3d70d24140
+		summarizeBy: sum
+		sourceColumn: home_points
+
+		annotation SummarizationSetBy = Automatic
+
+	column away_points
+		dataType: double
+		formatString: 0
+		lineageTag: 8affc849-ec8b-426b-be46-6d93a327207e
+		summarizeBy: sum
+		sourceColumn: away_points
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_goal_band
+		dataType: string
+		lineageTag: 66c08f01-a2d0-4503-97c1-fcf028504f14
+		summarizeBy: none
+		sourceColumn: match_goal_band
+
+		annotation SummarizationSetBy = Automatic
+
+	column attendance_band
+		dataType: string
+		lineageTag: eb1eabfd-07e7-4108-b5d3-eb4c6f8d9d58
+		summarizeBy: none
+		sourceColumn: attendance_band
+
+		annotation SummarizationSetBy = Automatic
+
+	column MatchWeek = 'matches'[match_week]
+		dataType: int64
+		formatString: 0
+		lineageTag: ffa07adf-d5d9-4298-9d22-16419171cc30
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column MatchResult = 'matches'[match_result]
+		dataType: string
+		lineageTag: d66c8209-f0a4-45d8-8dee-a444676f9063
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition matches = m
+		mode: import
+		source =
+				let
+				                Source = PostgreSQL.Database("t2f-postgre-server.postgres.database.azure.com", "test"),
+				                Result = Value.NativeQuery(Source, "SELECT ""match_id"", ""season"", ""match_week"", ""match_date"", ""home_team_id"", ""away_team_id"", ""home_score"", ""away_score"", ""stadium"", ""attendance"", ""referee"" FROM ""public"".""matches""", null, [EnableFolding=false]),
+				                #"Renamed Columns" = Table.RenameColumns(Result, {{"stadium", "match_stadium"}}, MissingField.Ignore),
+				                #"Added total_goals" = Table.AddColumn(#"Renamed Columns", "total_goals", each [home_score] + [away_score], type number),
+				                #"Added match_goal_difference" = Table.AddColumn(#"Added total_goals", "match_goal_difference", each [home_score] - [away_score], type number),
+				                #"Added match_result" = Table.AddColumn(#"Added match_goal_difference", "match_result", each if [home_score] > [away_score] then "Home Win" else if [home_score] < [away_score] then "Away Win" else "Draw", type text),
+				                #"Added home_points" = Table.AddColumn(#"Added match_result", "home_points", each if [home_score] > [away_score] then 3 else if [home_score] = [away_score] then 1 else 0, type number),
+				                #"Added away_points" = Table.AddColumn(#"Added home_points", "away_points", each if [away_score] > [home_score] then 3 else if [away_score] = [home_score] then 1 else 0, type number),
+				                #"Added match_goal_band" = Table.AddColumn(#"Added away_points", "match_goal_band", each if [home_score] + [away_score] <= 1 then "Low Scoring" else if [home_score] + [away_score] <= 3 then "Medium Scoring" else "High Scoring", type text),
+				                #"Added attendance_band" = Table.AddColumn(#"Added match_goal_band", "attendance_band", each if [attendance] < 20000 then "Low" else if [attendance] < 40000 then "Medium" else "High", type text)
+				            in
+				                #"Added attendance_band"
+
+	annotation PBI_ResultType = Table
+

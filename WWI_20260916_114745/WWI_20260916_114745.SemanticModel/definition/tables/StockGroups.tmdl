@@ -1,0 +1,31 @@
+table StockGroups
+	lineageTag: 44a37c97-1d1a-40d6-8176-8bd272988915
+
+	column StockGroupID
+		dataType: int64
+		formatString: 0
+		lineageTag: a507e975-3711-4651-9098-76ac93646ccd
+		summarizeBy: none
+		sourceColumn: StockGroupID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockGroupName
+		dataType: string
+		lineageTag: 26487db6-e3a7-4126-9f9f-0cd2c6ee99c5
+		summarizeBy: none
+		sourceColumn: StockGroupName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition StockGroups = m
+		mode: import
+		source =
+				let
+				                Source = Sql.Database("vl-t2f-sql-server-dev.database.windows.net", "vl-t2f-sql-db-dev-wwi"),
+				                Result = Value.NativeQuery(Source, "SELECT StockGroupID, StockGroupName FROM ""vl-t2f-sql-db-dev-wwi"".Warehouse.StockGroups", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

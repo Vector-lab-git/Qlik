@@ -1,0 +1,194 @@
+table Loads
+	lineageTag: a0865d9d-64a3-4fac-b3c9-a68da5db1f36
+
+	measure 'Total Revenue' = ROUND(DIVIDE(SUM('Loads'[revenue]), 1000000, BLANK()), 1)
+		formatString: \$#,##0.0\M
+		lineageTag: 07ba86f4-b86a-4651-b3a9-ba8ef6552e5c
+
+	measure 'Customer Analytics' = MAXX(VALUES('Customers'[customer_name]), CALCULATE(SUM('Loads'[revenue]), CROSSFILTER('Loads'[customer_id], 'Customers'[customer_id], Both)))
+		lineageTag: b3b185d8-f22a-44df-b139-b539cad49fe9
+
+	measure 'Highest Revenue by Customer' = MAXX(VALUES('Customers'[customer_name]), CALCULATE(SUM('Loads'[revenue]), CROSSFILTER('Loads'[customer_id], 'Customers'[customer_id], Both)))
+		lineageTag: b682a6da-1c0f-4391-a377-9a6a81f1c2aa
+
+	measure 'Average Revenue per Load' = AVERAGE('Loads'[revenue])
+		lineageTag: 648c6ad1-1aae-4b09-8201-5d51148fe7a4
+
+	measure 'High Value Loads' = CALCULATE(DISTINCTCOUNT('Loads'[load_id]), 'Loads'[RevenueBand] = "High Value")
+		lineageTag: fdc61fd5-b2e1-4b47-85f2-092e9b415c79
+
+	measure 'High Value Revenue %' = DIVIDE(CALCULATE(SUM('Loads'[revenue]), 'Loads'[RevenueBand] = "High Value"), SUM('Loads'[revenue]), BLANK())
+		formatString: 0.0%
+		lineageTag: f15c123f-9159-4f46-a7df-1433e9cf1de8
+
+	measure 'Driver Analytics' = DIVIDE(SUM('Loads'[revenue]), DISTINCTCOUNT('Drivers'[driver_id]), BLANK())
+		lineageTag: 9c996a08-6c4c-43c0-9c91-aa55ac09b04b
+
+	measure 'Average Revenue per Driver' = DIVIDE(SUM('Loads'[revenue]), DISTINCTCOUNT('Drivers'[driver_id]), BLANK())
+		lineageTag: 5f3cdf7c-a7f9-4eac-bdbe-c22384a8c934
+
+	measure 'Revenue per Mile' = DIVIDE(SUM('Loads'[revenue]), SUM('Trips'[actual_distance_miles]), BLANK())
+		lineageTag: f3219a20-cfe1-44c4-9d0d-aa0430148cfc
+
+	measure 'Completed Trip Revenue' = CALCULATE(SUM('Loads'[revenue]), 'Trips'[trip_status] = "Completed", CROSSFILTER('Loads'[load_id], 'Trips'[load_id], Both))
+		lineageTag: b4d85b8b-4342-4e0b-b28d-e081dec2f23b
+
+	measure 'High Value Revenue' = CALCULATE(SUM('Loads'[revenue]), 'Loads'[RevenueBand] = "High Value")
+		lineageTag: 1713629e-b235-48b9-a71b-b4d5b61816a2
+
+	measure 'Revenue %' = DIVIDE(SUM('Loads'[revenue]), CALCULATE(SUM('Loads'[revenue]), ALLSELECTED()), BLANK())
+		formatString: 0.0%
+		lineageTag: e4204bb1-9175-4fa2-8fc0-562738216522
+
+	measure 'Total Loads' = COUNT('Trips'[load_id])
+		lineageTag: 652685a7-c09e-42a1-9abe-d5ff8d0679d0
+
+	column customer_id
+		dataType: string
+		lineageTag: 0622d044-2214-4750-a9c0-f08e6bd7339f
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column route_id
+		dataType: string
+		lineageTag: 06adee50-25df-4249-9a7b-724e35a3ee71
+		summarizeBy: none
+		sourceColumn: route_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_id
+		dataType: string
+		lineageTag: bead14f5-58c5-40f2-b166-7ddd6333c634
+		summarizeBy: none
+		sourceColumn: load_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a64dc1df-1b9a-4163-a340-9ec1ffdafdb0
+		summarizeBy: none
+		sourceColumn: load_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_type
+		dataType: string
+		lineageTag: 848ff030-4542-46db-8aa7-a95c3e4bc605
+		summarizeBy: none
+		sourceColumn: load_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column weight_lbs
+		dataType: int64
+		formatString: 0
+		lineageTag: 25b47d19-e223-46c8-bf2a-2a8a7caa6a5e
+		summarizeBy: none
+		sourceColumn: weight_lbs
+
+		annotation SummarizationSetBy = Automatic
+
+	column pieces
+		dataType: int64
+		formatString: 0
+		lineageTag: ad1036f8-cfd7-41f9-b9e6-bdd1559b2706
+		summarizeBy: none
+		sourceColumn: pieces
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue
+		dataType: double
+		lineageTag: a4e3dcf9-1d9b-4663-9ae1-b9de3c23c5e6
+		summarizeBy: none
+		sourceColumn: revenue
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_surcharge
+		dataType: double
+		lineageTag: 2941eed7-8fcf-465e-b2f3-61c3a7257ea8
+		summarizeBy: none
+		sourceColumn: fuel_surcharge
+
+		annotation SummarizationSetBy = Automatic
+
+	column accessorial_charges
+		dataType: double
+		formatString: 0
+		lineageTag: d9b7a37d-790a-4f4c-8dc7-5d27a913d053
+		summarizeBy: sum
+		sourceColumn: accessorial_charges
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_status
+		dataType: string
+		lineageTag: a0b98457-eb70-4ada-9747-2ee3e1b175d9
+		summarizeBy: none
+		sourceColumn: load_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column booking_type
+		dataType: string
+		lineageTag: d0ce3134-9f10-4490-a05a-f1f4dc250794
+		summarizeBy: none
+		sourceColumn: booking_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column RevenueBand
+		dataType: string
+		lineageTag: dc2d8bf1-1c49-4465-8fec-68521a35cc0d
+		summarizeBy: none
+		sourceColumn: RevenueBand
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckNumber
+		dataType: string
+		lineageTag: 3a9ecb0c-3fd6-455a-8d0d-cad1a816fdd4
+		summarizeBy: none
+		sourceColumn: TruckNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Load Month' = FORMAT('Loads'[load_date], "MMM")
+		dataType: string
+		lineageTag: ab04e8f6-8659-4775-9e39-0405f2d8ed5e
+		summarizeBy: none
+		sortByColumn: 'Load MonthSort'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Load MonthSort' = MONTH('Loads'[load_date])
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3172609c-ffdd-4520-ad42-49ffa1d05769
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Loads = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Schema = Source{[Name="fleetvision",Kind="Schema"]}[Data],
+				                Navigation = Schema{[Name="loads"]}[Data],
+				                #"Added RevenueBand" = Table.AddColumn(Navigation, "RevenueBand", each if [revenue] >= 6000 then "High Value" else if [revenue] >= 3000 then "Medium Value" else "Low Value", type text),
+				                #"Added TruckNumber" = Table.AddColumn(#"Added RevenueBand", "TruckNumber", each "Unknown", type text)
+				            in
+				                #"Added TruckNumber"
+
+	annotation PBI_ResultType = Table
+

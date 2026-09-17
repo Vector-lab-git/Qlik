@@ -1,0 +1,255 @@
+table Trips
+	lineageTag: b56b031b-918d-4632-ad84-a3de9098b463
+
+	measure 'Average Trip Distance' = AVERAGE('Trips'[actual_distance_miles])
+		lineageTag: 9c395808-69e7-4458-a2c2-f91e55c7fae4
+
+	measure 'Average Fuel Efficiency' = DIVIDE(SUM('Trips'[actual_distance_miles]), SUM('Trips'[fuel_gallons_used]), BLANK())
+		lineageTag: 472f97b5-01af-4612-bd8b-9e1a11b48fee
+
+	measure 'Average Trip Duration' = AVERAGE('Trips'[actual_duration_hours])
+		lineageTag: 79e4f64c-ca9a-40c9-9a9e-aec079c967cb
+
+	measure Avg(actual_distance_miles) = AVERAGE('Trips'[actual_distance_miles])
+		lineageTag: fc0334d5-7919-4760-b574-093d47157919
+
+	measure Avg(average_mpg) = AVERAGE('Trips'[average_mpg])
+		lineageTag: c8fb6a37-4b93-41b2-ac6a-621902e8d883
+
+	column driver_id
+		dataType: string
+		lineageTag: 8085194b-cb1b-4704-ab80-5a11f74ff600
+		summarizeBy: none
+		sourceColumn: driver_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_id
+		dataType: string
+		lineageTag: 72ea0588-26ef-454c-8e4a-dd8e458087b0
+		summarizeBy: none
+		sourceColumn: truck_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column trailer_id
+		dataType: string
+		lineageTag: 0fe791ba-5fc9-404a-8210-7896548f5a67
+		summarizeBy: none
+		sourceColumn: trailer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_id
+		dataType: string
+		lineageTag: 60fb5c7f-b4bc-4599-b5ac-a3bc3e92443f
+		summarizeBy: none
+		sourceColumn: load_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column trip_id
+		dataType: string
+		lineageTag: 707d2158-c022-4129-9cb2-a927189ec416
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_distance_miles
+		dataType: int64
+		formatString: 0
+		lineageTag: 92799b64-ef89-47bc-b60c-cbf64b18aa4d
+		summarizeBy: none
+		sourceColumn: actual_distance_miles
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_duration_hours
+		dataType: double
+		lineageTag: b410e26b-2d8f-4565-b530-1088ad07b814
+		summarizeBy: none
+		sourceColumn: actual_duration_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_gallons_used
+		dataType: double
+		lineageTag: b4efa653-2454-4fe1-90d2-983af1ac6dc5
+		summarizeBy: none
+		sourceColumn: fuel_gallons_used
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_mpg
+		dataType: double
+		lineageTag: 4cd18f0d-5128-4edd-b18b-4cf96cafd301
+		summarizeBy: none
+		sourceColumn: average_mpg
+
+		annotation SummarizationSetBy = Automatic
+
+	column idle_time_hours
+		dataType: double
+		lineageTag: e0ac59bb-44cd-4b19-923f-e019f6faa091
+		summarizeBy: sum
+		sourceColumn: idle_time_hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column trip_status
+		dataType: string
+		lineageTag: 7d14d379-d046-4bce-831c-9c1910033ef8
+		summarizeBy: none
+		sourceColumn: trip_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckNumber
+		dataType: string
+		lineageTag: 5ee043e6-e1c6-4693-a5aa-11d81cb23c6c
+		summarizeBy: none
+		sourceColumn: TruckNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column DispatchDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b2a06acb-abae-40f2-8708-eeb65d9038b1
+		summarizeBy: none
+		sourceColumn: DispatchDate
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column TripMonth
+		dataType: double
+		formatString: 0
+		lineageTag: 2c48328c-d459-4e99-98e3-e04c4a1b09ab
+		summarizeBy: sum
+		sourceColumn: TripMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column LoadMonth
+		dataType: double
+		formatString: 0
+		lineageTag: d7667df9-087f-452a-88a4-22df047a6989
+		summarizeBy: sum
+		sourceColumn: LoadMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthStartDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ef31d3f9-be32-41d0-bf1d-c07c48f01889
+		summarizeBy: none
+		sourceColumn: MonthStartDate
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthYear
+		dataType: string
+		formatString: General Date
+		lineageTag: e8c079fc-4306-4994-9a3d-2301bdf1b13f
+		summarizeBy: none
+		sourceColumn: MonthYear
+		sortByColumn: MonthSort
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthSort
+		dataType: double
+		lineageTag: d0e303b6-416e-4af7-a603-065397e08cc7
+		summarizeBy: sum
+		sourceColumn: MonthSort
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TripYear
+		dataType: double
+		formatString: 0
+		lineageTag: f59b108b-825d-4af6-b8db-3726f76a7110
+		summarizeBy: sum
+		sourceColumn: TripYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column TripWeek
+		dataType: double
+		formatString: 0
+		lineageTag: a7cdbb84-124c-4b5c-9990-ea5fa657d255
+		summarizeBy: sum
+		sourceColumn: TripWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNo
+		dataType: double
+		formatString: 0
+		lineageTag: 7448c74f-8864-42ff-aea3-6233c5f7eecb
+		summarizeBy: sum
+		sourceColumn: MonthNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column DistanceBand
+		dataType: string
+		lineageTag: 382de250-5fc8-46f6-9a83-29c0754aa668
+		summarizeBy: none
+		sourceColumn: DistanceBand
+
+		annotation SummarizationSetBy = Automatic
+
+	column FuelEfficiencyBand
+		dataType: string
+		lineageTag: 95e72676-ec59-4a70-909f-4ea776f706e5
+		summarizeBy: none
+		sourceColumn: FuelEfficiencyBand
+
+		annotation SummarizationSetBy = Automatic
+
+	column IdleTimeBand
+		dataType: string
+		lineageTag: 1f37ddb3-b57e-4525-8569-d6e0cb25beab
+		summarizeBy: none
+		sourceColumn: IdleTimeBand
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Trips = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Schema = Source{[Name="fleetvision",Kind="Schema"]}[Data],
+				                Navigation = Schema{[Name="v_trips"]}[Data],
+				                #"Added TruckNumber" = Table.AddColumn(Navigation, "TruckNumber", each "Unknown", type text),
+				                #"Added DispatchDate" = Table.TransformColumns(#"Added TruckNumber", {{"dispatch_date", each Date.From(_), type date}}),
+				                #"Added TripMonth" = Table.AddColumn(#"Added DispatchDate", "TripMonth", each Date.Month([dispatch_date]), type number),
+				                #"Added LoadMonth" = Table.AddColumn(#"Added TripMonth", "LoadMonth", each Date.Month([dispatch_date]), type number),
+				                #"Added MonthStartDate" = Table.AddColumn(#"Added LoadMonth", "MonthStartDate", each Date.StartOfMonth([dispatch_date]), type date),
+				                #"Added MonthYear" = Table.AddColumn(#"Added MonthStartDate", "MonthYear", each Date.ToText([dispatch_date], "MMM yyyy"), type text),
+				                #"Added MonthSort" = Table.AddColumn(#"Added MonthYear", "MonthSort", each Number.From(Date.StartOfMonth([dispatch_date])), type number),
+				                #"Added TripYear" = Table.AddColumn(#"Added MonthSort", "TripYear", each Date.Year([dispatch_date]), type number),
+				                #"Added TripWeek" = Table.AddColumn(#"Added TripYear", "TripWeek", each Date.WeekOfYear([dispatch_date]), type number),
+				                #"Added MonthNo" = Table.AddColumn(#"Added TripWeek", "MonthNo", each Number.From(Date.Month([dispatch_date])), type number),
+				                #"Added DistanceBand" = Table.AddColumn(#"Added MonthNo", "DistanceBand", each if [actual_distance_miles] >= 1000 then "Long Haul" else if [actual_distance_miles] >= 500 then "Medium Haul" else "Short Haul", type text),
+				                #"Added FuelEfficiencyBand" = Table.AddColumn(#"Added DistanceBand", "FuelEfficiencyBand", each if [average_mpg] >= 8 then "High MPG" else if [average_mpg] >= 6 then "Medium MPG" else "Low MPG", type text),
+				                #"Added IdleTimeBand" = Table.AddColumn(#"Added FuelEfficiencyBand", "IdleTimeBand", each if [idle_time_hours] >= 5 then "High Idle" else if [idle_time_hours] >= 2 then "Moderate Idle" else "Low Idle", type text),
+				                #"Renamed Columns" = Table.RenameColumns(#"Added IdleTimeBand", {{"dispatch_date", "DispatchDate"}}, MissingField.Ignore),
+				                #"Renamed Columns 1" = Table.RenameColumns(#"Renamed Columns", {{"dispatch_date", "DispatchDate"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns 1"
+
+	annotation PBI_ResultType = Table
+

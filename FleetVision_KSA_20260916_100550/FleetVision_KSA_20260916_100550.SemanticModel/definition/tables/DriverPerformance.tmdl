@@ -1,0 +1,97 @@
+table DriverPerformance
+	lineageTag: 6f6b55e8-5a13-430e-903d-9b9232570375
+
+	column driver_id
+		dataType: string
+		lineageTag: dfd13f0b-cdcd-4764-b1c2-752b17509d88
+		summarizeBy: none
+		sourceColumn: driver_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalTrips
+		dataType: double
+		formatString: 0
+		lineageTag: cc9e596d-006b-4d74-ae90-b4fd21c29e1a
+		summarizeBy: sum
+		sourceColumn: TotalTrips
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalMiles
+		dataType: double
+		formatString: 0
+		lineageTag: 259eb3c3-3676-4cd1-925e-038814e68e6c
+		summarizeBy: sum
+		sourceColumn: TotalMiles
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalTripHours
+		dataType: double
+		lineageTag: 02b7ae0b-e25a-4a34-8d85-901a23df644f
+		summarizeBy: none
+		sourceColumn: TotalTripHours
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalFuelGallons
+		dataType: double
+		lineageTag: e587786b-67ee-40e1-897a-5b0fe76c62bb
+		summarizeBy: none
+		sourceColumn: TotalFuelGallons
+
+		annotation SummarizationSetBy = Automatic
+
+	column FleetMPG
+		dataType: double
+		lineageTag: f9812a5a-4ce4-4e1e-b21d-af9cf3d53068
+		summarizeBy: none
+		sourceColumn: FleetMPG
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvgMPG
+		dataType: double
+		lineageTag: fd7fda82-2a5b-44b7-a7f8-4262d8c8da55
+		summarizeBy: none
+		sourceColumn: AvgMPG
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvgIdleHours
+		dataType: double
+		lineageTag: e1e59d8a-b9e7-487e-8479-a89b0885e6d6
+		summarizeBy: none
+		sourceColumn: AvgIdleHours
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalIdleHours
+		dataType: double
+		lineageTag: 6d62e415-d740-4370-9268-550d7ea3bba6
+		summarizeBy: none
+		sourceColumn: TotalIdleHours
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckNumber
+		dataType: string
+		lineageTag: de4edf2d-9179-4586-bd72-144e23f99bfa
+		summarizeBy: none
+		sourceColumn: TruckNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DriverPerformance = m
+		mode: import
+		source =
+				let
+				                Source = Trips,
+				                #"Grouped DriverPerformance" = Table.Group(Source, {"driver_id"}, {{"TotalTrips", each List.Count(List.Distinct([trip_id])), type number}, {"TotalMiles", each List.Sum([actual_distance_miles]), type number}, {"TotalTripHours", each List.Sum([actual_duration_hours]), type number}, {"TotalFuelGallons", each List.Sum([fuel_gallons_used]), type number}, {"FleetMPG", each if List.Sum([fuel_gallons_used]) > 0 then List.Sum([actual_distance_miles]) / List.Sum([fuel_gallons_used]) else 0, type number}, {"AvgMPG", each List.Average([average_mpg]), type number}, {"AvgIdleHours", each List.Average([idle_time_hours]), type number}, {"TotalIdleHours", each List.Sum([idle_time_hours]), type number}}),
+				                #"Added TruckNumber" = Table.AddColumn(#"Grouped DriverPerformance", "TruckNumber", each "Unknown", type text)
+				            in
+				                #"Added TruckNumber"
+
+	annotation PBI_ResultType = Table
+

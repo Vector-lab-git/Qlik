@@ -1,0 +1,6 @@
+relationship rel_StudentData_SalesData_ID
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: StudentData.ID
+	toColumn: SalesData.ID
+

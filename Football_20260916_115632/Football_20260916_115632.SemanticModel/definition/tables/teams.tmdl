@@ -1,0 +1,90 @@
+table teams
+	lineageTag: ea5a0a43-a144-4afc-9f90-297d0f952eee
+
+	column team_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 05f17b68-117f-4656-aba3-fbe45100607e
+		summarizeBy: none
+		sourceColumn: team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_name
+		dataType: string
+		lineageTag: fdfd10e7-e23d-442e-9141-077188837536
+		summarizeBy: none
+		sourceColumn: team_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column short_name
+		dataType: string
+		lineageTag: 14fd0e3f-51a3-4b73-aab5-963305cff959
+		summarizeBy: none
+		sourceColumn: short_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column team_stadium
+		dataType: string
+		lineageTag: ab9b53ba-8334-4b0b-b214-d18b67becedf
+		summarizeBy: none
+		sourceColumn: team_stadium
+
+		annotation SummarizationSetBy = Automatic
+
+	column stadium_capacity
+		dataType: int64
+		formatString: 0
+		lineageTag: ddd81726-1a4c-4da2-9e7b-b0dac90018ba
+		summarizeBy: sum
+		sourceColumn: stadium_capacity
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 8ecca8e8-a860-4e06-bcc8-feb232bbcbfe
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column founded_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 2daf2c63-e5a8-4236-b3ec-044c44c44db2
+		summarizeBy: sum
+		sourceColumn: founded_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column coach
+		dataType: string
+		lineageTag: 949525ec-55a5-4a50-91b0-2f4e7f34c623
+		summarizeBy: none
+		sourceColumn: coach
+
+		annotation SummarizationSetBy = Automatic
+
+	column Team = 'teams'[team_name]
+		dataType: string
+		lineageTag: d97c7e82-2b6b-4b4e-bab3-d47f6d37abc6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition teams = m
+		mode: import
+		source =
+				let
+				                Source = PostgreSQL.Database("t2f-postgre-server.postgres.database.azure.com", "test"),
+				                #"Navigation 1" = Source{[Schema = "public", Item = "teams"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(#"Navigation 1", {{"stadium", "team_stadium"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

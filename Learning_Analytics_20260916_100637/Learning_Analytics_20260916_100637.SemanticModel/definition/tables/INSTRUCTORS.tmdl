@@ -1,0 +1,70 @@
+table INSTRUCTORS
+	lineageTag: e782b1f8-0391-4976-bab6-66384c1b8469
+
+	measure 'Total Instructors' = COUNT('COURSE_INSTRUCTORS'[INSTRUCTOR_ID])
+		lineageTag: ecf3a287-1ae0-41c6-9503-afaa663ae1be
+
+	column INSTRUCTOR_ID
+		dataType: string
+		lineageTag: 6ecda894-918b-4a14-ab3f-668b5e967a07
+		summarizeBy: none
+		sourceColumn: INSTRUCTOR_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column FIRST_NAME
+		dataType: string
+		lineageTag: 6517d1ad-3bc6-4c8d-96ab-eb196f6e1075
+		summarizeBy: none
+		sourceColumn: FIRST_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column LAST_NAME
+		dataType: string
+		lineageTag: be055a29-301b-40cc-acdf-93c0fcb72634
+		summarizeBy: none
+		sourceColumn: LAST_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column EMAIL
+		dataType: string
+		lineageTag: adef0830-dcd1-42b4-8db5-2c2b8672625a
+		summarizeBy: none
+		sourceColumn: EMAIL
+
+		annotation SummarizationSetBy = Automatic
+
+	column HIRE_DATE
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6148e07c-4559-43e2-b18d-322a4d20c965
+		summarizeBy: none
+		sourceColumn: HIRE_DATE
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Instructor Name' = 'INSTRUCTORS'[FIRST_NAME] & " " & 'INSTRUCTORS'[LAST_NAME]
+		dataType: string
+		lineageTag: 0793b6d4-13e8-4c65-8505-1ec842cc298f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition INSTRUCTORS = m
+		mode: import
+		source =
+				let
+				                Source = Snowflake.Databases("ZLDAGWO-PW94760.snowflakecomputing.com", "COMPUTE_WH"),
+				                Db = Source{[Name="LEARNING_ANALYTICS",Kind="Database"]}[Data],
+				                Sch = Db{[Name="PUBLIC",Kind="Schema"]}[Data],
+				                Navigation = Sch{[Name="INSTRUCTORS",Kind="Table"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"FIRST_NAME", "FIRST_NAME"}, {"LAST_NAME", "LAST_NAME"}, {"EMAIL", "EMAIL"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

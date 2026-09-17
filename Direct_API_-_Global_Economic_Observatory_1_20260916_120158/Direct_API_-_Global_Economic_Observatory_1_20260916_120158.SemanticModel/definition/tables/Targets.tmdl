@@ -1,0 +1,55 @@
+table Targets
+	lineageTag: 3ab14d92-a4fe-473d-8f6c-96fecf3b62a8
+
+	measure 'Growth vs Target' = DIVIDE([vGDPGrowth] - AVERAGE('Targets'[TargetGDPGrowth]), 100, BLANK())
+		lineageTag: c6cbabdf-2ed2-4eca-ae0c-e5aedd701d4b
+
+	measure 'Inflation vs Target' = DIVIDE([vInflation] - AVERAGE('Targets'[TargetInflation]), 100, BLANK())
+		lineageTag: b5d22987-2883-4986-82e0-44016a93ef8b
+
+	column %RegionYearKey
+		dataType: string
+		lineageTag: 8ec16ebd-ed06-43f8-8a75-1aa510974da9
+		summarizeBy: none
+		sourceColumn: '%RegionYearKey'
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetGDPGrowth
+		dataType: double
+		lineageTag: cac90094-cb8d-43df-962f-f04ba4f64251
+		summarizeBy: none
+		sourceColumn: TargetGDPGrowth
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetInflation
+		dataType: double
+		lineageTag: 1c209024-2287-4436-a325-723b4b5498af
+		summarizeBy: none
+		sourceColumn: TargetInflation
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetUnemployment
+		dataType: double
+		lineageTag: 69efa206-0cbc-4658-a9a2-1c57d3c74505
+		summarizeBy: none
+		sourceColumn: TargetUnemployment
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Targets = m
+		mode: import
+		source =
+				let
+				                Source = Countries,
+				                #"Added %RegionYearKey" = Table.AddColumn(Source, "%RegionYearKey", each [TargetRegion] & "|" & null, type text),
+				                #"Added TargetGDPGrowth" = Table.AddColumn(#"Added %RegionYearKey", "TargetGDPGrowth", each Number.Round(2.5 + Number.RandomBetween(0, 3000) / 1000, 1), type number),
+				                #"Added TargetInflation" = Table.AddColumn(#"Added TargetGDPGrowth", "TargetInflation", each Number.Round(2.0 + Number.RandomBetween(0, 3000) / 1000, 1), type number),
+				                #"Added TargetUnemployment" = Table.AddColumn(#"Added TargetInflation", "TargetUnemployment", each Number.Round(4.0 + Number.RandomBetween(0, 5000) / 1000, 1), type number)
+				            in
+				                #"Added TargetUnemployment"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,59 @@
+table 'Top N Variable'
+	lineageTag: f312dfb5-93dc-45de-8550-fb6f6ac8fcf0
+
+	measure 'Top N Variable Value' = SELECTEDVALUE('Top N Variable'[Value], 1)
+		lineageTag: c0e8d045-76c6-4ba9-ad90-ee529c3e5a60
+
+	measure 'Top N Variable' = [Top N Variable Value]
+		lineageTag: 78f38f15-19f4-4c26-ac35-8a567fcf3d8c
+
+	measure 'Show Top N City' =
+			VAR SelectedTopN = COALESCE([Top N Variable Value], 10)
+			VAR CurrentRank =
+			    RANKX(
+			        ALLSELECTED('Weather_Data'[City]),
+			        [Average Temperature],
+			        ,
+			        DESC
+			    )
+			RETURN
+			    IF(ISBLANK([Average Temperature]), 0, IF(CurrentRank <= SelectedTopN, 1, 0))
+		formatString: 0
+		lineageTag: 7e063edb-cc35-4dfc-af01-7c024e5f6e6f
+
+	column Value
+		dataType: int64
+		lineageTag: 2dcd9b67-70b4-46ff-b2fb-14e200d5e81f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Top N Variable' = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Value", INTEGER,
+				    {
+				        { 1 },
+				        { 2 },
+				        { 3 },
+				        { 4 },
+				        { 5 },
+				        { 6 },
+				        { 7 },
+				        { 8 },
+				        { 9 },
+				        { 10 },
+				        { 15 },
+				        { 20 },
+				        { 25 },
+				        { 30 },
+				        { 40 },
+				        { 50 }
+				    }
+				)
+
+	annotation PBI_Id = 144997ca-4e99-42f8-aa04-208ab7983b32
+

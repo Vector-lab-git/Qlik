@@ -1,0 +1,125 @@
+table Calendar
+	lineageTag: 420e5cea-21e7-4391-9a2d-943b4e847744
+
+	column DispatchDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fa84c22f-14b5-49c1-987b-84bc01b34d1a
+		summarizeBy: none
+		sourceColumn: DispatchDate
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarYear
+		dataType: string
+		lineageTag: ac67afa3-b5fb-4262-a46a-56475f5caf0c
+		summarizeBy: none
+		sourceColumn: CalendarYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarQuarter
+		dataType: string
+		lineageTag: 620d27d9-6a1c-4113-bef9-dc4968181b92
+		summarizeBy: none
+		sourceColumn: CalendarQuarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarMonth
+		dataType: int64
+		formatString: 0
+		lineageTag: 51a8bb04-5c65-40d4-8001-eb5a99274442
+		summarizeBy: sum
+		sourceColumn: CalendarMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarMonthYear
+		dataType: string
+		lineageTag: feec12ab-9b92-4a80-9874-65eab801e96b
+		summarizeBy: none
+		sourceColumn: CalendarMonthYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarMonthStart
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 3f7a63df-1e37-4e42-bfd8-8357a5d2e216
+		summarizeBy: none
+		sourceColumn: CalendarMonthStart
+
+		variation Variation
+			isDefault
+			relationship: 132388ad-518a-4a31-a25e-ecefdbb5746a
+			defaultHierarchy: LocalDateTable_18997f9d-07fb-48fb-ab23-48902a66a855.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CalendarWeek
+		dataType: int64
+		formatString: 0
+		lineageTag: 48930024-dcc8-4d44-98c3-795df2ee987e
+		summarizeBy: sum
+		sourceColumn: CalendarWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarWeekDay
+		dataType: int64
+		formatString: 0
+		lineageTag: c517ccd6-e9d2-468d-b2c8-c20ecf1076f7
+		summarizeBy: sum
+		sourceColumn: CalendarWeekDay
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarDay
+		dataType: int64
+		formatString: 0
+		lineageTag: 6a466050-41b8-4a6a-aaae-06d3f644c048
+		summarizeBy: sum
+		sourceColumn: CalendarDay
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckNumber
+		dataType: string
+		lineageTag: 24d29d99-55e5-4d06-b6e0-32404d8c0c73
+		summarizeBy: none
+		sourceColumn: TruckNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendar = m
+		mode: import
+		source =
+				let
+				                Today = DateTime.Date(DateTime.LocalNow()),
+				                StartYear = Date.Year(Today) - 25,
+				                EndYear = Date.Year(Today) + 2,
+				                StartDate = #date(StartYear, 1, 1),
+				                EndDate = #date(EndYear, 12, 31),
+				                NumberOfDays = Duration.Days(EndDate - StartDate) + 1,
+				                DatesList = List.Dates(StartDate, NumberOfDays, #duration(1, 0, 0, 0)),
+				                #"Converted to Table" = Table.FromList(DatesList, Splitter.SplitByNothing(), {"DispatchDate"}, null),
+				                #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table", {{ "DispatchDate", type date}}),
+				                #"Added CalendarYear" = Table.AddColumn(#"Changed Type", "CalendarYear", each Text.From(Date.Year([DispatchDate])), type text),
+				                #"Added CalendarQuarter" = Table.AddColumn(#"Added CalendarYear", "CalendarQuarter", each "Q" & Text.From(Date.QuarterOfYear([DispatchDate])), type text),
+				                #"Added CalendarMonth" = Table.AddColumn(#"Added CalendarQuarter", "CalendarMonth", each Date.Month([DispatchDate]), Int64.Type),
+				                #"Added CalendarMonthYear" = Table.AddColumn(#"Added CalendarMonth", "CalendarMonthYear", each Date.ToText([DispatchDate], "yyyy-MMM"), type text),
+				                #"Added CalendarMonthStart" = Table.AddColumn(#"Added CalendarMonthYear", "CalendarMonthStart", each Date.StartOfMonth([DispatchDate]), type date),
+				                #"Added CalendarWeek" = Table.AddColumn(#"Added CalendarMonthStart", "CalendarWeek", each Date.WeekOfYear([DispatchDate]), Int64.Type),
+				                #"Added CalendarWeekDay" = Table.AddColumn(#"Added CalendarWeek", "CalendarWeekDay", each Date.DayOfWeek([DispatchDate]), Int64.Type),
+				                #"Added CalendarDay" = Table.AddColumn(#"Added CalendarWeekDay", "CalendarDay", each Date.Day([DispatchDate]), Int64.Type),
+				                #"Added TruckNumber" = Table.AddColumn(#"Added CalendarDay", "TruckNumber", each "Unknown", type text)
+				            in
+				                #"Added TruckNumber"
+
+	annotation PBI_ResultType = Table
+

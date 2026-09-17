@@ -1,0 +1,89 @@
+table TruckPerformance
+	lineageTag: 094ad7fd-7989-4f14-a300-e5e1e5c41ccb
+
+	column truck_id
+		dataType: string
+		lineageTag: 0a923571-bfe4-4587-967e-eb8fb7d5a0f9
+		summarizeBy: none
+		sourceColumn: truck_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckTrips
+		dataType: double
+		formatString: 0
+		lineageTag: e257d94a-a129-4a17-b45c-c45286c17bfd
+		summarizeBy: sum
+		sourceColumn: TruckTrips
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckMiles
+		dataType: double
+		formatString: 0
+		lineageTag: f9d63d5a-7578-4bf7-ba52-246c511ba520
+		summarizeBy: sum
+		sourceColumn: TruckMiles
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckHours
+		dataType: double
+		lineageTag: bb10a9c0-2ad8-41d8-8486-abf51385ed9d
+		summarizeBy: none
+		sourceColumn: TruckHours
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckFuelGallons
+		dataType: double
+		lineageTag: fdb4fde2-776e-4331-b451-eb0ec47abf91
+		summarizeBy: none
+		sourceColumn: TruckFuelGallons
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckMPG
+		dataType: double
+		lineageTag: 8b7d3fd3-d4f3-465d-9827-9010ba9d1c49
+		summarizeBy: none
+		sourceColumn: TruckMPG
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckAvgIdleHours
+		dataType: double
+		lineageTag: 05b9e3b5-c961-4ef0-bb4b-1739b75a0e02
+		summarizeBy: none
+		sourceColumn: TruckAvgIdleHours
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckIdleHours
+		dataType: double
+		lineageTag: 55acbd97-8ce2-42e6-b2a8-bc4789f8b1bb
+		summarizeBy: none
+		sourceColumn: TruckIdleHours
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckNumber
+		dataType: string
+		lineageTag: e6f8bce5-c24e-4fd0-a2a2-9070e2245227
+		summarizeBy: none
+		sourceColumn: TruckNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	partition TruckPerformance = m
+		mode: import
+		source =
+				let
+				                Source = Trips,
+				                #"Grouped TruckPerformance" = Table.Group(Source, {"truck_id"}, {{"TruckTrips", each List.Count(List.Distinct([trip_id])), type number}, {"TruckMiles", each List.Sum([actual_distance_miles]), type number}, {"TruckHours", each List.Sum([actual_duration_hours]), type number}, {"TruckFuelGallons", each List.Sum([fuel_gallons_used]), type number}, {"TruckMPG", each if List.Sum([fuel_gallons_used]) > 0 then List.Sum([actual_distance_miles]) / List.Sum([fuel_gallons_used]) else 0, type number}, {"TruckAvgIdleHours", each List.Average([idle_time_hours]), type number}, {"TruckIdleHours", each List.Sum([idle_time_hours]), type number}}),
+				                #"Added TruckNumber" = Table.AddColumn(#"Grouped TruckPerformance", "TruckNumber", each "Unknown", type text)
+				            in
+				                #"Added TruckNumber"
+
+	annotation PBI_ResultType = Table
+

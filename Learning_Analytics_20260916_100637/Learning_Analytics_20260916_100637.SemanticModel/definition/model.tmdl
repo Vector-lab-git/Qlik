@@ -1,0 +1,25 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["COURSES","COURSE_INSTRUCTORS","STUDENT_COURSES","INSTRUCTORS","GRADES","STUDENTS"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode","WebModelingEdit"]
+
+ref table COURSES
+ref table COURSE_INSTRUCTORS
+ref table STUDENT_COURSES
+ref table INSTRUCTORS
+ref table GRADES
+ref table STUDENTS
+ref table Parameters
+
+ref cultureInfo en-US
+

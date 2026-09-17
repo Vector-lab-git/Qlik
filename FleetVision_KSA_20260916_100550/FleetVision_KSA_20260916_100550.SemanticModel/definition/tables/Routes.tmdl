@@ -1,0 +1,95 @@
+table Routes
+	lineageTag: b34d084a-8426-4173-b117-fd3069afda53
+
+	column route_id
+		dataType: string
+		lineageTag: 29cfedce-db1e-4774-8cbd-c3ee63a44f21
+		summarizeBy: none
+		sourceColumn: route_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column origin_city
+		dataType: string
+		lineageTag: 90c126e5-a2ec-41d2-b0fc-81b6f5a18380
+		summarizeBy: none
+		sourceColumn: origin_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column origin_state
+		dataType: string
+		lineageTag: 4d18adf6-cf33-401e-8fe0-af3330e297c7
+		summarizeBy: none
+		sourceColumn: origin_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_city
+		dataType: string
+		lineageTag: b83f400a-8973-488a-b8a5-1be2096053c9
+		summarizeBy: none
+		sourceColumn: destination_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column destination_state
+		dataType: string
+		lineageTag: 457ecdfc-9a38-4be4-8fc0-021ab0740db0
+		summarizeBy: none
+		sourceColumn: destination_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column typical_distance_miles
+		dataType: int64
+		formatString: 0
+		lineageTag: be50d77a-e459-4d86-91a6-86d9cf6b9e39
+		summarizeBy: none
+		sourceColumn: typical_distance_miles
+
+		annotation SummarizationSetBy = Automatic
+
+	column base_rate_per_mile
+		dataType: double
+		lineageTag: fb58e19e-75c2-477e-831c-a653981b5288
+		summarizeBy: none
+		sourceColumn: base_rate_per_mile
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_surcharge_rate
+		dataType: double
+		lineageTag: 621c9289-38a0-4695-a159-8369fe27f733
+		summarizeBy: none
+		sourceColumn: fuel_surcharge_rate
+
+		annotation SummarizationSetBy = Automatic
+
+	column typical_transit_days
+		dataType: int64
+		formatString: 0
+		lineageTag: d1c26a01-2639-4273-9121-0cd50f5549bc
+		summarizeBy: none
+		sourceColumn: typical_transit_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column Route = 'Routes'[origin_city] & " → " & 'Routes'[destination_city]
+		dataType: string
+		lineageTag: 53bdddb6-3f95-4156-a3ee-adb3ed745361
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Routes = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Result = Value.NativeQuery(Source, "SELECT * FROM fleetvision.routes", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

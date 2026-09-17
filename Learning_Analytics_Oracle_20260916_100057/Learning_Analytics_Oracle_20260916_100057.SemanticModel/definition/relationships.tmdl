@@ -1,0 +1,10 @@
+relationship 331e01f5-2fa3-4b58-a82e-7f5cfa490a99
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Students.DOB
+	toColumn: LocalDateTable_4c250b67-3c01-4a07-9309-926294b384ef.Date
+
+relationship f29b2bc7-a50f-47e2-b602-04a48e2a5d48
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Students.'Admission Date'
+	toColumn: LocalDateTable_f77e81b5-4cee-4ecb-bb42-db6305d90b52.Date
+

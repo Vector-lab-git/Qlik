@@ -1,0 +1,33 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["SalesFact","Customers","StockItems","StockItemStockGroups","StockItemHoldings","CustomerCategories","BuyingGroups","StockGroups"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode","WebModelingEdit"]
+
+ref table SalesFact
+ref table Customers
+ref table StockItems
+ref table StockItemStockGroups
+ref table StockItemHoldings
+ref table CustomerCategories
+ref table BuyingGroups
+ref table StockGroups
+ref table Parameters
+ref table DateTableTemplate_55f5fe59-eb0a-4c68-8c15-e97488ce3f46
+ref table LocalDateTable_f6b1f7b7-5135-41bf-9d0d-6e22bc46cbb4
+ref table LocalDateTable_5c17ff4f-db3e-41ae-b5e5-ee9e31e0ba40
+ref table LocalDateTable_cc92f028-6367-49fe-b92a-378d1ef2b129
+ref table LocalDateTable_58088a9c-adb8-4750-a3fd-c863488d5cad
+ref table LocalDateTable_92627219-239f-402e-adad-da020ac6938a
+
+ref cultureInfo en-US
+

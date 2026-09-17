@@ -1,0 +1,41 @@
+table Years
+	lineageTag: a3d07f82-e0d2-435f-a3a9-6a7a7bb41ef8
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: f4861e62-f3b1-4f40-a225-489853cbbbca
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Time Drill' = 'Years'[Decade]
+		dataType: string
+		lineageTag: 1f8b6e7a-6166-4df2-a660-fe6dec4ee53c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Years = m
+		mode: import
+		source =
+				let
+				                StartYear = 1990,
+				                EndYear = 2024,
+				                Count = EndYear - StartYear + 1,
+				                YearList = List.Numbers(StartYear, Count),
+				                #"Converted to Table" = Table.FromList(YearList, Splitter.SplitByNothing(), {"Year"}, null),
+				                #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table", {{"Year", Int64.Type}}),
+				                #"Added YearEndDate" = Table.AddColumn(#"Changed Type", "YearEndDate", each #date([Year], 12, 31), type date),
+				                #"Added Decade" = Table.AddColumn(#"Added YearEndDate", "Decade", each Text.From(Number.IntegerDivide([Year], 10) * 10) & "s", type text),
+				                #"Added FiveYearBand" = Table.AddColumn(#"Added Decade", "FiveYearBand", each Text.From(Number.IntegerDivide([Year], 5) * 5) & "-" & Text.From(Number.IntegerDivide([Year], 5) * 5 + 4), type text),
+				                #"Added IsLatestYear" = Table.AddColumn(#"Added FiveYearBand", "IsLatestYear", each if [Year] = EndYear then 1 else 0, Int64.Type),
+				                #"Added IsLast10Years" = Table.AddColumn(#"Added IsLatestYear", "IsLast10Years", each if [Year] >= EndYear - 9 then 1 else 0, Int64.Type),
+				                #"Added IsLast5Years" = Table.AddColumn(#"Added IsLast10Years", "IsLast5Years", each Text.From(Number.IntegerDivide([Year], 5) * 5) & "-" & Text.From(Number.IntegerDivide([Year], 5) * 5 + 4), type text),
+				                #"Added EconomicEra" = Table.AddColumn(#"Added IsLast5Years", "EconomicEra", each Text.From(Number.IntegerDivide([Year], 10) * 10) & "s", type text)
+				            in
+				                #"Added EconomicEra"
+
+	annotation PBI_ResultType = Table
+

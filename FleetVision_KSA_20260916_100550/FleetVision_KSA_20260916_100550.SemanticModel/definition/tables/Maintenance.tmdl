@@ -1,0 +1,121 @@
+table Maintenance
+	lineageTag: cac24e56-93ae-42be-b25c-32ce3dbf5d4e
+
+	measure 'Total Maintainane Cost' = SUM('Maintenance'[maintenance_total_cost])
+		lineageTag: 3d3331ef-412c-4f8f-b44e-7ef5064c9fd5
+
+	column truck_id
+		dataType: string
+		lineageTag: 22b76494-2c69-434e-8c58-7ff2e017e24e
+		summarizeBy: none
+		sourceColumn: truck_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintenance_id
+		dataType: string
+		lineageTag: 485ac9f8-f8f1-4f19-adc2-89e9911e5728
+		summarizeBy: none
+		sourceColumn: maintenance_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintenance_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 980526ca-bfdb-49d3-b700-33d66037d462
+		summarizeBy: none
+		sourceColumn: maintenance_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintenance_type
+		dataType: string
+		lineageTag: d07d4c21-8984-4a6c-ae6e-e5c6394373c5
+		summarizeBy: none
+		sourceColumn: maintenance_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column odometer_reading
+		dataType: int64
+		formatString: 0
+		lineageTag: 3f29f85b-9a01-4686-9589-1ce7dcebc572
+		summarizeBy: none
+		sourceColumn: odometer_reading
+
+		annotation SummarizationSetBy = Automatic
+
+	column labor_hours
+		dataType: double
+		lineageTag: 7658cea4-fd81-48df-ad36-a8f34d59bf82
+		summarizeBy: none
+		sourceColumn: labor_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column labor_cost
+		dataType: double
+		lineageTag: b1acacbd-fc90-42dc-83f6-bc7f74f34a73
+		summarizeBy: none
+		sourceColumn: labor_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	column parts_cost
+		dataType: double
+		lineageTag: 3c9d4202-5b5d-4fdf-afca-2c7d71089539
+		summarizeBy: none
+		sourceColumn: parts_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	column maintenance_total_cost
+		dataType: double
+		lineageTag: 10fedc72-608a-4874-8b37-fa3dec94c7c1
+		summarizeBy: none
+		sourceColumn: maintenance_total_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_location
+		dataType: string
+		lineageTag: b96fba14-7c51-408d-b3d8-ddcb29b40cea
+		summarizeBy: none
+		sourceColumn: facility_location
+
+		annotation SummarizationSetBy = Automatic
+
+	column downtime_hours
+		dataType: double
+		lineageTag: a510885e-61d0-49e9-827e-bf8b60a36314
+		summarizeBy: sum
+		sourceColumn: downtime_hours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column service_description
+		dataType: string
+		lineageTag: c8e76a7f-ff0b-485e-b4a6-5555886d0a9f
+		summarizeBy: none
+		sourceColumn: service_description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Maintenance = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Schema = Source{[Name="fleetvision",Kind="Schema"]}[Data],
+				                Navigation = Schema{[Name="maintenance_records"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"total_cost", "maintenance_total_cost"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

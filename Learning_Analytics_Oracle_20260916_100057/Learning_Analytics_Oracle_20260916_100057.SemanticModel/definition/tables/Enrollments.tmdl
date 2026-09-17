@@ -1,0 +1,111 @@
+table Enrollments
+	lineageTag: 67df63bd-2893-4676-be05-5c5295615d59
+
+	measure '%age of Total Enrollments' = DIVIDE(DISTINCTCOUNT('Enrollments'[Enrollment Id]), CALCULATE(DISTINCTCOUNT('Enrollments'[Enrollment Id]), ALLSELECTED()), BLANK())
+		formatString: 0.0%
+		lineageTag: 99b055d8-75c4-4512-8874-157e992a145c
+
+	measure 'Total Course Credits' = SUMX(VALUES('Enrollments'[Course Id (Enrollments)]), CALCULATE(MAX('Courses'[Credits])))
+		lineageTag: 3a72d917-ec77-47e3-ac3d-545dc1cea1f9
+
+	measure 'Average Enrollments per Student' = DIVIDE(DISTINCTCOUNT('Enrollments'[Enrollment Id]), DISTINCTCOUNT('Students'[Student Id (Students)]), BLANK())
+		lineageTag: ec1bb8d6-b7c2-4d4b-a610-41b5ec1ff508
+
+	measure 'Course Completion / Success Rate' = DIVIDE(CALCULATE(DISTINCTCOUNT('Enrollments'[Student Id (Enrollments)]), 'Enrollments'[GRADE_SCORE] >= 60), DISTINCTCOUNT('Enrollments'[Student Id (Enrollments)]), BLANK())
+		formatString: 0.0%
+		lineageTag: 1144de42-3797-42d3-bca7-6d60085699b5
+
+	measure 'Average Credits per Enrollment' = MROUND(DIVIDE(SUM('Courses'[Credits]), DISTINCTCOUNT('Enrollments'[Enrollment Id]), BLANK()), 2)
+		lineageTag: 63b06a48-850a-44e4-9818-658f972aa5be
+
+	measure 'Total Enrollmemts' = DISTINCTCOUNT('Enrollments'[Enrollment Id])
+		lineageTag: 2f7b594b-1f92-4868-a78f-350c0fab8e74
+
+	column Semester
+		dataType: string
+		lineageTag: ca644d86-333f-44eb-a0c9-113651d4159b
+		summarizeBy: none
+		sourceColumn: Semester
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: double
+		formatString: 0
+		lineageTag: b33a26c1-8ca1-4dd2-aad0-1178a08d1ef5
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Grade
+		dataType: string
+		lineageTag: d6f53c09-f18d-4fcd-b4ce-4f821902c943
+		summarizeBy: none
+		sourceColumn: Grade
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Academic Term' = 'Enrollments'[Year] & " - " & 'Enrollments'[Semester]
+		dataType: string
+		lineageTag: bcecb406-7aff-4e3d-bc75-0eb5cf90f303
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Student Performance View' = SWITCH( TRUE(), 'Enrollments'[Grade] = "A", "Pass", 'Enrollments'[Grade] = "B", "Pass", 'Enrollments'[Grade] = "C", "Pass", NOT(ISBLANK('Enrollments'[Grade])), "Fail", BLANK() )
+		dataType: string
+		lineageTag: 36591cbe-b526-4c9c-9964-4c8a8cf60473
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Student Performance Level' = SWITCH(TRUE(), 'Enrollments'[Grade] = "A", "Excellent", 'Enrollments'[Grade] = "B", "Good", 'Enrollments'[Grade] = "C", "Average", 'Enrollments'[Grade] = "D", "Below Average", "Fail" )
+		dataType: string
+		lineageTag: 626bd8f5-9b48-42e9-b695-c50112aa247a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Student Id (Enrollments)'
+		dataType: double
+		lineageTag: 58c4cb68-bd99-437d-a9ea-902b6944ec95
+		summarizeBy: count
+		sourceColumn: Student Id (Enrollments)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Course Id (Enrollments)'
+		dataType: double
+		lineageTag: 6c7faf29-a3a3-43e1-ad8e-f800eed70f7d
+		summarizeBy: count
+		sourceColumn: Course Id (Enrollments)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Enrollment Id'
+		dataType: double
+		lineageTag: 74ede5d0-57d3-4079-b7ad-3331a36994a4
+		summarizeBy: count
+		sourceColumn: Enrollment Id
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Enrollments = m
+		mode: import
+		source =
+				let
+				                Source = Oracle.Database("20.70.170.10:1521/XEPDB1", [Query = "SELECT * FROM SYSTEM.ENROLLMENTS"]),
+				                #"Changed Type" = Table.TransformColumnTypes(Source, {{"STUDENT_ID", type number}, {"COURSE_ID", type number}, {"ENROLLMENT_ID", type number}, {"SEMESTER", type text}, {"YEAR", type number}, {"GRADE", type text}}),
+				                #"Renamed Columns" = Table.RenameColumns(#"Changed Type", {{"STUDENT_ID", "Student Id (Enrollments)"}, {"COURSE_ID", "Course Id (Enrollments)"}, {"ENROLLMENT_ID", "Enrollment Id"}, {"SEMESTER", "Semester"}, {"YEAR", "Year"}, {"GRADE", "Grade"}})
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

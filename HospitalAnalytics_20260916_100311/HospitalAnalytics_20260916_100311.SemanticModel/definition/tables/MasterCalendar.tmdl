@@ -1,0 +1,40 @@
+table MasterCalendar
+	lineageTag: ec34b275-43d5-49ff-bf51-f8334c33a5b4
+
+	column EncounterDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b46881c3-fa1a-4ce5-b6ad-eedbd1ba53d3
+		summarizeBy: none
+		sourceColumn: EncounterDate
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MasterCalendar = m
+		mode: import
+		source =
+				let
+				                Today = DateTime.Date(DateTime.LocalNow()),
+				                StartYear = Date.Year(Today) - 25,
+				                EndYear = Date.Year(Today) + 2,
+				                StartDate = #date(StartYear, 1, 1),
+				                EndDate = #date(EndYear, 12, 31),
+				                NumberOfDays = Duration.Days(EndDate - StartDate) + 1,
+				                DatesList = List.Dates(StartDate, NumberOfDays, #duration(1, 0, 0, 0)),
+				                #"Converted to Table" = Table.FromList(DatesList, Splitter.SplitByNothing(), {"EncounterDate"}, null),
+				                #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table", {{ "EncounterDate", type date}}),
+				                #"Added CalendarYear" = Table.AddColumn(#"Changed Type", "CalendarYear", each Text.From(Date.Year([EncounterDate])), type text),
+				                #"Added CalendarQuarter" = Table.AddColumn(#"Added CalendarYear", "CalendarQuarter", each "Q" & Text.From(Date.QuarterOfYear([EncounterDate])), type text),
+				                #"Added CalendarMonth" = Table.AddColumn(#"Added CalendarQuarter", "CalendarMonth", each Date.Month([EncounterDate]), Int64.Type),
+				                #"Added CalendarMonthYear" = Table.AddColumn(#"Added CalendarMonth", "CalendarMonthYear", each Date.ToText([EncounterDate], "yyyy-MMM"), type text),
+				                #"Added CalendarWeek" = Table.AddColumn(#"Added CalendarMonthYear", "CalendarWeek", each Date.WeekOfYear([EncounterDate]), Int64.Type),
+				                #"Added CalendarWeekDay" = Table.AddColumn(#"Added CalendarWeek", "CalendarWeekDay", each Date.DayOfWeek([EncounterDate]), Int64.Type),
+				                #"Added CalendarDay" = Table.AddColumn(#"Added CalendarWeekDay", "CalendarDay", each Date.Day([EncounterDate]), Int64.Type),
+				                #"Added CalendarYearQuarter" = Table.AddColumn(#"Added CalendarDay", "CalendarYearQuarter", each "Q" & Text.From(Date.QuarterOfYear([EncounterDate])), type text)
+				            in
+				                #"Added CalendarYearQuarter"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,31 @@
+table 'Performance View'
+	lineageTag: abe478d9-cab5-48aa-b5f3-d623a0f3b2f3
+
+	measure 'Performance View Value' = SELECTEDVALUE('Performance View'[Value], "Grade")
+		lineageTag: bd862ce8-f711-4bc6-af77-ad9b3ff6bda9
+
+	measure 'Performance View' = [Performance View Value]
+		lineageTag: 9d01e5c2-1a1e-4c07-b472-9b95829862d2
+
+	column Value
+		dataType: string
+		lineageTag: 44a7aea9-40ed-440b-9f2b-075bc67c2be1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Performance View' = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Value", STRING,
+				    {
+				        { "Grade" },
+				        { "Pass/Fail" }
+				    }
+				)
+
+	annotation PBI_Id = e405b7a2-a375-4b66-a680-6d3e51ca289b
+
