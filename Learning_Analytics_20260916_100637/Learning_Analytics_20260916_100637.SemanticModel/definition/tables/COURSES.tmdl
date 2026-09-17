@@ -1,0 +1,70 @@
+table COURSES
+	lineageTag: 3c274269-0b25-41aa-bd49-d9baa1ab8e54
+
+	measure 'Total Departments' = DISTINCTCOUNT('COURSES'[DEPARTMENT])
+		lineageTag: b76b012a-c9de-4bc1-8c1a-599220072074
+
+	measure 'Average Course Credits' = AVERAGE('COURSES'[CREDITS])
+		lineageTag: a4584bc6-5225-4337-a911-9467586e807c
+
+	measure 'Total Courses' = DISTINCTCOUNT('COURSES'[COURSE_ID])
+		lineageTag: 7e923c16-d2d6-4ead-ad02-73c30c4c8c49
+
+	measure 'Average Assignment Credits' = AVERAGE('COURSES'[CREDITS])
+		lineageTag: 946bb120-a9d8-41f0-a89f-e52f1b959f52
+
+	measure 'Max Credits' = MAX('COURSES'[CREDITS])
+		lineageTag: 5720971b-8d8f-476e-82a6-f7cb5f75dd90
+
+	column COURSE_ID
+		dataType: string
+		lineageTag: 8a411eca-11f2-4edc-9733-a52011b281c6
+		summarizeBy: none
+		sourceColumn: COURSE_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column COURSE_NAME
+		dataType: string
+		lineageTag: 0be7a961-cca6-4fe7-92ad-558a8b0ce503
+		summarizeBy: none
+		sourceColumn: COURSE_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column DEPARTMENT
+		dataType: string
+		lineageTag: 6bb0bc81-7d41-416e-a4a2-362b2dd7308b
+		summarizeBy: none
+		sourceColumn: DEPARTMENT
+
+		annotation SummarizationSetBy = Automatic
+
+	column CREDITS
+		dataType: double
+		formatString: 0
+		lineageTag: d514000b-25e1-4064-a49b-f7b03777b65e
+		summarizeBy: sum
+		sourceColumn: CREDITS
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Course Category' = SWITCH(TRUE(), 'COURSES'[CREDITS] = 2, "Basic Course", TRUE(), "Other Course")
+		dataType: string
+		lineageTag: 3528066d-0128-46b6-9955-a09e1411fb68
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition COURSES = m
+		mode: import
+		source =
+				let
+				                Source = Snowflake.Databases("ZLDAGWO-PW94760.snowflakecomputing.com", "COMPUTE_WH"),
+				                Db = Source{[Name="LEARNING_ANALYTICS",Kind="Database"]}[Data],
+				                Result = Value.NativeQuery(Db, "SELECT ""COURSE_ID"", ""COURSE_NAME"", ""DEPARTMENT"", ""CREDITS"" FROM ""LEARNING_ANALYTICS"".""PUBLIC"".""COURSES""", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,53 @@
+relationship rel_team_match_matches_match_id
+	crossFilteringBehavior: bothDirections
+	fromColumn: team_match.match_id
+	toColumn: matches.match_id
+
+relationship rel_team_match_player_match_stats_match_id
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: team_match.match_id
+	toColumn: player_match_stats.match_id
+
+	annotation AmbiguousPaths = "MATCHES->TEAM_MATCH | MATCHES->PLAYER_MATCH_STATS->TEAM_MATCH"
+
+relationship rel_player_match_stats_matches_match_id
+	crossFilteringBehavior: bothDirections
+	fromColumn: player_match_stats.match_id
+	toColumn: matches.match_id
+
+relationship rel_matches_match_calendar_match_date
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: matches.match_date
+	toColumn: match_calendar.match_date
+
+relationship rel_team_match_teams_team_id
+	crossFilteringBehavior: bothDirections
+	fromColumn: team_match.team_id
+	toColumn: teams.team_id
+
+relationship rel_team_match_view_team_standings_team_id
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: team_match.team_id
+	toColumn: view_team_standings.team_id
+
+	annotation AmbiguousPaths = "MATCHES->TEAM_MATCH->TEAMS | MATCHES->TEAM_MATCH->VIEW_TEAM_STANDINGS->TEAMS"
+
+relationship rel_view_team_standings_teams_team_id
+	fromColumn: view_team_standings.team_id
+	toColumn: teams.team_id
+
+relationship rel_player_match_stats_players_player_id
+	crossFilteringBehavior: bothDirections
+	fromColumn: player_match_stats.player_id
+	toColumn: players.player_id
+
+relationship AutoDetected_2511b1f4-428c-4db4-9522-1d04407f6308
+	isActive: false
+	fromColumn: players.team_id
+	toColumn: teams.team_id
+

@@ -1,0 +1,108 @@
+table FuelPurchases
+	lineageTag: cb8e3efe-a13a-482a-a2bc-0ec4322cb146
+
+	column trip_id
+		dataType: string
+		lineageTag: 211dc062-1190-424e-8dc4-b2bf3a28dcfd
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_purchase_id
+		dataType: string
+		lineageTag: ae7facf5-c163-44bb-9c08-5a35e536926a
+		summarizeBy: none
+		sourceColumn: fuel_purchase_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a8b72c7c-bcd4-4d5e-8706-570f0f710861
+		summarizeBy: none
+		sourceColumn: purchase_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_city
+		dataType: string
+		lineageTag: 5ff3da82-9f7e-42dc-bfee-41bfe3221ca5
+		summarizeBy: none
+		sourceColumn: fuel_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_state
+		dataType: string
+		lineageTag: dbd6b356-c608-4abc-968f-d24356cbdac4
+		summarizeBy: none
+		sourceColumn: fuel_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column gallons
+		dataType: double
+		formatString: 0
+		lineageTag: 774a9691-a2c0-4134-a7b1-b24702e8ba92
+		summarizeBy: sum
+		sourceColumn: gallons
+
+		annotation SummarizationSetBy = Automatic
+
+	column price_per_gallon
+		dataType: double
+		lineageTag: ee87626a-a3c4-4f1e-a8fe-39739dd9f305
+		summarizeBy: none
+		sourceColumn: price_per_gallon
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_total_cost
+		dataType: double
+		lineageTag: 8502fbf8-96b7-48d3-a493-10822af240e6
+		summarizeBy: none
+		sourceColumn: fuel_total_cost
+
+		annotation SummarizationSetBy = Automatic
+
+	column fuel_card_number
+		dataType: string
+		lineageTag: a17dbf5b-fe1f-43bd-87a3-130aa6fdc5c8
+		summarizeBy: none
+		sourceColumn: fuel_card_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column truck_id
+		dataType: string
+		lineageTag: d75271b8-f873-4c82-bf48-6fcea2c7609c
+		summarizeBy: none
+		sourceColumn: truck_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column driver_id
+		dataType: string
+		lineageTag: 777455d2-eeb5-433b-a05b-f992fb34da58
+		summarizeBy: none
+		sourceColumn: driver_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FuelPurchases = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Schema = Source{[Name="fleetvision",Kind="Schema"]}[Data],
+				                Navigation = Schema{[Name="fuel_purchases"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"location_city", "fuel_city"}, {"location_state", "fuel_state"}, {"total_cost", "fuel_total_cost"}}, MissingField.Ignore)
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

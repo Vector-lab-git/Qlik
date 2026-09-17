@@ -1,0 +1,106 @@
+table Indicators
+	lineageTag: 857216c8-8b6a-4a0b-8169-13a29c84632f
+
+	column IndicatorCode
+		dataType: string
+		lineageTag: 43a814e6-9f08-4da1-b31b-ebea468841df
+		summarizeBy: none
+		sourceColumn: IndicatorCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column IndicatorName
+		dataType: string
+		lineageTag: a61579cf-fd9b-4b32-bf3a-8852334d55f5
+		summarizeBy: none
+		sourceColumn: IndicatorName
+
+		annotation SummarizationSetBy = Automatic
+
+	column IndicatorGroup
+		dataType: string
+		lineageTag: fd2a2c1f-41bd-47d4-84a0-a04257e6cdd3
+		summarizeBy: none
+		sourceColumn: IndicatorGroup
+
+		annotation SummarizationSetBy = Automatic
+
+	column IndicatorUnit
+		dataType: string
+		lineageTag: d9b81e55-8f3b-4243-acbb-8f86ea2ccc9e
+		summarizeBy: none
+		sourceColumn: IndicatorUnit
+
+		annotation SummarizationSetBy = Automatic
+
+	column IndicatorPolarity
+		dataType: string
+		lineageTag: 99c79a12-cb45-415b-bef3-6a17a75045a9
+		summarizeBy: none
+		sourceColumn: IndicatorPolarity
+
+		annotation SummarizationSetBy = Automatic
+
+	column AggregationType
+		dataType: string
+		lineageTag: d56ffdce-81fd-4830-9458-7dc264488f46
+		summarizeBy: none
+		sourceColumn: AggregationType
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Top 10 Economies + Rest of World' = VAR Top10Countries = TOPN(10, FILTER(ALL('Fact'), 'Indicators'[IndicatorCode] = "NY.GDP.MKTP.CD"), RELATED('Fact'[IndicatorValue]), DESC) VAR IsTop10 = CONTAINS(Top10Countries, RELATED('Countries'[CountryISO3]), RELATED('Fact'[CountryISO3])) RETURN SWITCH( TRUE(), IsTop10, RELATED('Countries'[Country]), TRUE(), "Rest of World" )
+		dataType: string
+		lineageTag: 0c69a3f7-6785-4830-ac95-8f9d1248613f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Growth Classification' = VAR avg_gdp_growth = AVERAGEX( FILTER( FILTER( ALL('Fact'), 'Indicators'[IndicatorCode] = "NY.GDP.MKTP.KD.ZG" ), RELATED('Fact'[CountryISO3]) = EARLIER(RELATED('Fact'[CountryISO3])) ), RELATED('Fact'[IndicatorValue]) ) RETURN SWITCH( TRUE(), avg_gdp_growth >= 6, "1. High Growth (6%+)", avg_gdp_growth >= 3, "2. Solid Growth (3-6%)", avg_gdp_growth >= 0, "3. Slow Growth (0-3%)", "4. Contraction" )
+		dataType: string
+		lineageTag: 4283c963-213d-4db2-be7b-e009694936f1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Indicator Drill' = 'Indicators'[IndicatorGroup]
+		dataType: string
+		lineageTag: b1d1e088-23b9-43ff-b565-fe135fbae54d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Indicator = 'Indicators'[IndicatorName]
+		dataType: string
+		lineageTag: ec7c4c6e-0a93-4b42-bfef-7d45d7a3ae42
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Indicator Group' = 'Indicators'[IndicatorGroup]
+		dataType: string
+		lineageTag: 85e69a9b-e1aa-4f9d-9896-3227841e03b3
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Indicators = m
+		mode: import
+		source =
+				let
+				                Source = #table(type table [IndicatorCode = text, IndicatorName = text, IndicatorGroup = text, IndicatorUnit = text, IndicatorPolarity = text, AggregationType = text], {{"NY.GDP.MKTP.CD", "GDP (current US$)", "Economy", "USD", "Higher is better", "Sum"},
+				                    {"NY.GDP.MKTP.KD.ZG", "GDP growth (annual %)", "Economy", "Percent", "Higher is better", "Average"},
+				                    {"NY.GDP.PCAP.CD", "GDP per capita (current US$)", "Economy", "USD", "Higher is better", "Average"},
+				                    {"FP.CPI.TOTL.ZG", "Inflation consumer prices (annual %)", "Economy", "Percent", "Lower is better", "Average"},
+				                    {"SL.UEM.TOTL.ZS", "Unemployment rate (% labour force)", "Labour", "Percent", "Lower is better", "Average"},
+				                    {"SP.POP.TOTL", "Population total", "Demographics", "People", "Neutral", "Sum"},
+				                    {"SP.DYN.LE00.IN", "Life expectancy at birth (years)", "Demographics", "Years", "Higher is better", "Average"},
+				                    {"NE.EXP.GNFS.CD", "Exports of goods and services (current US$)", "Trade", "USD", "Higher is better", "Sum"},
+				                    {"NE.IMP.GNFS.CD", "Imports of goods and services (current US$)", "Trade", "USD", "Higher is better", "Sum"},
+				                    {"BX.KLT.DINV.CD.WD", "Foreign direct investment net inflows (current US$)", "Investment", "USD", "Higher is better", "Sum"}
+				                })
+				            in
+				                Source
+
+	annotation PBI_ResultType = Table
+

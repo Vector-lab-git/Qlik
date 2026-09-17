@@ -1,0 +1,83 @@
+relationship rel_SalesFact_StockItems_StockItemID
+	crossFilteringBehavior: bothDirections
+	fromColumn: SalesFact.StockItemID
+	toColumn: StockItems.StockItemID
+
+relationship rel_SalesFact_StockItemStockGroups_StockItemID
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: SalesFact.StockItemID
+	toColumn: StockItemStockGroups.StockItemID
+
+relationship rel_SalesFact_StockItemHoldings_StockItemID
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: SalesFact.StockItemID
+	toColumn: StockItemHoldings.StockItemID
+
+relationship rel_StockItemStockGroups_StockItems_StockItemID
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromColumn: StockItemStockGroups.StockItemID
+	toColumn: StockItems.StockItemID
+
+	annotation AmbiguousPaths = "CUSTOMERS->SALESFACT->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMSTOCKGROUPS->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMSTOCKGROUPS->STOCKITEMHOLDINGS->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMHOLDINGS->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMHOLDINGS->STOCKITEMSTOCKGROUPS->STOCKITEMS"
+
+relationship rel_StockItems_StockItemHoldings_StockItemID
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: StockItems.StockItemID
+	toColumn: StockItemHoldings.StockItemID
+
+	annotation AmbiguousPaths = "CUSTOMERS->SALESFACT->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMSTOCKGROUPS->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMSTOCKGROUPS->STOCKITEMHOLDINGS->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMHOLDINGS->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMHOLDINGS->STOCKITEMSTOCKGROUPS->STOCKITEMS"
+
+relationship rel_StockItemStockGroups_StockItemHoldings_StockItemID
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: StockItemStockGroups.StockItemID
+	toColumn: StockItemHoldings.StockItemID
+
+	annotation AmbiguousPaths = "CUSTOMERS->SALESFACT->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMSTOCKGROUPS->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMSTOCKGROUPS->STOCKITEMHOLDINGS->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMHOLDINGS->STOCKITEMS | CUSTOMERS->SALESFACT->STOCKITEMHOLDINGS->STOCKITEMSTOCKGROUPS->STOCKITEMS"
+
+relationship rel_Customers_CustomerCategories_CustomerCategoryID
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: Customers.CustomerCategoryID
+	toColumn: CustomerCategories.CustomerCategoryID
+
+relationship rel_Customers_BuyingGroups_BuyingGroupID
+	fromColumn: Customers.BuyingGroupID
+	toColumn: BuyingGroups.BuyingGroupID
+
+relationship rel_StockItemStockGroups_StockGroups_StockGroupID
+	crossFilteringBehavior: bothDirections
+	fromColumn: StockItemStockGroups.StockGroupID
+	toColumn: StockGroups.StockGroupID
+
+relationship fc8e1946-da8e-4507-9409-9726a1e97356
+	joinOnDateBehavior: datePartOnly
+	fromColumn: SalesFact.LastEditedWhen
+	toColumn: LocalDateTable_f6b1f7b7-5135-41bf-9d0d-6e22bc46cbb4.Date
+
+relationship c19dfd07-e2be-4fb8-91c6-ee24481e7dcf
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Customers.ValidFrom
+	toColumn: LocalDateTable_5c17ff4f-db3e-41ae-b5e5-ee9e31e0ba40.Date
+
+relationship 6ed30d77-8eff-48be-8d64-16a0c8247e0e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Customers.ValidTo
+	toColumn: LocalDateTable_cc92f028-6367-49fe-b92a-378d1ef2b129.Date
+
+relationship 0c379f8e-c4df-4734-b57c-931d50938354
+	joinOnDateBehavior: datePartOnly
+	fromColumn: StockItems.ValidFrom
+	toColumn: LocalDateTable_58088a9c-adb8-4750-a3fd-c863488d5cad.Date
+
+relationship 3c7ffcb9-8fad-424c-a4ac-2ffd8fdfc77d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: StockItems.ValidTo
+	toColumn: LocalDateTable_92627219-239f-402e-adad-da020ac6938a.Date
+

@@ -1,0 +1,29 @@
+relationship rel_COURSE_INSTRUCTORS_COURSES_COURSE_ID
+	crossFilteringBehavior: bothDirections
+	fromColumn: COURSE_INSTRUCTORS.COURSE_ID
+	toColumn: COURSES.COURSE_ID
+
+relationship rel_STUDENT_COURSES_COURSES_COURSE_ID
+	crossFilteringBehavior: bothDirections
+	fromColumn: STUDENT_COURSES.COURSE_ID
+	toColumn: COURSES.COURSE_ID
+
+relationship rel_COURSE_INSTRUCTORS_STUDENT_COURSES_COURSE_ID
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: COURSE_INSTRUCTORS.COURSE_ID
+	toColumn: STUDENT_COURSES.COURSE_ID
+
+	annotation AmbiguousPaths = "COURSES->COURSE_INSTRUCTORS | COURSES->STUDENT_COURSES->COURSE_INSTRUCTORS"
+
+relationship rel_COURSE_INSTRUCTORS_INSTRUCTORS_INSTRUCTOR_ID
+	crossFilteringBehavior: bothDirections
+	fromColumn: COURSE_INSTRUCTORS.INSTRUCTOR_ID
+	toColumn: INSTRUCTORS.INSTRUCTOR_ID
+
+relationship rel_STUDENT_COURSES_STUDENTS_STUDENT_ID
+	crossFilteringBehavior: bothDirections
+	fromColumn: STUDENT_COURSES.STUDENT_ID
+	toColumn: STUDENTS.STUDENT_ID
+

@@ -1,0 +1,64 @@
+table FuelByTrip
+	lineageTag: 2b4ee91f-db36-4408-905d-a6d2f8209abd
+
+	column trip_id
+		dataType: string
+		lineageTag: 2fd399ba-948d-4591-acbe-ea1d395c481b
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column PurchasedGallons
+		dataType: double
+		lineageTag: 8536d020-9aa4-46d7-a84c-cfe7adcd0dfd
+		summarizeBy: none
+		sourceColumn: PurchasedGallons
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalFuelCost
+		dataType: double
+		lineageTag: 6fe78a21-a20f-462f-bf25-1ead60afba4d
+		summarizeBy: none
+		sourceColumn: TotalFuelCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvgFuelPricePerGallon
+		dataType: double
+		lineageTag: 5d8bd0dc-9e8e-4918-a704-07ae726aca20
+		summarizeBy: none
+		sourceColumn: AvgFuelPricePerGallon
+
+		annotation SummarizationSetBy = Automatic
+
+	column FuelTransactions
+		dataType: double
+		formatString: 0
+		lineageTag: abbb9968-2377-486d-8738-149f96c37fe2
+		summarizeBy: sum
+		sourceColumn: FuelTransactions
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckNumber
+		dataType: string
+		lineageTag: 3211f4f8-5195-4d41-8120-debb72a4f082
+		summarizeBy: none
+		sourceColumn: TruckNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FuelByTrip = m
+		mode: import
+		source =
+				let
+				                Source = FuelPurchases,
+				                #"Grouped Rows" = Table.Group(Source, {"trip_id"}, {{"PurchasedGallons", each List.Sum([gallons]), type number}, {"TotalFuelCost", each List.Sum([fuel_total_cost]), type number}, {"AvgFuelPricePerGallon", each if List.Sum([gallons]) > 0 then List.Sum([fuel_total_cost]) / List.Sum([gallons]) else 0, type number}, {"FuelTransactions", each List.Count(List.Distinct([fuel_purchase_id])), type number}}),
+				                #"Added TruckNumber" = Table.AddColumn(#"Grouped Rows", "TruckNumber", each "Unknown", type text)
+				            in
+				                #"Added TruckNumber"
+
+	annotation PBI_ResultType = Table
+

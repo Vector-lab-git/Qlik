@@ -1,0 +1,67 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "C34C1C3F5A4F",
+  "position": {
+    "x": 0,
+    "y": 3120,
+    "z": 50,
+    "width": 960,
+    "height": 550,
+    "tabOrder": 50
+  },
+  "visual": {
+    "visualType": "htmlContent443BE3AD55E043BF878BED274D3A6855",
+    "query": {
+      "queryState": {
+        "content": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Weather_Data"
+                    }
+                  },
+                  "Property": "Weather & Climate Overview Video"
+                }
+              },
+              "queryRef": "Weather_Data.Weather & Climate Overview Video",
+              "nativeQueryRef": "Weather & Climate Overview Video"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Weather & Climate Overview'"
+                }
+              }
+            },
+            "heading": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Heading2'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

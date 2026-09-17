@@ -1,0 +1,101 @@
+table DeliveryByTrip
+	lineageTag: 8bc0f9cb-e7ec-406a-8665-5763fbe74717
+
+	measure 'Maximum Trips by Truck' = MAXX(VALUES('Trucks'[truck_id]), CALCULATE(COUNT('DeliveryByTrip'[trip_id])))
+		lineageTag: 26b0dac4-a3f2-4374-911e-4a2e82688888
+
+	measure 'Revenue per Trip' = DIVIDE(SUM('Loads'[revenue]), COUNT('DeliveryByTrip'[trip_id]), BLANK())
+		lineageTag: bbb0f8ab-9248-4e50-bf5f-3a8dc8a796a1
+
+	measure 'Completed Trips' = CALCULATE(COUNT('DeliveryByTrip'[trip_id]), 'Trips'[trip_status] = "Completed", CROSSFILTER('DeliveryByTrip'[trip_id], 'Trips'[trip_id], Both))
+		lineageTag: fb10d629-255b-4a1a-a89b-81ddf526c38e
+
+	measure 'Total Trips' = COUNT('DeliveryByTrip'[trip_id])
+		lineageTag: 018fe93d-b631-4aaa-af42-98e809e67005
+
+	measure 'Fleet Operations' = MAXX(VALUES('Trucks'[truck_id]), CALCULATE(COUNT('DeliveryByTrip'[trip_id])))
+		lineageTag: c5bb5b97-02e8-42e6-88c6-1a7ff1571f79
+
+	column trip_id
+		dataType: string
+		lineageTag: d69f7ca5-4780-4afd-8aae-d194581787ab
+		summarizeBy: none
+		sourceColumn: trip_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryEvents
+		dataType: double
+		formatString: 0
+		lineageTag: 1a456b66-9db5-42bf-957f-3d119d79f4a4
+		summarizeBy: sum
+		sourceColumn: DeliveryEvents
+
+		annotation SummarizationSetBy = Automatic
+
+	column OnTimeEvents
+		dataType: double
+		lineageTag: 34e62997-dfed-4210-9298-b43eb31aaf2f
+		summarizeBy: sum
+		sourceColumn: OnTimeEvents
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LateEvents
+		dataType: double
+		formatString: 0
+		lineageTag: 05f2c07a-2d8e-402f-a178-fe8206317ec3
+		summarizeBy: sum
+		sourceColumn: LateEvents
+
+		annotation SummarizationSetBy = Automatic
+
+	column OnTimeRate
+		dataType: double
+		lineageTag: 11be30bb-99c6-40b2-befc-6903f8e2f01c
+		summarizeBy: sum
+		sourceColumn: OnTimeRate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TotalDetentionMinutes
+		dataType: double
+		formatString: 0
+		lineageTag: 903976aa-c161-4565-92c6-b0074d352cdf
+		summarizeBy: sum
+		sourceColumn: TotalDetentionMinutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvgDetentionMinutes
+		dataType: double
+		lineageTag: 3aa8769d-440c-4086-a70c-f90bf448cf83
+		summarizeBy: none
+		sourceColumn: AvgDetentionMinutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column TruckNumber
+		dataType: string
+		lineageTag: 00c9c6ee-9cde-4021-b49c-b98bf259f585
+		summarizeBy: none
+		sourceColumn: TruckNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DeliveryByTrip = m
+		mode: import
+		source =
+				let
+				                Source = DeliveryEvents,
+				                #"Grouped by trip_id" = Table.Group(Source, {"trip_id"}, {{"DeliveryEvents", each List.Count(List.Distinct([event_id])), type number}, {"OnTimeEvents", each List.Sum(List.Transform([on_time_flag], (x) => if (x = 1 or x = true or x = "1") then 1 else 0)), type number}, {"LateEvents", each List.Sum(List.Transform([on_time_flag], (x) => if x = 0 then 1 else 0)), type number}, {"OnTimeRate", each if List.Count(List.Distinct([event_id])) > 0 then List.Sum(List.Transform([on_time_flag], (x) => if (x = 1 or x = true or x = "1") then 1 else 0)) / List.Count(List.Distinct([event_id])) else 0, type number}, {"TotalDetentionMinutes", each List.Sum([detention_minutes]), type number}, {"AvgDetentionMinutes", each List.Average([detention_minutes]), type number}}),
+				                #"Added TruckNumber" = Table.AddColumn(#"Grouped by trip_id", "TruckNumber", each "Unknown", type text)
+				            in
+				                #"Added TruckNumber"
+
+	annotation PBI_ResultType = Table
+

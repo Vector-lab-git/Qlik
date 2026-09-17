@@ -1,0 +1,78 @@
+table StockItemHoldings
+	lineageTag: d54a316f-45a7-4b93-897c-3946fa6b956b
+
+	measure Count(ReorderLevel) = COUNT('StockItemHoldings'[ReorderLevel])
+		lineageTag: 321b0587-0fd0-48a3-9ff4-95fca2e8e785
+
+	column StockItemID
+		dataType: int64
+		formatString: 0
+		lineageTag: f397aedb-46a8-4938-bd3d-211b320fbc21
+		summarizeBy: none
+		sourceColumn: StockItemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column QuantityOnHand
+		dataType: int64
+		formatString: 0
+		lineageTag: 6e2ca2fb-4e27-494e-9f22-377fdf2af17a
+		summarizeBy: none
+		sourceColumn: QuantityOnHand
+
+		annotation SummarizationSetBy = Automatic
+
+	column BinLocation
+		dataType: string
+		lineageTag: 0000cc2c-82ab-412c-ae38-1882e8cb5a75
+		summarizeBy: none
+		sourceColumn: BinLocation
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastStocktakeQuantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 138962b2-bf7c-4e3a-affd-042962ccccde
+		summarizeBy: none
+		sourceColumn: LastStocktakeQuantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastCostPrice
+		dataType: double
+		lineageTag: 25d8fbc9-22ff-45bc-909a-674c33064565
+		summarizeBy: none
+		sourceColumn: LastCostPrice
+
+		annotation SummarizationSetBy = Automatic
+
+	column ReorderLevel
+		dataType: int64
+		formatString: 0
+		lineageTag: cddb8420-a94d-4b3d-9c98-2e370b14842c
+		summarizeBy: none
+		sourceColumn: ReorderLevel
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetStockLevel
+		dataType: int64
+		formatString: 0
+		lineageTag: 896eadfb-e3ee-46ab-994e-4ffcd8f9c614
+		summarizeBy: none
+		sourceColumn: TargetStockLevel
+
+		annotation SummarizationSetBy = Automatic
+
+	partition StockItemHoldings = m
+		mode: import
+		source =
+				let
+				                Source = Sql.Database("vl-t2f-sql-server-dev.database.windows.net", "vl-t2f-sql-db-dev-wwi"),
+				                Result = Value.NativeQuery(Source, "SELECT StockItemID, QuantityOnHand, BinLocation, LastStocktakeQuantity, LastCostPrice, ReorderLevel, TargetStockLevel FROM ""vl-t2f-sql-db-dev-wwi"".Warehouse.StockItemHoldings", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

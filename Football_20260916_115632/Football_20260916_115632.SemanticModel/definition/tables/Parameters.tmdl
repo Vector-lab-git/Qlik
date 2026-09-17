@@ -1,0 +1,132 @@
+table Parameters
+	lineageTag: 263c8808-edbc-491f-a148-7e8375128eb1
+
+	measure ErrorMode = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ErrorMode")), 1)
+		lineageTag: 2106e267-352a-4b63-91a9-bc114c6a5505
+
+	measure StripComments = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "StripComments")), 1)
+		lineageTag: 698f265b-79b8-461f-b2e4-1a028f10a8ae
+
+	measure OpenUrlTimeout = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "OpenUrlTimeout")), 86400)
+		lineageTag: 922726b2-139c-43f6-b78f-b2dda40629b5
+
+	measure ScriptError = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptError")), 1)
+		lineageTag: b18da8d5-7b3d-4cad-b042-c11eeef910e1
+
+	measure ScriptErrorCount = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptErrorCount")), 0)
+		lineageTag: 8fcc1d00-bcdc-4447-bbdf-2dd579941fc9
+
+	measure ScriptErrorList = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptErrorList")), 1)
+		lineageTag: 1d3bbae3-a5e8-49b8-a81c-30557cd099a5
+
+	measure ThousandSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ThousandSep")
+		lineageTag: a8cdb40d-1a80-4ceb-af96-8dda9dd5050d
+
+	measure DecimalSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DecimalSep")
+		lineageTag: 53183ec9-4691-4183-be14-bdae805be698
+
+	measure MoneyThousandSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyThousandSep")
+		lineageTag: e8b187c0-1c94-4a80-82af-248b2c9badd0
+
+	measure MoneyDecimalSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyDecimalSep")
+		lineageTag: ce9df40a-fc11-45c1-869a-63e14e4e6afd
+
+	measure MoneyFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyFormat")
+		lineageTag: a07c51cd-8d72-4b0f-9cc9-4f59e44e01d3
+
+	measure TimeFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "TimeFormat")
+		lineageTag: 8296354f-6eba-454e-a8c5-cde16c82e9eb
+
+	measure DateFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DateFormat")
+		lineageTag: b8044fb1-2461-4280-aabb-6f66f4d62c43
+
+	measure TimestampFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "TimestampFormat")
+		lineageTag: ade376d8-b7d2-4b7f-99b9-9c71279e428e
+
+	measure FirstWeekDay = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "FirstWeekDay")), 6)
+		lineageTag: a5961eb9-1853-406d-b0b3-7ae0c5b4f064
+
+	measure BrokenWeeks = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "BrokenWeeks")), 1)
+		lineageTag: 3e5e886d-6242-410e-9adb-741e923bb9cc
+
+	measure ReferenceDay = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ReferenceDay")), 0)
+		lineageTag: 115b08f2-93e8-4121-b47b-d136cc3fed7d
+
+	measure FirstMonthOfYear = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "FirstMonthOfYear")), 1)
+		lineageTag: 5af556c8-467d-49c1-bfe2-638d55e5c717
+
+	measure CollationLocale = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "CollationLocale")
+		lineageTag: 7067d79b-7996-4b81-a7cf-53a2a5174d4f
+
+	measure CreateSearchIndexOnReload = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "CreateSearchIndexOnReload")), 1)
+		lineageTag: e2ce6bbd-c639-4fa1-9c3d-f9a12adbfd1a
+
+	measure MonthNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MonthNames")
+		lineageTag: 28ee7c34-f5b9-4c61-ade2-b7e042bcbca9
+
+	measure LongMonthNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "LongMonthNames")
+		lineageTag: a2ee4aaa-8de1-4aa8-90a5-5fcbf0e5025d
+
+	measure DayNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DayNames")
+		lineageTag: e236e5a8-c353-4111-9709-f541f721c98f
+
+	measure LongDayNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "LongDayNames")
+		lineageTag: bd961c73-841f-4016-8867-de0434fe0863
+
+	measure NumericalAbbreviation = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "NumericalAbbreviation")
+		lineageTag: dbba69e7-1ad3-4697-8a92-3f52cd3f5635
+
+	measure vTeamMetric = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vTeamMetric")
+		lineageTag: eb128f4d-7905-4f3b-8c10-aa9cb16b097a
+
+	measure vTeamView = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vTeamView")
+		lineageTag: 2d5dc10d-3bc0-4ab4-8692-c38964e9d1f5
+
+	column Parameter
+		lineageTag: c23a2d2b-1825-4214-8928-e04a88379b80
+		isNameInferred
+		sourceColumn: [Parameter]
+
+	column Value
+		lineageTag: 34f8db24-2dbc-4408-9085-16cf68073d65
+		isNameInferred
+		sourceColumn: [Value]
+
+	partition Parameters = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Parameter", STRING, "Value", STRING,
+				    {
+				        { "ErrorMode", "1" },
+				        { "StripComments", "1" },
+				        { "OpenUrlTimeout", "86400" },
+				        { "ScriptError", "1" },
+				        { "ScriptErrorCount", "0" },
+				        { "ScriptErrorList", "1" },
+				        { "ThousandSep", "," },
+				        { "DecimalSep", "." },
+				        { "MoneyThousandSep", "," },
+				        { "MoneyDecimalSep", "." },
+				        { "MoneyFormat", "$ ###0.00;-$ ###0.00" },
+				        { "TimeFormat", "h:mm:ss TT" },
+				        { "DateFormat", "M/D/YYYY" },
+				        { "TimestampFormat", "M/D/YYYY h:mm:ss[.fff] TT" },
+				        { "FirstWeekDay", "6" },
+				        { "BrokenWeeks", "1" },
+				        { "ReferenceDay", "0" },
+				        { "FirstMonthOfYear", "1" },
+				        { "CollationLocale", "en-US" },
+				        { "CreateSearchIndexOnReload", "1" },
+				        { "MonthNames", "Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec" },
+				        { "LongMonthNames", "January;February;March;April;May;June;July;August;September;October;November;December" },
+				        { "DayNames", "Mon;Tue;Wed;Thu;Fri;Sat;Sun" },
+				        { "LongDayNames", "Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday" },
+				        { "NumericalAbbreviation", "3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y" },
+				        { "vTeamMetric", "='Goals Scored'" },
+				        { "vTeamView", "='Overall'" }
+				    }
+				)
+
+	annotation PBI_Id = f07509ef-cf6d-4335-abc0-1922b9ae710b
+

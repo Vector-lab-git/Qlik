@@ -1,0 +1,26 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Countries","Fact","Indicators","Years","Targets"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode","WebModelingEdit"]
+
+ref table Countries
+ref table Fact
+ref table Indicators
+ref table Years
+ref table Targets
+ref table Parameters
+ref table DateTableTemplate_dce18423-58c8-4dce-925e-a47bb84ce906
+ref table LocalDateTable_65aec1b2-082a-4e97-b25a-b2baa9a88433
+
+ref cultureInfo en-US
+

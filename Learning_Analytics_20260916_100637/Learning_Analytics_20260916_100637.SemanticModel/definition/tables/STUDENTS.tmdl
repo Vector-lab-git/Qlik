@@ -1,0 +1,80 @@
+table STUDENTS
+	lineageTag: 5f99ab2e-4284-4887-b44b-602b55a556a9
+
+	measure 'Total Students' = DISTINCTCOUNT('STUDENTS'[STUDENT_ID])
+		lineageTag: f49d599d-07b0-4ea3-968b-22359cc9298a
+
+	column STUDENT_ID
+		dataType: string
+		lineageTag: 80b2d15d-5627-4f57-8e55-1ed7c313961a
+		summarizeBy: none
+		sourceColumn: STUDENT_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column FIRST_NAME
+		dataType: string
+		lineageTag: b3fc1307-d19e-4e2b-b965-16e02312f606
+		summarizeBy: none
+		sourceColumn: FIRST_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column LAST_NAME
+		dataType: string
+		lineageTag: 86344436-b9a5-4157-bfd8-f17d52987b84
+		summarizeBy: none
+		sourceColumn: LAST_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column GENDER
+		dataType: string
+		lineageTag: 4f9cc6aa-e042-45a5-8be7-f9ee43136fa5
+		summarizeBy: none
+		sourceColumn: GENDER
+
+		annotation SummarizationSetBy = Automatic
+
+	column DOB
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1f243681-4e44-42ab-b6ac-52019b61f955
+		summarizeBy: none
+		sourceColumn: DOB
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column EMAIL
+		dataType: string
+		lineageTag: d18f8455-182d-4319-a494-98b55245c548
+		summarizeBy: none
+		sourceColumn: EMAIL
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age = VAR days_since_birth = TODAY() - 'STUDENTS'[DOB] VAR age = FLOOR(days_since_birth / 365.25, 1) RETURN age
+		dataType: double
+		formatString: 0.00
+		lineageTag: a743011a-b4d2-41d7-9719-f2224a550706
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition STUDENTS = m
+		mode: import
+		source =
+				let
+				                Source = Snowflake.Databases("ZLDAGWO-PW94760.snowflakecomputing.com", "COMPUTE_WH"),
+				                Db = Source{[Name="LEARNING_ANALYTICS",Kind="Database"]}[Data],
+				                Sch = Db{[Name="PUBLIC",Kind="Schema"]}[Data],
+				                Navigation = Sch{[Name="STUDENTS",Kind="Table"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"FIRST_NAME", "FIRST_NAME"}, {"LAST_NAME", "LAST_NAME"}, {"EMAIL", "EMAIL"}}, MissingField.Ignore),
+				                #"Transformed DOB" = Table.TransformColumns(#"Renamed Columns", {{"DOB", each Date.From(_), type date}})
+				            in
+				                #"Transformed DOB"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
+  "version": "4.0",
+  "datasetReference": {
+    "byPath": {
+      "path": "../Direct_API_-_Global_Economic_Observatory_1_20260917_033403.SemanticModel"
+    }
+  }
+}

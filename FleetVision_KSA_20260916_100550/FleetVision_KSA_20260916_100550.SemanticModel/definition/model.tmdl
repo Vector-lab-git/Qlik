@@ -1,0 +1,43 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Trips","Drivers","DriverPerformance","Trucks","Maintenance","TruckPerformance","MaintenanceByTruck","Trailers","Customers","Loads","Facilities","DeliveryEvents","Routes","FuelPurchases","SafetyIncidents","FuelByTrip","DeliveryByTrip","SafetyByTrip","Calendar"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode","WebModelingEdit"]
+
+ref table Trips
+ref table Drivers
+ref table DriverPerformance
+ref table Trucks
+ref table Maintenance
+ref table TruckPerformance
+ref table MaintenanceByTruck
+ref table Trailers
+ref table Customers
+ref table Loads
+ref table Facilities
+ref table DeliveryEvents
+ref table Routes
+ref table FuelPurchases
+ref table SafetyIncidents
+ref table FuelByTrip
+ref table DeliveryByTrip
+ref table SafetyByTrip
+ref table Calendar
+ref table 'Top N Customers'
+ref table Parameters
+ref table DateTableTemplate_46d29e3d-a6ce-472e-9ec9-6c96b19ebaab
+ref table LocalDateTable_18997f9d-07fb-48fb-ab23-48902a66a855
+ref table LocalDateTable_fdc5f814-779e-44c2-98e4-f3830526b71d
+ref table LocalDateTable_2ba4fa7a-efe1-4882-8523-9f56ea7f89c2
+
+ref cultureInfo en-US
+

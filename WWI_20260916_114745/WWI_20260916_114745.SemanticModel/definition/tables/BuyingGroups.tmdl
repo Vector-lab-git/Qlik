@@ -1,0 +1,31 @@
+table BuyingGroups
+	lineageTag: d84d3374-7d26-4ae8-a667-4c3ce75aba4d
+
+	column BuyingGroupID
+		dataType: int64
+		formatString: 0
+		lineageTag: 84bc2c1f-4829-41ab-8d00-12a3af5c03c7
+		summarizeBy: none
+		sourceColumn: BuyingGroupID
+
+		annotation SummarizationSetBy = Automatic
+
+	column BuyingGroupName
+		dataType: string
+		lineageTag: 78ba835c-bde3-4abe-a89c-c5b46da5732f
+		summarizeBy: none
+		sourceColumn: BuyingGroupName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition BuyingGroups = m
+		mode: import
+		source =
+				let
+				                Source = Sql.Database("vl-t2f-sql-server-dev.database.windows.net", "vl-t2f-sql-db-dev-wwi"),
+				                Result = Value.NativeQuery(Source, "SELECT BuyingGroupID, BuyingGroupName FROM ""vl-t2f-sql-db-dev-wwi"".Sales.BuyingGroups", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

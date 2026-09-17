@@ -1,0 +1,113 @@
+table Procedures
+	lineageTag: ecce48cc-28f3-41da-98a0-0a5ea1cbc4fc
+
+	measure 'Procedures per Encounter' = DIVIDE(COUNT('Procedures'[CODE]), DISTINCTCOUNT('Encounters'[Id]), BLANK())
+		lineageTag: d894adc6-cdbe-4570-8d3a-4359a5bfc5b2
+
+	measure 'Total Procedures' = COUNT('Procedures'[CODE])
+		lineageTag: 2a875f9d-e7d7-4142-8322-79957d2af3d5
+
+	measure 'Total Procedure Cost' = SUM('Procedures'[BASE_COST])
+		lineageTag: b6e21609-671a-4d80-9dcc-f473eeb6185e
+
+	column START
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8d2c15c0-74f4-42eb-96fe-5f76dd6d1ba8
+		summarizeBy: none
+		sourceColumn: START
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column STOP
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 3c06f682-2c72-4513-bb41-1414a089cb4a
+		summarizeBy: none
+		sourceColumn: STOP
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column PatientId
+		dataType: string
+		lineageTag: 665d969b-2e3e-4676-b8e8-a15ec0c45485
+		summarizeBy: none
+		sourceColumn: PatientId
+
+		annotation SummarizationSetBy = Automatic
+
+	column EncounterId
+		dataType: string
+		lineageTag: e6d319bc-a8d1-4ac5-8b17-c97385ee09dd
+		summarizeBy: none
+		sourceColumn: EncounterId
+
+		annotation SummarizationSetBy = Automatic
+
+	column CODE
+		dataType: string
+		lineageTag: 2e932d40-2847-455c-b654-a5d61674a76f
+		summarizeBy: none
+		sourceColumn: CODE
+
+		annotation SummarizationSetBy = Automatic
+
+	column DESCRIPTION
+		dataType: string
+		lineageTag: d1fa9d72-54a5-4420-b344-44e105008e38
+		summarizeBy: none
+		sourceColumn: DESCRIPTION
+
+		annotation SummarizationSetBy = Automatic
+
+	column BASE_COST
+		dataType: int64
+		formatString: 0
+		lineageTag: 008acddb-5f3e-42f4-abf2-aebabb66ef62
+		summarizeBy: none
+		sourceColumn: BASE_COST
+
+		annotation SummarizationSetBy = Automatic
+
+	column REASONCODE
+		dataType: int64
+		formatString: 0
+		lineageTag: b846accf-6167-4a23-9978-d044c637582d
+		summarizeBy: none
+		sourceColumn: REASONCODE
+
+		annotation SummarizationSetBy = Automatic
+
+	column REASONDESCRIPTION
+		dataType: string
+		lineageTag: 687415d0-ac65-4918-9d7b-a6927c1ec8b1
+		summarizeBy: none
+		sourceColumn: REASONDESCRIPTION
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Procedures = m
+		mode: import
+		source =
+				let
+				                Source = GoogleSheets.Contents("https://docs.google.com/spreadsheets/d/10X1xQHkGidpz_0qYh7o9mxmsRJsOHRB9bNnSKFnUNgo/edit"),
+				                #"Selected Sheet" = try Source{[name="Procedures", ItemKind="Table"]}[Data] otherwise try Source{[Item="Procedures"]}[Data] otherwise Source{0}[Data],
+				                Navigation = Table.PromoteHeaders(#"Selected Sheet", [PromoteAllScalars=true]),
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"START", "START"}, {"STOP", "STOP"}, {"PATIENT", "PatientId"}, {"ENCOUNTER", "EncounterId"}, {"CODE", "CODE"}, {"DESCRIPTION", "DESCRIPTION"}, {"BASE_COST", "BASE_COST"}, {"REASONCODE", "REASONCODE"}, {"REASONDESCRIPTION", "REASONDESCRIPTION"}}, MissingField.Ignore),
+				                #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns", {{"START", type date}, {"STOP", type date}, {"PatientId", type text}, {"EncounterId", type text}, {"CODE", type text}, {"DESCRIPTION", type text}, {"BASE_COST", type number}, {"REASONCODE", type number}, {"REASONDESCRIPTION", type text}}),
+				                #"Added ProcedureDate" = Table.AddColumn(#"Changed Type", "ProcedureDate", each Date.From([START]), type date),
+				                #"Added ProcedureYear" = Table.AddColumn(#"Added ProcedureDate", "ProcedureYear", each Date.Year([START]), type number),
+				                #"Added ProcedureMonth" = Table.AddColumn(#"Added ProcedureYear", "ProcedureMonth", each Date.Month([START]), type number),
+				                #"Added ProcedureYearMonth" = Table.AddColumn(#"Added ProcedureMonth", "ProcedureYearMonth", each Text.From(Date.Year([START])) & "-" & Text.PadStart(Text.From(Date.Month([START])), 2, "0"), type text),
+				                #"Added ProcedureQuarter" = Table.AddColumn(#"Added ProcedureYearMonth", "ProcedureQuarter", each "Q" & Text.From(Date.QuarterOfYear([START])) & " " & Text.From(Date.Year([START])), type text),
+				                #"Added ProcedureDurationHours" = Table.AddColumn(#"Added ProcedureQuarter", "ProcedureDurationHours", each (Duration.TotalHours([STOP] - [START])), type number),
+				                #"Added ProcedureCostBand" = Table.AddColumn(#"Added ProcedureDurationHours", "ProcedureCostBand", each if [BASE_COST] < 500 then "Low" else if [BASE_COST] < 2000 then "Medium" else if [BASE_COST] < 10000 then "High" else "Very High", type text)
+				            in
+				                #"Added ProcedureCostBand"
+
+	annotation PBI_ResultType = Table
+

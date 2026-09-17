@@ -1,0 +1,66 @@
+table SalesData
+	lineageTag: cf91fb23-827c-48c4-996b-8728a916a2db
+
+	measure 'Average Sales / Student' = DIVIDE(SUM('SalesData'[Sales]), DISTINCTCOUNT('StudentData'[ID]), BLANK())
+		lineageTag: bd4927c4-56a2-4fab-89aa-4202e9e02750
+
+	measure 'Total Sales' = SUM('SalesData'[Sales])
+		lineageTag: b2e73050-fce8-4479-ad13-44641e129c9e
+
+	column ID
+		dataType: double
+		formatString: 0
+		lineageTag: 2e9ee2dd-7fcd-4e33-8e99-cf52b79155e0
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sales
+		dataType: double
+		formatString: 0
+		lineageTag: bc2d33e0-2e7a-4aa8-9839-ac6233f3a984
+		summarizeBy: sum
+		sourceColumn: Sales
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		dataType: string
+		lineageTag: a6e205eb-edb6-4a55-9596-8370c4713b28
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 58262e2e-c2be-4fa0-80cd-51615d3fddde
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: string
+		lineageTag: 8767a8dd-1dc7-4c74-aae1-d54e1f8a6a8b
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SalesData = m
+		mode: import
+		source =
+				let
+				                Source = SharePoint.Files("https://aoscaustralia.sharepoint.com/sites/TableautoFabricMigration", [ApiVersion = 15]),
+				                #"Filtered Files" = Table.SelectRows(Source, each [Name] = "sample_sharepoint_sales.csv"),
+				                FileContent = #"Filtered Files"{0}[Content],
+				                #"Imported CSV" = Csv.Document(FileContent, [Delimiter=",", Encoding=28591, QuoteStyle=QuoteStyle.None]),
+				                Navigation = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				                #"Changed Type" = Table.TransformColumnTypes(Navigation, {{"ID", type number}, {"Sales", type number}})
+				            in
+				                #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

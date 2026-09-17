@@ -1,0 +1,203 @@
+table Encounters
+	lineageTag: fc6998c8-03f3-426e-85ad-266cdc1a5edc
+
+	measure 'YoY Claim Cost Growth' = VAR _CurrentYear = MAX('Encounters'[Encounter Year]) VAR _CurrentCost = CALCULATE(SUM('Encounters'[TOTAL_CLAIM_COST]), 'Encounters'[Encounter Year] = _CurrentYear) VAR _PriorCost = CALCULATE(SUM('Encounters'[TOTAL_CLAIM_COST]), 'Encounters'[Encounter Year] = _CurrentYear - 1) RETURN DIVIDE(_CurrentCost - _PriorCost, _PriorCost, BLANK())
+		lineageTag: f410790d-200d-4113-8d73-e8c995645cd9
+
+	measure 'Total Claim Cost' = SUM('Encounters'[TOTAL_CLAIM_COST])
+		lineageTag: 520cce09-1eef-4f0c-90f5-ab5d4487efba
+
+	measure 'Total Base Encounter Cost' = SUM('Encounters'[BASE_ENCOUNTER_COST])
+		lineageTag: 2eb2ccb3-2667-4629-8028-4c3e95245602
+
+	measure 'Total Encounters' = DISTINCTCOUNT('Encounters'[Id])
+		lineageTag: cf08becb-85d2-4d04-aca0-db6345284cf8
+
+	measure 'Average Encounter Cost' = AVERAGE('Encounters'[TOTAL_CLAIM_COST])
+		lineageTag: 27d7ec36-06a4-47cc-b38c-4b9ba29a25a8
+
+	measure 'Total Payer Coverage' = SUM('Encounters'[PAYER_COVERAGE])
+		lineageTag: a290a745-357c-40fd-a19b-00f33ac5afd5
+
+	measure 'Avg Encounter Duration' = AVERAGEX(FILTER('Encounters', NOT(ISBLANK('Encounters'[START])) && NOT(ISBLANK('Encounters'[STOP]))), DATEDIFF('Encounters'[START], 'Encounters'[STOP], DAY))
+		lineageTag: 0f42388b-88d3-4c7f-a7d4-839b85287024
+
+	measure 'Coverage %' = DIVIDE(SUM('Encounters'[PAYER_COVERAGE]), SUM('Encounters'[TOTAL_CLAIM_COST]), BLANK())
+		formatString: 0.0%
+		lineageTag: b2eb20ff-ec2c-48b1-bff4-9a5dbbcafaca
+
+	measure 'Cost Contribution %' = DIVIDE(SUM('Encounters'[TOTAL_CLAIM_COST]), CALCULATE(SUM('Encounters'[TOTAL_CLAIM_COST]), ALLSELECTED()), BLANK())
+		formatString: 0.0%
+		lineageTag: 8176fe09-c3d1-4335-bcee-69b5a1575d49
+
+	measure 'Median Encounter Cost' = MEDIAN('Encounters'[TOTAL_CLAIM_COST])
+		lineageTag: 33a0d70e-bd29-4b0a-b8eb-9b22c35754a6
+
+	measure 'Patient Out-of-Pocket Cost' = ROUND(DIVIDE(SUM('Encounters'[TOTAL_CLAIM_COST]) - SUM('Encounters'[PAYER_COVERAGE]), 1000000, BLANK()), 1)
+		formatString: \$#,##0.0\M
+		lineageTag: a9ee9e8a-61a5-460e-afb4-50b85915144d
+
+	measure 'High-Cost Encounters' = CALCULATE(DISTINCTCOUNT('Encounters'[Id]), FILTER('Encounters', 'Encounters'[TOTAL_CLAIM_COST] >=[vHighCostThreshold]))
+		lineageTag: d3d01ede-b82e-4ef9-92c1-e32cd6f44b06
+
+	column PatientId
+		dataType: string
+		lineageTag: 41e0801b-e5a8-493a-abed-3b90f926d8b8
+		summarizeBy: none
+		sourceColumn: PatientId
+
+		annotation SummarizationSetBy = Automatic
+
+	column PayerId
+		dataType: string
+		lineageTag: 08b75f31-3654-4a60-93a3-9fb08d93445e
+		summarizeBy: none
+		sourceColumn: PayerId
+
+		annotation SummarizationSetBy = Automatic
+
+	column Id
+		dataType: string
+		lineageTag: 115f694f-e566-4e9e-8a24-191383ff9ccf
+		summarizeBy: none
+		sourceColumn: Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column START
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4ec1466b-c664-4428-a0ce-dd7fd73aebce
+		summarizeBy: none
+		sourceColumn: START
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column STOP
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 04c6f5c8-e07e-4772-a9e8-05e5face35e4
+		summarizeBy: none
+		sourceColumn: STOP
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrganizationId
+		dataType: string
+		lineageTag: 7a2308bd-e043-4aa7-9799-ce8272ecb15f
+		summarizeBy: none
+		sourceColumn: OrganizationId
+
+		annotation SummarizationSetBy = Automatic
+
+	column ENCOUNTERCLASS
+		dataType: string
+		lineageTag: 02017c49-bb99-49d5-aeac-9467a942da7c
+		summarizeBy: none
+		sourceColumn: ENCOUNTERCLASS
+
+		annotation SummarizationSetBy = Automatic
+
+	column CODE
+		dataType: int64
+		formatString: 0
+		lineageTag: f3a64612-0fbe-4e40-8376-cd8d0a33a843
+		summarizeBy: none
+		sourceColumn: CODE
+
+		annotation SummarizationSetBy = Automatic
+
+	column DESCRIPTION
+		dataType: string
+		lineageTag: 78485e86-31c8-4e48-aadf-a024c7ec3583
+		summarizeBy: none
+		sourceColumn: DESCRIPTION
+
+		annotation SummarizationSetBy = Automatic
+
+	column BASE_ENCOUNTER_COST
+		dataType: double
+		lineageTag: b29a1296-ebe0-47c6-8d0a-40f1621177c6
+		summarizeBy: none
+		sourceColumn: BASE_ENCOUNTER_COST
+
+		annotation SummarizationSetBy = Automatic
+
+	column TOTAL_CLAIM_COST
+		dataType: double
+		lineageTag: 25aa79e6-953c-4422-ac35-513a85d0494a
+		summarizeBy: none
+		sourceColumn: TOTAL_CLAIM_COST
+
+		annotation SummarizationSetBy = Automatic
+
+	column PAYER_COVERAGE
+		dataType: double
+		lineageTag: c0adc7d5-217f-483f-b1fc-c16137013e81
+		summarizeBy: none
+		sourceColumn: PAYER_COVERAGE
+
+		annotation SummarizationSetBy = Automatic
+
+	column REASONCODE
+		dataType: string
+		lineageTag: 4bcf86e6-508a-4207-9686-3238b7cfd0da
+		summarizeBy: none
+		sourceColumn: REASONCODE
+
+		annotation SummarizationSetBy = Automatic
+
+	column REASONDESCRIPTION
+		dataType: string
+		lineageTag: c686a9e9-e4ed-401a-aff7-53133b801b95
+		summarizeBy: none
+		sourceColumn: REASONDESCRIPTION
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Encounter Class' = 'Encounters'[ENCOUNTERCLASS]
+		dataType: string
+		lineageTag: 71723b9f-ec60-41a3-ba27-cb38f6f9cc53
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Encounter Year' = YEAR(RELATED('MasterCalendar'[EncounterDate]))
+		dataType: int64
+		formatString: 0
+		lineageTag: 129b895f-634e-4745-9980-696397b21594
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Encounters = m
+		mode: import
+		source =
+				let
+				                Source = GoogleSheets.Contents("https://docs.google.com/spreadsheets/d/1iFUvMqsnppeYwK3RvSO1KjOWVdL3M1ZlXK0_tMex8gQ/edit"),
+				                #"Selected Sheet" = try Source{[name="Encounters", ItemKind="Table"]}[Data] otherwise try Source{[Item="Encounters"]}[Data] otherwise Source{0}[Data],
+				                Navigation = Table.PromoteHeaders(#"Selected Sheet", [PromoteAllScalars=true]),
+				                #"Renamed Columns" = Table.RenameColumns(Navigation, {{"Id", "Id"}, {"START", "START"}, {"STOP", "STOP"}, {"PATIENT", "PatientId"}, {"ORGANIZATION", "OrganizationId"}, {"PAYER", "PayerId"}, {"ENCOUNTERCLASS", "ENCOUNTERCLASS"}, {"CODE", "CODE"}, {"DESCRIPTION", "DESCRIPTION"}, {"BASE_ENCOUNTER_COST", "BASE_ENCOUNTER_COST"}, {"TOTAL_CLAIM_COST", "TOTAL_CLAIM_COST"}, {"PAYER_COVERAGE", "PAYER_COVERAGE"}, {"REASONCODE", "REASONCODE"}, {"REASONDESCRIPTION", "REASONDESCRIPTION"}}, MissingField.Ignore),
+				                #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns", {{"PatientId", type text}, {"PayerId", type text}, {"Id", type text}, {"START", type date}, {"STOP", type date}, {"OrganizationId", type text}, {"ENCOUNTERCLASS", type text}, {"CODE", type number}, {"DESCRIPTION", type text}, {"BASE_ENCOUNTER_COST", type number}, {"TOTAL_CLAIM_COST", type number}, {"PAYER_COVERAGE", type number}, {"REASONCODE", type text}, {"REASONDESCRIPTION", type text}}),
+				                #"Added EncounterDate" = Table.AddColumn(#"Changed Type", "EncounterDate", each Date.From([START]), type date),
+				                #"Added EncounterYear" = Table.AddColumn(#"Added EncounterDate", "EncounterYear", each Date.Year([START]), type number),
+				                #"Added EncounterMonth" = Table.AddColumn(#"Added EncounterYear", "EncounterMonth", each Date.Month([START]), type number),
+				                #"Added EncounterYearMonth" = Table.AddColumn(#"Added EncounterMonth", "EncounterYearMonth", each Text.From(Date.Year([START])) & "-" & Text.PadStart(Text.From(Date.Month([START])), 2, "0"), type text),
+				                #"Added EncounterQuarter" = Table.AddColumn(#"Added EncounterYearMonth", "EncounterQuarter", each Date.ToText([START], "Q\Q yyyy"), type text),
+				                #"Added EncounterWeek" = Table.AddColumn(#"Added EncounterQuarter", "EncounterWeek", each Date.WeekOfYear([START]), type number),
+				                #"Added EncounterWeekDay" = Table.AddColumn(#"Added EncounterWeek", "EncounterWeekDay", each Date.DayOfWeek([START]), type number),
+				                #"Added EncounterDurationHours" = Table.AddColumn(#"Added EncounterWeekDay", "EncounterDurationHours", each Duration.TotalHours([STOP] - [START]), type number),
+				                #"Added PatientResponsibility" = Table.AddColumn(#"Added EncounterDurationHours", "PatientResponsibility", each [TOTAL_CLAIM_COST] - [PAYER_COVERAGE], type number),
+				                #"Added CoverageRate" = Table.AddColumn(#"Added PatientResponsibility", "CoverageRate", each if [TOTAL_CLAIM_COST] = 0 then 0 else [PAYER_COVERAGE] / [TOTAL_CLAIM_COST], type number),
+				                #"Added ClaimCostBand" = Table.AddColumn(#"Added CoverageRate", "ClaimCostBand", each if [TOTAL_CLAIM_COST] < 500 then "Low" else if [TOTAL_CLAIM_COST] < 2000 then "Medium" else if [TOTAL_CLAIM_COST] < 10000 then "High" else "Very High", type text),
+				                #"Added HighCostEncounterFlag" = Table.AddColumn(#"Added ClaimCostBand", "HighCostEncounterFlag", each if [TOTAL_CLAIM_COST] >= 10000 then 1 else 0, type number),
+				                #"Added CoverageStatus" = Table.AddColumn(#"Added HighCostEncounterFlag", "CoverageStatus", each if [PAYER_COVERAGE] >= [TOTAL_CLAIM_COST] then "Fully Covered" else if [PAYER_COVERAGE] > 0 then "Partially Covered" else "Not Covered", type text)
+				            in
+				                #"Added CoverageStatus"
+
+	annotation PBI_ResultType = Table
+

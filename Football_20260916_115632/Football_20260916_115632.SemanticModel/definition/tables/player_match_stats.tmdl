@@ -1,0 +1,268 @@
+table player_match_stats
+	lineageTag: 7ff52369-eaef-4ac3-8c48-5088d720c03c
+
+	measure 'Total Assists' = SUM('player_match_stats'[assists])
+		lineageTag: 9c0eae21-7e23-48ae-b7cb-72ecca289887
+
+	measure 'Shots on Target' = SUM('player_match_stats'[shots_on_target])
+		lineageTag: 695133ea-dcf3-43d7-925a-9f9c25ec1313
+
+	measure 'Total Minutes Played' = SUM('player_match_stats'[minutes_played])
+		lineageTag: 71456056-d6e5-4d23-8bd2-d59e803408bb
+
+	measure 'Average Player Rating' = MROUND(AVERAGE('player_match_stats'[player_rating]), 2)
+		lineageTag: 350b0918-8e25-4812-8861-b1ad0ed092e8
+
+	measure 'Shot Accuracy %' = DIVIDE(SUM('player_match_stats'[shots_on_target]), SUM('player_match_stats'[shots]), BLANK())
+		formatString: 0.0%
+		lineageTag: 6c12d3e4-8b0a-4a83-a297-f96a6920d938
+
+	measure 'Total Player Goals' = SUM('player_match_stats'[goals])
+		lineageTag: f0990bb4-9a9f-40c6-abff-18ae008b0465
+
+	measure 'Shot Accuracy by Player' = ROUND(DIVIDE(SUM('player_match_stats'[shots_on_target]), SUM('player_match_stats'[shots]), BLANK()) * 100, 0)
+		lineageTag: 1e929afb-3d1c-491c-bae1-6e90ef775899
+
+	measure 'Total Shots' = SUM('player_match_stats'[shots])
+		lineageTag: 147612cd-5cda-4283-91ae-a87d5ba5321b
+
+	column match_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e57dbc2a-aef4-4e6c-8a7c-a8ec1afe5e47
+		summarizeBy: none
+		sourceColumn: match_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column stats_id
+		dataType: int64
+		formatString: 0
+		lineageTag: da04f964-cabf-4d03-a3a2-4826452c2b46
+		summarizeBy: none
+		sourceColumn: stats_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column player_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e0cc388b-a7b3-485e-ae40-bf11437c1e43
+		summarizeBy: none
+		sourceColumn: player_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column stats_team_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 8310e92e-313e-4649-aa58-e8daba300252
+		summarizeBy: none
+		sourceColumn: stats_team_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column minutes_played
+		dataType: int64
+		formatString: 0
+		lineageTag: 8bdd0bb3-456a-4bb7-980f-1bc0e7aed4f4
+		summarizeBy: none
+		sourceColumn: minutes_played
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals
+		dataType: int64
+		formatString: 0
+		lineageTag: 5db22a93-139d-407f-b8c4-792e6b5d4e28
+		summarizeBy: none
+		sourceColumn: goals
+
+		annotation SummarizationSetBy = Automatic
+
+	column assists
+		dataType: int64
+		formatString: 0
+		lineageTag: f267d7ce-1c23-4cbd-bed6-c249fb6eb55d
+		summarizeBy: none
+		sourceColumn: assists
+
+		annotation SummarizationSetBy = Automatic
+
+	column shots
+		dataType: int64
+		formatString: 0
+		lineageTag: a0d2bda8-8e38-4b2e-a414-78fc965afbe4
+		summarizeBy: none
+		sourceColumn: shots
+
+		annotation SummarizationSetBy = Automatic
+
+	column shots_on_target
+		dataType: int64
+		formatString: 0
+		lineageTag: 116bb00f-fa10-445a-8a19-0f03b45940be
+		summarizeBy: none
+		sourceColumn: shots_on_target
+
+		annotation SummarizationSetBy = Automatic
+
+	column passes_attempted
+		dataType: int64
+		formatString: 0
+		lineageTag: aa644414-e96e-497f-8ece-ef1ebf1d11b7
+		summarizeBy: none
+		sourceColumn: passes_attempted
+
+		annotation SummarizationSetBy = Automatic
+
+	column passes_completed
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e6b1cbc-0985-409d-8220-7114f0331bfd
+		summarizeBy: none
+		sourceColumn: passes_completed
+
+		annotation SummarizationSetBy = Automatic
+
+	column tackles
+		dataType: int64
+		formatString: 0
+		lineageTag: 5901b4c5-d649-4cb2-ad98-8bfbea27ce65
+		summarizeBy: none
+		sourceColumn: tackles
+
+		annotation SummarizationSetBy = Automatic
+
+	column interceptions
+		dataType: int64
+		formatString: 0
+		lineageTag: 36a6130d-58bd-4303-afd8-5184933141fa
+		summarizeBy: none
+		sourceColumn: interceptions
+
+		annotation SummarizationSetBy = Automatic
+
+	column clearances
+		dataType: int64
+		formatString: 0
+		lineageTag: a6799fde-3c3f-4fb1-853b-6e8255328af1
+		summarizeBy: none
+		sourceColumn: clearances
+
+		annotation SummarizationSetBy = Automatic
+
+	column fouls_committed
+		dataType: int64
+		formatString: 0
+		lineageTag: f7fd9a2d-f873-4c99-9196-6e469f1edca9
+		summarizeBy: none
+		sourceColumn: fouls_committed
+
+		annotation SummarizationSetBy = Automatic
+
+	column yellow_cards
+		dataType: int64
+		formatString: 0
+		lineageTag: f20acaeb-32d3-49aa-a5da-9df30b677c4b
+		summarizeBy: none
+		sourceColumn: yellow_cards
+
+		annotation SummarizationSetBy = Automatic
+
+	column red_cards
+		dataType: int64
+		formatString: 0
+		lineageTag: 967d24d3-9a5c-46b8-acd4-aa9301fa8a35
+		summarizeBy: none
+		sourceColumn: red_cards
+
+		annotation SummarizationSetBy = Automatic
+
+	column distance_covered_km
+		dataType: double
+		lineageTag: cd5ec634-64a3-4741-9302-001b0cc8ede0
+		summarizeBy: none
+		sourceColumn: distance_covered_km
+
+		annotation SummarizationSetBy = Automatic
+
+	column player_rating
+		dataType: double
+		formatString: 0
+		lineageTag: 7d134ce3-e82e-4e97-887d-0be0119d661e
+		summarizeBy: sum
+		sourceColumn: player_rating
+
+		annotation SummarizationSetBy = Automatic
+
+	column pass_completion_pct
+		dataType: double
+		formatString: 0
+		lineageTag: 9bee4406-e579-4657-a08f-3506f7a54d78
+		summarizeBy: sum
+		sourceColumn: pass_completion_pct
+
+		annotation SummarizationSetBy = Automatic
+
+	column shot_accuracy_pct
+		dataType: double
+		formatString: 0
+		lineageTag: 85016998-a2a2-45da-a054-c96c29ee4e0a
+		summarizeBy: sum
+		sourceColumn: shot_accuracy_pct
+
+		annotation SummarizationSetBy = Automatic
+
+	column goals_per_90
+		dataType: double
+		formatString: 0
+		lineageTag: d2ce8e36-2c51-4041-a5ef-bd67c6f6cc54
+		summarizeBy: sum
+		sourceColumn: goals_per_90
+
+		annotation SummarizationSetBy = Automatic
+
+	column assists_per_90
+		dataType: double
+		formatString: 0
+		lineageTag: 0f108a0d-9215-4dbe-b210-0e93b7c75cd3
+		summarizeBy: sum
+		sourceColumn: assists_per_90
+
+		annotation SummarizationSetBy = Automatic
+
+	column pass_efficiency_band
+		dataType: string
+		lineageTag: a9b58d5b-048b-4d21-91f6-23ccca4326b0
+		summarizeBy: none
+		sourceColumn: pass_efficiency_band
+
+		annotation SummarizationSetBy = Automatic
+
+	column shot_accuracy_band
+		dataType: string
+		lineageTag: 9443e630-fa06-4ce0-aecc-a83a02de2ebf
+		summarizeBy: none
+		sourceColumn: shot_accuracy_band
+
+		annotation SummarizationSetBy = Automatic
+
+	partition player_match_stats = m
+		mode: import
+		source =
+				let
+				                Source = PostgreSQL.Database("t2f-postgre-server.postgres.database.azure.com", "test"),
+				                Result = Value.NativeQuery(Source, "SELECT ""stats_id"", ""match_id"", ""player_id"", ""team_id"", ""minutes_played"", ""goals"", ""assists"", ""shots"", ""shots_on_target"", ""passes_attempted"", ""passes_completed"", ""tackles"", ""interceptions"", ""clearances"", ""fouls_committed"", ""yellow_cards"", ""red_cards"", ""distance_covered_km"", ""player_rating"" FROM ""public"".""player_match_stats""", null, [EnableFolding=false]),
+				                #"Renamed Columns" = Table.RenameColumns(Result, {{"team_id", "stats_team_id"}}, MissingField.Ignore),
+				                #"Added pass_completion_pct" = Table.AddColumn(#"Renamed Columns", "pass_completion_pct", each if [passes_attempted] > 0 then Number.Round(([passes_completed] / [passes_attempted]) * 100, 1) else 0, type number),
+				                #"Added shot_accuracy_pct" = Table.AddColumn(#"Added pass_completion_pct", "shot_accuracy_pct", each if [shots] > 0 then Number.Round(([shots_on_target] / [shots]) * 100, 1) else 0, type number),
+				                #"Added goals_per_90" = Table.AddColumn(#"Added shot_accuracy_pct", "goals_per_90", each if [minutes_played] > 0 then Number.Round( ([goals] / [minutes_played]) * 90, 2 ) else 0, type number),
+				                #"Added assists_per_90" = Table.AddColumn(#"Added goals_per_90", "assists_per_90", each if [minutes_played] > 0 then Number.Round( ([assists] / [minutes_played]) * 90, 2 ) else 0, type number),
+				                #"Added pass_efficiency_band" = Table.AddColumn(#"Added assists_per_90", "pass_efficiency_band", each if [passes_attempted] = 0 then "No Attempts" else if ([passes_completed] / [passes_attempted]) * 100 >= 90 then "Excellent" else if ([passes_completed] / [passes_attempted]) * 100 >= 80 then "Good" else if ([passes_completed] / [passes_attempted]) * 100 >= 70 then "Average" else "Low", type text),
+				                #"Added shot_accuracy_band" = Table.AddColumn(#"Added pass_efficiency_band", "shot_accuracy_band", each if [shots] = 0 then "No Shots" else if ([shots_on_target] / [shots]) * 100 >= 60 then "Excellent" else if ([shots_on_target] / [shots]) * 100 >= 40 then "Good" else if ([shots_on_target] / [shots]) * 100 >= 20 then "Average" else "Low", type text)
+				            in
+				                #"Added shot_accuracy_band"
+
+	annotation PBI_ResultType = Table
+

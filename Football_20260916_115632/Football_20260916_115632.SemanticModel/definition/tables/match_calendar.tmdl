@@ -1,0 +1,79 @@
+table match_calendar
+	lineageTag: 1878f90f-48ea-49b8-bdd1-2c1391268be4
+
+	column match_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 59c14f03-2bba-4ce6-92bb-143e4bbb8b6f
+		summarizeBy: none
+		sourceColumn: match_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_year
+		dataType: double
+		formatString: 0
+		lineageTag: cb8608cc-e6c0-43ad-92d9-d5090809ca73
+		summarizeBy: sum
+		sourceColumn: match_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_month
+		dataType: double
+		formatString: 0
+		lineageTag: bc0eb57a-1616-42ab-b190-79b4d7404f36
+		summarizeBy: sum
+		sourceColumn: match_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_month_year
+		dataType: string
+		formatString: 0
+		lineageTag: d43cbcdc-0e99-450d-9a5f-eb12204ad61f
+		summarizeBy: none
+		sourceColumn: match_month_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_week_number
+		dataType: double
+		formatString: 0
+		lineageTag: 43dfcfd7-03cc-4be0-9435-7e89a856789d
+		summarizeBy: sum
+		sourceColumn: match_week_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_weekday
+		dataType: double
+		formatString: 0
+		lineageTag: 5eb3806c-f912-4daa-87a3-9bf0a8d76d89
+		summarizeBy: sum
+		sourceColumn: match_weekday
+
+		annotation SummarizationSetBy = Automatic
+
+	column match_quarter
+		dataType: string
+		lineageTag: 4a7fbd30-b439-46ff-8223-45fca2c3a87b
+		summarizeBy: none
+		sourceColumn: match_quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	partition match_calendar = m
+		mode: import
+		source =
+				let
+				                Source = PostgreSQL.Database("t2f-postgre-server.postgres.database.azure.com", "test"),
+				                #"Navigation 1" = Source{[Schema = "public", Item = "matches"]}[Data],
+				                #"Grouped Calendar" = Table.Group(#"Navigation 1", {"match_date"}, {{"match_year", each List.First(List.Transform([match_date], Date.Year)), type number}, {"match_month", each List.First(List.Transform([match_date], Date.Month)), type number}, {"match_month_year", each List.First(List.Transform([match_date], (d) => Date.ToText(d, "MMM yyyy"))), type text}, {"match_week_number", each List.First(List.Transform([match_date], Date.WeekOfYear)), type number}, {"match_weekday", each List.First(List.Transform([match_date], Date.DayOfWeek)), type number}, {"match_quarter", each List.First(List.Transform([match_date], (d) => Date.ToText(d, "Q" & Number.ToText(Date.QuarterOfYear(d)) & " " & Date.Year(d)))), type text}})
+				            in
+				                #"Grouped Calendar"
+
+	annotation PBI_ResultType = Table
+

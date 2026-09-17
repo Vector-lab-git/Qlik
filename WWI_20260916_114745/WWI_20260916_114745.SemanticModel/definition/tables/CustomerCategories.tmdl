@@ -1,0 +1,31 @@
+table CustomerCategories
+	lineageTag: 5c68d377-8b99-4bb5-ba9c-7f65fadd21fa
+
+	column CustomerCategoryID
+		dataType: int64
+		formatString: 0
+		lineageTag: cce62028-4c4d-451a-9073-e6131b1f8e18
+		summarizeBy: none
+		sourceColumn: CustomerCategoryID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerCategoryName
+		dataType: string
+		lineageTag: 2c7af93b-a5e4-4e15-bbaf-6103e16cf5dc
+		summarizeBy: none
+		sourceColumn: CustomerCategoryName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition CustomerCategories = m
+		mode: import
+		source =
+				let
+				                Source = Sql.Database("vl-t2f-sql-server-dev.database.windows.net", "vl-t2f-sql-db-dev-wwi"),
+				                Result = Value.NativeQuery(Source, "SELECT CustomerCategoryID, CustomerCategoryName FROM ""vl-t2f-sql-db-dev-wwi"".Sales.CustomerCategories", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

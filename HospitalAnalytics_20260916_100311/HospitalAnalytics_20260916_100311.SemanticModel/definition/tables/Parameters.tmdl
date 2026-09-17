@@ -1,0 +1,170 @@
+table Parameters
+	lineageTag: f0a3d958-4c52-47a5-8792-0ed6c17dc1cf
+
+	measure ErrorMode = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ErrorMode")), 1)
+		lineageTag: a2b55e0f-8d55-4712-a633-f5365f44b91b
+
+	measure StripComments = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "StripComments")), 1)
+		lineageTag: 2ee88650-b5c0-4703-82bd-9524d4ddd8c3
+
+	measure OpenUrlTimeout = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "OpenUrlTimeout")), 86400)
+		lineageTag: e6ade653-13db-44d8-a2f1-c51fcaa76706
+
+	measure ScriptError = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptError")), 1)
+		lineageTag: 6fcc979e-5ddd-4d7d-b426-b39a6f7efa2a
+
+	measure ScriptErrorCount = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptErrorCount")), 0)
+		lineageTag: a7c917d1-c6b3-4918-985c-c1d969f95934
+
+	measure ScriptErrorList = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptErrorList")), 1)
+		lineageTag: 1ac67eb2-cd7a-42ff-b03a-1f2ef5d87264
+
+	measure ThousandSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ThousandSep")
+		lineageTag: 1b1f56eb-6873-4466-8245-3d306dd46793
+
+	measure DecimalSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DecimalSep")
+		lineageTag: 7a402593-bedc-4065-81c9-198c941eed04
+
+	measure MoneyThousandSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyThousandSep")
+		lineageTag: d783c25a-6d71-4dcf-9e9a-74aff7fc92cf
+
+	measure MoneyDecimalSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyDecimalSep")
+		lineageTag: e8cca294-75ca-4b18-9ea2-044b975f3fae
+
+	measure MoneyFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyFormat")
+		lineageTag: fce0beb1-be15-4cb0-9c69-a4c8bf9d171b
+
+	measure TimeFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "TimeFormat")
+		lineageTag: fd44190b-ed25-4c83-9224-c9734021f7e5
+
+	measure DateFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DateFormat")
+		lineageTag: c6e0ae4a-ab99-48bb-9b54-f72ed71aa127
+
+	measure TimestampFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "TimestampFormat")
+		lineageTag: 773ebec8-fa58-49f2-a37e-eb6cebb845e6
+
+	measure FirstWeekDay = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "FirstWeekDay")), 6)
+		lineageTag: e06b96b3-2b81-4807-8f54-de032582c27d
+
+	measure BrokenWeeks = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "BrokenWeeks")), 1)
+		lineageTag: e2c3944f-ace1-4b31-a0b8-290292ffa31b
+
+	measure ReferenceDay = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ReferenceDay")), 0)
+		lineageTag: 930b199d-6f1a-4b52-afa3-b4374d8365fe
+
+	measure FirstMonthOfYear = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "FirstMonthOfYear")), 1)
+		lineageTag: 76b3a3bd-cb4a-4d4d-83af-4bf3f37252ea
+
+	measure CollationLocale = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "CollationLocale")
+		lineageTag: 3cd4ae66-812b-4d91-a7ec-9fb9bf17ef90
+
+	measure CreateSearchIndexOnReload = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "CreateSearchIndexOnReload")), 1)
+		lineageTag: 18d9474e-7d92-40c5-907a-17f2d1ae7bc2
+
+	measure MonthNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MonthNames")
+		lineageTag: 98c204f0-bcfd-41d8-94e5-4f8eab97bd0a
+
+	measure LongMonthNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "LongMonthNames")
+		lineageTag: ebfb4531-65db-4fd3-bbe7-40f5c90a8df5
+
+	measure DayNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DayNames")
+		lineageTag: 3de60e9f-c86d-4258-bbb5-1e333e5c2f1b
+
+	measure LongDayNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "LongDayNames")
+		lineageTag: b6c0cc26-4f3d-419f-a296-4894f18bd9af
+
+	measure NumericalAbbreviation = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "NumericalAbbreviation")
+		lineageTag: 4f9aac44-f462-4ce1-b659-dedc52ab11ae
+
+	measure vCurrency = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vCurrency")
+		lineageTag: 04e6f85c-f760-4d96-bca4-e2c572d57394
+
+	measure vTopN = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vTopN")), 10)
+		lineageTag: 650d215b-40af-439f-be04-e69f96a61d89
+
+	measure vHighCostThreshold = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vHighCostThreshold")), 10000)
+		lineageTag: 81ac55bc-b188-4852-8352-485f9f624889
+
+	measure vMediumCostThreshold = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vMediumCostThreshold")), 2000)
+		lineageTag: 574c3221-9c5e-4f3c-b8be-44fb930b9c48
+
+	measure vLowCostThreshold = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vLowCostThreshold")), 500)
+		lineageTag: 2e47e690-0e4d-486d-9656-c567d538f6f1
+
+	measure vMinDate = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vMinDate")), 40545)
+		lineageTag: bb9e1547-0f09-4c00-9c4a-62968511412e
+
+	measure vMaxDate = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vMaxDate")), 44597)
+		lineageTag: f26bb083-3ebb-4649-92b1-f6614e0baf73
+
+	measure vDateField = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vDateField")
+		lineageTag: 2ecdd6ff-1243-491d-89b0-98362b757ec6
+
+	measure vClaimCost = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vClaimCost")
+		lineageTag: 9201f8de-eb83-4e33-973b-ce4c42b408fb
+
+	measure vPayerCoverage = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vPayerCoverage")
+		lineageTag: cba1a4e7-a9c9-40ec-8f85-60041c37812b
+
+	measure vPatientResponsibility = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vPatientResponsibility")
+		lineageTag: da5070eb-3939-413d-acd2-b3550ca41528
+
+	measure vSelectedMetric = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vSelectedMetric")
+		lineageTag: 15d04cb1-9e01-4323-b071-0b0cf616ac84
+
+	column Parameter
+		isNameInferred
+		sourceColumn: [Parameter]
+
+	column Value
+		isNameInferred
+		sourceColumn: [Value]
+
+	partition Parameters = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Parameter", STRING, "Value", STRING,
+				    {
+				        { "ErrorMode", "1" },
+				        { "StripComments", "1" },
+				        { "OpenUrlTimeout", "86400" },
+				        { "ScriptError", "1" },
+				        { "ScriptErrorCount", "0" },
+				        { "ScriptErrorList", "1" },
+				        { "ThousandSep", "," },
+				        { "DecimalSep", "." },
+				        { "MoneyThousandSep", "," },
+				        { "MoneyDecimalSep", "." },
+				        { "MoneyFormat", "$ ###0.00;-$ ###0.00" },
+				        { "TimeFormat", "h:mm:ss TT" },
+				        { "DateFormat", "M/D/YYYY" },
+				        { "TimestampFormat", "M/D/YYYY h:mm:ss[.fff] TT" },
+				        { "FirstWeekDay", "6" },
+				        { "BrokenWeeks", "1" },
+				        { "ReferenceDay", "0" },
+				        { "FirstMonthOfYear", "1" },
+				        { "CollationLocale", "en-US" },
+				        { "CreateSearchIndexOnReload", "1" },
+				        { "MonthNames", "Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec" },
+				        { "LongMonthNames", "January;February;March;April;May;June;July;August;September;October;November;December" },
+				        { "DayNames", "Mon;Tue;Wed;Thu;Fri;Sat;Sun" },
+				        { "LongDayNames", "Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday" },
+				        { "NumericalAbbreviation", "3:k;6:M;9:G;12:T;15:P;18:E;21:Z;24:Y;-3:m;-6:μ;-9:n;-12:p;-15:f;-18:a;-21:z;-24:y" },
+				        { "vCurrency", "$" },
+				        { "vTopN", "10" },
+				        { "vHighCostThreshold", "10000" },
+				        { "vMediumCostThreshold", "2000" },
+				        { "vLowCostThreshold", "500" },
+				        { "vMinDate", "40545" },
+				        { "vMaxDate", "44597" },
+				        { "vDateField", "EncounterDate" },
+				        { "vClaimCost", "Sum([Encounters.TOTAL_CLAIM_COST])" },
+				        { "vPayerCoverage", "Sum([Encounters.PAYER_COVERAGE])" },
+				        { "vPatientResponsibility", "Sum([Encounters.TOTAL_CLAIM_COST]) - Sum([Encounters.PAYER_COVERAGE])" },
+				        { "vSelectedMetric", "'Claim Cost'" }
+				    }
+				)
+
+	annotation PBI_Id = 1952337f-7625-4995-9893-b32d885f586a
+

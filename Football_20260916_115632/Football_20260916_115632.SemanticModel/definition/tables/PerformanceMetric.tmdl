@@ -1,0 +1,31 @@
+table PerformanceMetric
+	lineageTag: 3e8b42ef-c916-44e6-a070-5315ccd36626
+
+	measure 'PerformanceMetric Value' = SELECTEDVALUE(PerformanceMetric[Value], "Goals")
+		lineageTag: 3ffae246-7c3f-421f-953b-af1026e0e5b7
+
+	measure PerformanceMetric = [PerformanceMetric Value]
+		lineageTag: 511c5d32-754b-4325-8a43-48bf1621b4dc
+
+	column Value
+		dataType: string
+		lineageTag: 9a674394-7958-4502-b9fd-ab99edf71357
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition PerformanceMetric = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Value", STRING,
+				    {
+				        { "Goals" },
+				        { "Points" }
+				    }
+				)
+
+	annotation PBI_Id = 5eb06697-38ff-4da4-9eb5-97a5ebee5a77
+

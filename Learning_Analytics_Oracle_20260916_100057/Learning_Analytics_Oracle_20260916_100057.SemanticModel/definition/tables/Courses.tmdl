@@ -1,0 +1,71 @@
+table Courses
+	lineageTag: e266050e-fe85-4067-8c75-bf203366ad41
+
+	measure 'Average Courses per Student' = MROUND(DIVIDE(DISTINCTCOUNT('Enrollments'[Course Id (Enrollments)]), DISTINCTCOUNT('Students'[Student Id (Students)]), BLANK()), 2)
+		lineageTag: adbcd16b-f5b2-4190-8662-ac6ced61938d
+
+	measure 'Courses Enrolled' = DISTINCTCOUNT('Courses'[Course Id (Courses)])
+		lineageTag: 3b85a052-c18d-4748-81ff-012f9177cd93
+
+	measure Max(CREDITS) = MAX('Courses'[Credits])
+		lineageTag: 5c9b7da6-257f-4d9e-ac32-77e09aaf8e78
+
+	column Credits
+		dataType: double
+		formatString: 0
+		lineageTag: 7213370f-b126-4aa6-a07a-5015c3fe2547
+		summarizeBy: sum
+		sourceColumn: Credits
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Department Id (Courses)'
+		dataType: double
+		lineageTag: 62e5804b-24f3-498f-abbd-a22b0c5b5e1e
+		summarizeBy: count
+		sourceColumn: Department Id (Courses)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Faculty Id (Courses)'
+		dataType: double
+		lineageTag: c6ea52ba-0989-437e-a74b-f9f022f04133
+		summarizeBy: count
+		sourceColumn: Faculty Id (Courses)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Course Id (Courses)'
+		dataType: double
+		lineageTag: 25d5f46e-3d41-4fd3-a8a1-565507a65786
+		summarizeBy: count
+		sourceColumn: Course Id (Courses)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Course Name'
+		dataType: string
+		lineageTag: 456ae14b-b4b9-42af-ad4b-2ba44069dc4a
+		summarizeBy: none
+		sourceColumn: Course Name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Courses = m
+		mode: import
+		source =
+				let
+				                Source = Oracle.Database("20.70.170.10:1521/XEPDB1", [Query = "SELECT * FROM SYSTEM.COURSES"]),
+				                #"Changed Type" = Table.TransformColumnTypes(Source, {{"DEPARTMENT_ID", type number}, {"FACULTY_ID", type number}, {"COURSE_ID", type number}, {"COURSE_NAME", type text}, {"CREDITS", type number}}),
+				                #"Renamed Columns" = Table.RenameColumns(#"Changed Type", {{"DEPARTMENT_ID", "Department Id (Courses)"}, {"FACULTY_ID", "Faculty Id (Courses)"}, {"COURSE_ID", "Course Id (Courses)"}, {"COURSE_NAME", "Course Name"}, {"CREDITS", "Credits"}})
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

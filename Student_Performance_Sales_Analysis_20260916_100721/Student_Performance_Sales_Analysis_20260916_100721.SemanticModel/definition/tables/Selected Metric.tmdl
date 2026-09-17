@@ -1,0 +1,31 @@
+table 'Selected Metric'
+	lineageTag: 57aac220-271a-4515-88fd-dced4ebd496f
+
+	measure 'Selected Metric Value' = SELECTEDVALUE('Selected Metric'[Value], "Sales")
+		lineageTag: 0467e756-c137-40fb-97e2-f62137189410
+
+	measure 'Selected Metric' = [Selected Metric Value]
+		lineageTag: ccc5d44e-fafd-413b-95dc-7df1e0df0f23
+
+	column Value
+		dataType: string
+		lineageTag: 9f4d9ba2-5ebc-4c81-aa45-5e969333e631
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Selected Metric' = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Value", STRING,
+				    {
+				        { "Sales" },
+				        { "Marks" }
+				    }
+				)
+
+	annotation PBI_Id = b253b70e-bb77-488e-9c65-ca4573603af8
+

@@ -1,0 +1,135 @@
+table Students
+	lineageTag: e21e0fe1-946d-4ae0-9f4e-39c64b2a7de6
+
+	measure 'Average Enrollment per Course' = MROUND(DIVIDE(COUNTROWS('Enrollments'), DISTINCTCOUNT('Courses'[Course Id (Courses)]), BLANK()), 2)
+		lineageTag: 1599577f-0f5b-49ef-b657-f31a68ffc5ff
+
+	measure 'Student Pass Rate' = DIVIDE(CALCULATE(DISTINCTCOUNT('Students'[Student Id (Students)]), 'Enrollments'[Grade] IN {"A", "B", "C"}), DISTINCTCOUNT('Students'[Student Id (Students)]), BLANK())
+		formatString: 0.0%
+		lineageTag: 47ebbc7e-e06e-4842-a71e-ea4cfaff8730
+
+	measure 'Student Distribution Percentage' = DIVIDE(DISTINCTCOUNT('Students'[Student Id (Students)]), CALCULATE(DISTINCTCOUNT('Students'[Student Id (Students)]), ALLSELECTED()), BLANK())
+		formatString: 0.0%
+		lineageTag: af1d7be8-0110-435e-a16e-37ceed732d39
+
+	measure 'Active Students' = CALCULATE(DISTINCTCOUNT('Students'[Student Id (Students)]), FILTER('Students', CALCULATE(COUNT('Enrollments'[Enrollment Id])) > 0))
+		lineageTag: 7155ad0f-ba42-4497-9876-1c6bbae0cc39
+
+	measure 'Total Students' = DISTINCTCOUNT('Students'[Student Id (Students)])
+		lineageTag: 55ebdf0e-e964-4da2-af19-c6849fc1f659
+
+	column Gender
+		dataType: string
+		lineageTag: 96b10d06-70c4-4d8d-9270-72347a7a50bf
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column DOB
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6f13ab9f-af0c-4b5b-86f6-da37d29baa62
+		summarizeBy: none
+		sourceColumn: DOB
+
+		variation Variation
+			isDefault
+			relationship: 331e01f5-2fa3-4b58-a82e-7f5cfa490a99
+			defaultHierarchy: LocalDateTable_4c250b67-3c01-4a07-9309-926294b384ef.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 7bdbd29f-38aa-4a1e-88ac-9a89a288e88a
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: 46f22eb0-4ba8-4a9f-8eb1-e2f42e5622a3
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Student Name' = 'Students'[First Name] & " " & 'Students'[Last Name]
+		dataType: string
+		lineageTag: d80b0748-0d7b-4f6c-b85b-3f4249f96fe8
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Student Id (Students)'
+		dataType: double
+		lineageTag: e9d3cd4f-8366-4794-a213-9f638c043119
+		summarizeBy: count
+		sourceColumn: Student Id (Students)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'First Name'
+		dataType: string
+		lineageTag: 188fd94d-8a44-4e84-8853-0ba80cbb5bbe
+		summarizeBy: none
+		sourceColumn: First Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Last Name'
+		dataType: string
+		lineageTag: 3c04eeae-b6b4-4efa-9081-bc4580225de4
+		summarizeBy: none
+		sourceColumn: Last Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Email (Students)'
+		dataType: string
+		lineageTag: 56f12222-1039-40a4-8f48-a1a419341e89
+		summarizeBy: none
+		sourceColumn: Email (Students)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Phone (Students)'
+		dataType: string
+		lineageTag: 0effc84e-0f86-4efa-a4dd-0aea698fc95a
+		summarizeBy: none
+		sourceColumn: Phone (Students)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Admission Date'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c967e6e6-d52c-4856-bfb4-35e936aa08ce
+		summarizeBy: none
+		sourceColumn: Admission Date
+
+		variation Variation
+			isDefault
+			relationship: f29b2bc7-a50f-47e2-b602-04a48e2a5d48
+			defaultHierarchy: LocalDateTable_f77e81b5-4cee-4ecb-bb42-db6305d90b52.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Students = m
+		mode: import
+		source =
+				let
+				                Source = Oracle.Database("20.70.170.10:1521/XEPDB1", [Query = "SELECT * FROM SYSTEM.STUDENTS"]),
+				                #"Changed Type" = Table.TransformColumnTypes(Source, {{"STUDENT_ID", type number}, {"FIRST_NAME", type text}, {"LAST_NAME", type text}, {"GENDER", type text}, {"DOB", type datetime}, {"EMAIL", type text}, {"PHONE", type text}, {"CITY", type text}, {"STATE", type text}, {"ADMISSION_DATE", type datetime}}),
+				                #"Renamed Columns" = Table.RenameColumns(#"Changed Type", {{"STUDENT_ID", "Student Id (Students)"}, {"FIRST_NAME", "First Name"}, {"LAST_NAME", "Last Name"}, {"GENDER", "Gender"}, {"EMAIL", "Email (Students)"}, {"PHONE", "Phone (Students)"}, {"CITY", "City"}, {"STATE", "State"}, {"ADMISSION_DATE", "Admission Date"}})
+				            in
+				                #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,91 @@
+table Facilities
+	lineageTag: 64e6ce90-41a4-476d-9273-31c815d77644
+
+	column facility_id
+		dataType: string
+		lineageTag: 974e0a74-7bb5-4ca7-835f-694b84db44f2
+		summarizeBy: none
+		sourceColumn: facility_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_name
+		dataType: string
+		lineageTag: c20c5c14-0be0-4a57-a588-f469ea393489
+		summarizeBy: none
+		sourceColumn: facility_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column facility_type
+		dataType: string
+		lineageTag: dde45b8c-8366-4470-852b-4555089a8903
+		summarizeBy: none
+		sourceColumn: facility_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: d8f5cedd-034b-43da-aeeb-ce9b171860c6
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 75900b54-e8be-4921-8697-9a690cd72ba0
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: 281be17e-175e-4918-80e1-2aa3fb06fd10
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column longitude
+		dataType: double
+		lineageTag: 14aa5eb9-79f0-4d64-8463-1c80dd402825
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column dock_doors
+		dataType: int64
+		formatString: 0
+		lineageTag: 665c9f9b-c63e-4c27-922a-ce29eba52065
+		summarizeBy: none
+		sourceColumn: dock_doors
+
+		annotation SummarizationSetBy = Automatic
+
+	column operating_hours
+		dataType: string
+		lineageTag: 6d324a88-493b-4c5e-85aa-8df9d5d3e699
+		summarizeBy: none
+		sourceColumn: operating_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Facilities = m
+		mode: import
+		source =
+				let
+				                Source = AmazonRedshift.Database("fleetvision-wg.881226714470.ap-southeast-2.redshift-serverless.amazonaws.com:5439", "dev"),
+				                Result = Value.NativeQuery(Source, "SELECT * FROM fleetvision.facilities", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+

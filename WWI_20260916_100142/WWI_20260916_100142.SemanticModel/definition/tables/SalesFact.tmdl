@@ -1,0 +1,175 @@
+table SalesFact
+	lineageTag: a2390bbe-da59-4bbe-a047-bea76aa53286
+
+	measure Count(CustomerID) = COUNT('SalesFact'[CustomerID])
+		lineageTag: 5973551e-4342-4d87-8179-b5a8540d376f
+
+	column InvoiceLineID
+		dataType: int64
+		formatString: 0
+		lineageTag: db5bd2b7-21fd-4937-82b7-70749b17f012
+		summarizeBy: count
+		sourceColumn: InvoiceLineID
+
+		annotation SummarizationSetBy = Automatic
+
+	column InvoiceID
+		dataType: int64
+		formatString: 0
+		lineageTag: 638c9cae-4228-4131-be66-7ead56f6a011
+		summarizeBy: count
+		sourceColumn: InvoiceID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockItemID
+		dataType: int64
+		formatString: 0
+		lineageTag: 3e93e621-1439-429e-8fcf-29729e92532e
+		summarizeBy: none
+		sourceColumn: StockItemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: e8e08656-74af-42f1-a587-cf94860f8d9d
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesAmount
+		dataType: double
+		lineageTag: a3718075-e9aa-490b-89da-d245d6c4798e
+		summarizeBy: sum
+		sourceColumn: SalesAmount
+
+		annotation SummarizationSetBy = Automatic
+
+	column TaxRate
+		dataType: double
+		formatString: 0
+		lineageTag: 885ac526-f02b-4278-8d32-577269c0b690
+		summarizeBy: sum
+		sourceColumn: TaxRate
+
+		annotation SummarizationSetBy = Automatic
+
+	column TaxAmount
+		dataType: double
+		lineageTag: b66020e9-895a-478b-8105-862e70e93edd
+		summarizeBy: sum
+		sourceColumn: TaxAmount
+
+		annotation SummarizationSetBy = Automatic
+
+	column LineProfit
+		dataType: double
+		formatString: 0
+		lineageTag: e8166943-6f23-4c84-abb3-3d1c27aa402d
+		summarizeBy: sum
+		sourceColumn: LineProfit
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExtendedPrice
+		dataType: double
+		lineageTag: 92836c8c-591a-4a00-9519-811dc528d9f6
+		summarizeBy: sum
+		sourceColumn: ExtendedPrice
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalculatedTax
+		dataType: double
+		lineageTag: 79ab079f-eacf-46f7-82ed-c7e5e2579bac
+		summarizeBy: sum
+		sourceColumn: CalculatedTax
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesYear
+		dataType: double
+		formatString: 0
+		lineageTag: 0a1a0aed-4b75-4753-8fa0-050fbed42fd0
+		summarizeBy: sum
+		sourceColumn: SalesYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesMonth
+		dataType: double
+		formatString: 0
+		lineageTag: 0724e570-d360-431a-8668-a60f1e3ef176
+		summarizeBy: sum
+		sourceColumn: SalesMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesMonthYear
+		dataType: string
+		formatString: General Date
+		lineageTag: 9ca6a519-712d-4d78-bd8d-115f9ba7b2b2
+		summarizeBy: none
+		sourceColumn: SalesMonthYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: 5fdbf5ab-6c66-4ae8-8e9d-dd2339d51a55
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column PackageTypeID
+		dataType: int64
+		formatString: 0
+		lineageTag: 1f5da0e0-0a2d-42ea-a3a0-2180693cb752
+		summarizeBy: count
+		sourceColumn: PackageTypeID
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastEditedBy
+		dataType: int64
+		formatString: 0
+		lineageTag: 63f5e3d1-6301-4671-af15-8cbbfe245d0b
+		summarizeBy: sum
+		sourceColumn: LastEditedBy
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastEditedWhen
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b85a5f98-a715-482a-897b-ee2296f754c5
+		summarizeBy: none
+		sourceColumn: LastEditedWhen
+
+		variation Variation
+			isDefault
+			relationship: a3c64af2-81e9-4e7f-9a04-0e3a0ef124cb
+			defaultHierarchy: LocalDateTable_6256205b-a48e-40c0-83a3-707dd340f758.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SalesFact = m
+		mode: import
+		source =
+				let
+				                Source = Sql.Database("vl-t2f-sql-server-dev.database.windows.net", "vl-t2f-sql-db-dev-wwi"),
+				                #"Navigation 1" = Source{[Schema = "Sales", Item = "InvoiceLines"]}[Data],
+				                #"Renamed Columns" = Table.RenameColumns(#"Navigation 1", {{"UnitPrice", "SalesAmount"}}, MissingField.Ignore),
+				                #"Added CalculatedTax" = Table.AddColumn(#"Renamed Columns", "CalculatedTax", each [Quantity] * [SalesAmount] * ([TaxRate] / 100), type number),
+				                #"Added SalesYear" = Table.AddColumn(#"Added CalculatedTax", "SalesYear", each Date.Year([InvoiceDate]), type number),
+				                #"Added SalesMonth" = Table.AddColumn(#"Added SalesYear", "SalesMonth", each Date.Month([InvoiceDate]), type number),
+				                #"Added SalesMonthYear" = Table.AddColumn(#"Added SalesMonth", "SalesMonthYear", each Date.ToText([InvoiceDate], "MMM yyyy"), type text)
+				            in
+				                #"Added SalesMonthYear"
+
+	annotation PBI_ResultType = Table
+

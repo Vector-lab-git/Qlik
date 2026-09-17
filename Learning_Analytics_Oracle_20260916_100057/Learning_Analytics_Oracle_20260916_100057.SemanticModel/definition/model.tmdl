@@ -1,0 +1,28 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Students","Enrollments","Departments","Courses","Faculty"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode","WebModelingEdit"]
+
+ref table Students
+ref table Enrollments
+ref table Departments
+ref table Courses
+ref table Faculty
+ref table 'Performance View'
+ref table Parameters
+ref table DateTableTemplate_041193bf-260f-4f98-a1da-fa1dad32b9d3
+ref table LocalDateTable_4c250b67-3c01-4a07-9309-926294b384ef
+ref table LocalDateTable_f77e81b5-4cee-4ecb-bb42-db6305d90b52
+
+ref cultureInfo en-US
+

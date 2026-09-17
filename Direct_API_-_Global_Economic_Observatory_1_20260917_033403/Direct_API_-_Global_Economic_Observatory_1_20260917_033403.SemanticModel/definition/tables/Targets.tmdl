@@ -1,0 +1,80 @@
+table Targets
+	lineageTag: fda0487f-f971-4c7c-98b9-22d2b334d205
+
+	measure 'Projected GDP' = [vGDPLatest] * POWER(1 + ([vGDPCAGR10] + DIVIDE([vGrowthScenarioPct], 100, BLANK())),[vProjectionYears])
+		lineageTag: 528b90a1-8c29-43d7-b24e-6020168e56cf
+
+	measure 'GDP Growth %' = DIVIDE([vGDPGrowth], 100, BLANK())
+		formatString: 0.0%
+		lineageTag: a1ca5ff6-9f3f-4d20-9ba6-6a177bc4e486
+
+	measure 'Inflation % (GDP-weighted)' = DIVIDE([InflationWeighted], 100, BLANK())
+		formatString: 0.0%
+		lineageTag: 5753765e-2d99-4245-ac5a-b2516d677f8c
+
+	measure 'Unemployment %' = DIVIDE([vUnemployment], 100, BLANK())
+		formatString: 0.0%
+		lineageTag: 2fe3fc59-d263-44e8-9667-e5f4d17fed25
+
+	measure 'Growth vs Target' = DIVIDE([vGDPGrowth] - AVERAGE('Targets'[TargetGDPGrowth]), 100, BLANK())
+		lineageTag: f8481ef3-d5a1-42ba-bdbd-b14b220b922f
+
+	measure Population = BLANK()
+		lineageTag: d4f1b000-68b6-4458-be80-e4078097e7d4
+
+	measure 'Inflation vs Target' = DIVIDE(([vInflation] - AVERAGE('Targets'[TargetInflation])), 100, BLANK())
+		lineageTag: 2b61b281-0ee5-4b8b-a415-d870e2895e37
+
+	measure 'GDP Latest Year in US$ trillions' = DIVIDE([vGDPLatest], 1000000000000, BLANK())
+		lineageTag: b4927d51-fe14-4c17-93b2-56fffb3175df
+
+	measure 'Inflation %' = DIVIDE([vInflation], 100, BLANK())
+		formatString: 0.0%
+		lineageTag: 2f676b35-8763-4f3d-a30b-adb8e05959bd
+
+	column %RegionYearKey
+		dataType: string
+		lineageTag: 0d1aeefc-e627-45b7-a10f-1ea66c951cdf
+		summarizeBy: none
+		sourceColumn: '%RegionYearKey'
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetGDPGrowth
+		dataType: double
+		lineageTag: 68f3d8dc-e492-42a5-bc1e-b091b17e5b8e
+		summarizeBy: none
+		sourceColumn: TargetGDPGrowth
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetInflation
+		dataType: double
+		lineageTag: e64ef585-706a-4f28-9ed2-5e0f2777ae63
+		summarizeBy: none
+		sourceColumn: TargetInflation
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetUnemployment
+		dataType: double
+		lineageTag: fe15ed24-8063-4af2-8637-3c7ef89eda2c
+		summarizeBy: none
+		sourceColumn: TargetUnemployment
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Targets = m
+		mode: import
+		source =
+				let
+				                Source = Countries,
+				                #"Added %RegionYearKey" = Table.AddColumn(Source, "%RegionYearKey", each [TargetRegion] & "|" & null, type text),
+				                #"Added TargetGDPGrowth" = Table.AddColumn(#"Added %RegionYearKey", "TargetGDPGrowth", each null, type number),
+				                #"Added TargetInflation" = Table.AddColumn(#"Added TargetGDPGrowth", "TargetInflation", each null, type number),
+				                #"Added TargetUnemployment" = Table.AddColumn(#"Added TargetInflation", "TargetUnemployment", each null, type number)
+				            in
+				                #"Added TargetUnemployment"
+
+	annotation PBI_ResultType = Table
+

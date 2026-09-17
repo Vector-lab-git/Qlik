@@ -1,0 +1,27 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Procedures", "Patients", "Encounters", "Payers", "Organizations", "MasterCalendar", "Parameters"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.146.1133.0 (25.08)+c8010d55d1db76eda03c968b03481610e96a1ef7
+
+annotation PBI_ProTooling = ["DevMode","WebModelingEdit"]
+
+ref table Procedures
+ref table Patients
+ref table Encounters
+ref table Payers
+ref table Organizations
+ref table MasterCalendar
+ref table Parameters
+
+ref cultureInfo en-US
+

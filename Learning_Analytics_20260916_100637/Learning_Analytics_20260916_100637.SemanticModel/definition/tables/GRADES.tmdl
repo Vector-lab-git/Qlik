@@ -1,0 +1,76 @@
+table GRADES
+	lineageTag: 4a5523ad-fd35-4923-889b-3a4b087142f1
+
+	measure 'GPA (4.0 scale) average' = AVERAGEX('GRADES', SWITCH(UPPER(TRIM('GRADES'[GRADE])), "A+", 4.0, "A", 4.0, "A-", 3.7, "B+", 3.3, "B", 3.0, "B-", 2.7, "C+", 2.3, "C", 2.0, "C-", 1.7, "D+", 1.3, "D", 1.0, "D-", 0.7, "F", 0.0, BLANK()))
+		lineageTag: 6ac346b7-d229-460f-80df-46515dd18151
+
+	measure 'Decayed GPA Quality Index' = VAR _MaxGradedDate = CALCULATE(MAX('GRADES'[GRADED_DATE]), ALL('GRADES')) VAR _WindowStart = _MaxGradedDate - 179 VAR _WindowRows = CALCULATE(COUNTROWS(FILTER('GRADES', 'GRADES'[GRADED_DATE] >= _WindowStart && 'GRADES'[GRADED_DATE] <= _MaxGradedDate))) VAR _DecayNumerator = SUMX( FILTER('GRADES', 'GRADES'[GRADED_DATE] >= _WindowStart && 'GRADES'[GRADED_DATE] <= _MaxGradedDate), EXP(-0.6931471805599453 * (_MaxGradedDate - 'GRADES'[GRADED_DATE]) / 30) * VAR _GradeNum = IF( ISNUMBER(VALUE('GRADES'[GRADE])), MAX(0, MIN(4, IF(VALUE('GRADES'[GRADE]) >= 90, 4, IF(VALUE('GRADES'[GRADE]) >= 85, 3.7 + (VALUE('GRADES'[GRADE]) - 85) * 0.06, IF(VALUE('GRADES'[GRADE]) >= 75, 3.0 + (VALUE('GRADES'[GRADE]) - 75) * 0.07, IF(VALUE('GRADES'[GRADE]) >= 65, 2.0 + (VALUE('GRADES'[GRADE]) - 65) * 0.10, IF(VALUE('GRADES'[GRADE]) >= 50, 1.0 + (VALUE('GRADES'[GRADE]) - 50) * 0.0667, 0))))))), SWITCH( UPPER(TRIM('GRADES'[GRADE])), "A+", 4.0, "A", 4.0, "A-", 3.7, "B+", 3.3, "B", 3.0, "B-", 2.7, "C+", 2.3, "C", 2.0, "C-", 1.7, "D+", 1.3, "D", 1.0, "D-", 0.7, "F", 0.0, "HD", 4.0, "DI", 3.7, "CR", 2.5, "P", 1.0, "N", 0.0, "PASS", 1.0, "FAIL", 0.0, BLANK() ) ) ) RETURN IF(ISBLANK(_GradeNum), 0, _GradeNum) ) VAR _DecayDenominator = MAX(1e-9, SUMX( FILTER('GRADES', 'GRADES'[GRADED_DATE] >= _WindowStart && 'GRADES'[GRADED_DATE] <= _MaxGradedDate), EXP(-0.6931471805599453 * (_MaxGradedDate - 'GRADES'[GRADED_DATE]) / 30) )) VAR _WindowGPA = DIVIDE(_DecayNumerator, _DecayDenominator, BLANK()) VAR _AllTimeNumerator = SUMX( 'GRADES', VAR _GradeNum = IF( ISNUMBER(VALUE('GRADES'[GRADE])), MAX(0, MIN(4, IF(VALUE('GRADES'[GRADE]) >= 90, 4, IF(VALUE('GRADES'[GRADE]) >= 85, 3.7 + (VALUE('GRADES'[GRADE]) - 85) * 0.06, IF(VALUE('GRADES'[GRADE]) >= 75, 3.0 + (VALUE('GRADES'[GRADE]) - 75) * 0.07, IF(VALUE('GRADES'[GRADE]) >= 65, 2.0 + (VALUE('GRADES'[GRADE]) - 65) * 0.10, IF(VALUE('GRADES'[GRADE]) >= 50, 1.0 + (VALUE('GRADES'[GRADE]) - 50) * 0.0667, 0))))))), SWITCH( UPPER(TRIM('GRADES'[GRADE])), "A+", 4.0, "A", 4.0, "A-", 3.7, "B+", 3.3, "B", 3.0, "B-", 2.7, "C+", 2.3, "C", 2.0, "C-", 1.7, "D+", 1.3, "D", 1.0, "D-", 0.7, "F", 0.0, "HD", 4.0, "DI", 3.7, "CR", 2.5, "P", 1.0, "N", 0.0, "PASS", 1.0, "FAIL", 0.0, BLANK() ) ) ) RETURN IF(ISBLANK(_GradeNum), 0, _GradeNum) ) VAR _AllTimeDenominator = MAX(1, COUNTROWS('GRADES')) VAR _AllTimeGPA = DIVIDE(_AllTimeNumerator, _AllTimeDenominator, BLANK()) RETURN 25 * IF(_WindowRows > 0, _WindowGPA, _AllTimeGPA)
+		lineageTag: baed3867-9ae4-4faa-abec-498c0711fa4a
+
+	measure 'Average Grade Point' = AVERAGEX('GRADES', SWITCH('GRADES'[GRADE], "A", 5, "B", 4, "C", 3, "D", 2, "F", 0, BLANK()))
+		lineageTag: f3f3ecce-32e1-4ce7-9f44-6c7b8382e918
+
+	measure 'Total Enrollments' = COUNT('GRADES'[ENROLLMENT_ID])
+		lineageTag: a77694bd-7639-4ad1-8751-33e12db8618a
+
+	measure 'GPA (4.0 scale) average (1)' = AVERAGEX('GRADES', SWITCH(UPPER(TRIM('GRADES'[GRADE])), "A+", 4.0, "A", 4.0, "A-", 3.7, "B+", 3.3, "B", 3.0, "B-", 2.7, "C+", 2.3, "C", 2.0, "C-", 1.7, "D+", 1.3, "D", 1.0, "D-", 0.7, "F", 0.0, BLANK()))
+		lineageTag: 892ec8a1-4aa1-4336-bfb6-3423337ca0ab
+
+	measure 'Count of Grade' = COUNT('GRADES'[GRADE])
+		lineageTag: fe23ec6d-9b30-40d4-bd70-0ef1bef40a24
+
+	column GRADE_ID
+		dataType: string
+		lineageTag: 3c4ed286-2fa8-432c-b788-b6606b10cb1d
+		summarizeBy: none
+		sourceColumn: GRADE_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ENROLLMENT_ID
+		dataType: string
+		lineageTag: c397dbf8-fd12-42e6-90a7-cec915b85f68
+		summarizeBy: none
+		sourceColumn: ENROLLMENT_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column GRADE
+		dataType: string
+		lineageTag: 945213a7-c09b-4dc1-b41a-66b832480241
+		summarizeBy: none
+		sourceColumn: GRADE
+
+		annotation SummarizationSetBy = Automatic
+
+	column GRADED_DATE
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e7dc1cbf-0caf-4af0-994d-5925981c8285
+		summarizeBy: none
+		sourceColumn: GRADED_DATE
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Score based Grade' = SWITCH( TRUE(), CONTAINSSTRING(UPPER(TRIM('GRADES'[GRADE])), "A"), 5, CONTAINSSTRING(UPPER(TRIM('GRADES'[GRADE])), "B"), 4, CONTAINSSTRING(UPPER(TRIM('GRADES'[GRADE])), "C"), 3, CONTAINSSTRING(UPPER(TRIM('GRADES'[GRADE])), "D"), 2, 0 )
+		dataType: double
+		formatString: 0.00
+		lineageTag: f77551ab-2c88-4e71-968d-2675d0924cac
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition GRADES = m
+		mode: import
+		source =
+				let
+				                Source = Snowflake.Databases("ZLDAGWO-PW94760.snowflakecomputing.com", "COMPUTE_WH"),
+				                Db = Source{[Name="LEARNING_ANALYTICS",Kind="Database"]}[Data],
+				                Result = Value.NativeQuery(Db, "SELECT ""GRADE_ID"", ""ENROLLMENT_ID"", ""GRADE"", ""GRADED_DATE"" FROM ""LEARNING_ANALYTICS"".""PUBLIC"".""GRADES""", null, [EnableFolding=false])
+				            in
+				                Result
+
+	annotation PBI_ResultType = Table
+
