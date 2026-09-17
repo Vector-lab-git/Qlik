@@ -1,0 +1,21 @@
+relationship rel_Fact_Countries_CountryISO3
+    fromColumn: Fact.CountryISO3
+    toColumn: Countries.CountryISO3
+    crossFilteringBehavior: bothDirections
+    toCardinality: many
+
+relationship rel_Fact_Indicators_IndicatorCode
+    fromColumn: Fact.IndicatorCode
+    toColumn: Indicators.IndicatorCode
+    crossFilteringBehavior: bothDirections
+
+relationship rel_Fact_Years_Year
+    fromColumn: Fact.Year
+    toColumn: Years.Year
+    crossFilteringBehavior: bothDirections
+
+relationship 'rel_Fact_Targets_%RegionYearKey'
+    fromColumn: Fact.'%RegionYearKey'
+    toColumn: Targets.'%RegionYearKey'
+    crossFilteringBehavior: bothDirections
+    toCardinality: many

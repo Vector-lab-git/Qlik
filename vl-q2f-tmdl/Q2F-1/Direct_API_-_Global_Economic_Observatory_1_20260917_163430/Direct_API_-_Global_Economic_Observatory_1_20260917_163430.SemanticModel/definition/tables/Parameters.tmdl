@@ -1,0 +1,277 @@
+table Parameters
+    lineageTag: f64b85e0-12c6-4dd0-baab-61fba02fe2d6
+
+    column Parameter
+        dataType: string
+        lineageTag: 44657a95-532a-408b-96b7-52c6c1278781
+        summarizeBy: none
+        sourceColumn: Parameter
+
+        annotation SummarizationSetBy = Automatic
+
+    column Value
+        dataType: string
+        lineageTag: 5c1ab766-03ac-4569-b4a1-279199445891
+        summarizeBy: none
+        sourceColumn: Value
+
+        annotation SummarizationSetBy = Automatic
+
+    measure ErrorMode = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ErrorMode")), 1)
+        lineageTag: cd9028dc-d3e3-4e5d-b473-d50bdd771ba9
+
+    measure StripComments = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "StripComments")), 1)
+        lineageTag: 71504f89-8ae8-4e1e-8afe-fa6034616d27
+
+    measure OpenUrlTimeout = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "OpenUrlTimeout")), 86400)
+        lineageTag: 7934d91e-65ff-4b50-9c05-730d88b55877
+
+    measure ScriptError = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptError")), 1)
+        lineageTag: f7a91c73-e340-4088-bdde-37e9bea9fdf0
+
+    measure ScriptErrorCount = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptErrorCount")), 0)
+        lineageTag: 91df122f-c27e-4115-95f6-1e0dd255a60d
+
+    measure ScriptErrorList = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ScriptErrorList")), 1)
+        lineageTag: 7df7fb5a-bf81-43f7-834e-81f963a81838
+
+    measure ThousandSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ThousandSep")
+        lineageTag: 41c20a91-b88e-4763-a8b2-00b168d369e8
+
+    measure DecimalSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DecimalSep")
+        lineageTag: d8f6d9fb-bd07-4ad1-b7f0-3fd3928948f0
+
+    measure MoneyThousandSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyThousandSep")
+        lineageTag: ab97fa54-e938-4786-bc3c-22303d7e3bb4
+
+    measure MoneyDecimalSep = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyDecimalSep")
+        lineageTag: d4409334-cefc-493f-8c35-b25b5c6588b8
+
+    measure MoneyFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MoneyFormat")
+        lineageTag: cc4b214c-21ef-4c9a-a522-56129fdbe551
+
+    measure TimeFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "TimeFormat")
+        lineageTag: 8e92f925-2467-4196-97ad-a2eb2426160e
+
+    measure DateFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DateFormat")
+        lineageTag: de36def6-814c-4c8a-9a9d-45e589756fb2
+
+    measure TimestampFormat = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "TimestampFormat")
+        lineageTag: be52898d-5191-403e-8cd7-8e642c6781c3
+
+    measure FirstWeekDay = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "FirstWeekDay")), 6)
+        lineageTag: f5edb394-2ad5-45bb-8f77-0fbba4f1273e
+
+    measure BrokenWeeks = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "BrokenWeeks")), 1)
+        lineageTag: 540d777f-ff53-4671-aa51-6697fbe527c9
+
+    measure ReferenceDay = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "ReferenceDay")), 0)
+        lineageTag: e9cadaa6-91af-4f30-a652-4c93630c2002
+
+    measure FirstMonthOfYear = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "FirstMonthOfYear")), 1)
+        lineageTag: fdc5722f-3e2c-4a5e-8112-48e19a4e4bbd
+
+    measure CollationLocale = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "CollationLocale")
+        lineageTag: 379ea0b6-9a00-4efc-b928-87d9fa4c6c85
+
+    measure CreateSearchIndexOnReload = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "CreateSearchIndexOnReload")), 1)
+        lineageTag: aa1c363b-8b7b-4e6e-90fd-5ec33f282d3b
+
+    measure MonthNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "MonthNames")
+        lineageTag: 480e34df-20da-440a-933b-f65672ed040b
+
+    measure LongMonthNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "LongMonthNames")
+        lineageTag: 2c1260d7-45e7-41b4-a45f-33d08d3ec10e
+
+    measure DayNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "DayNames")
+        lineageTag: 50f7f56c-48d8-4358-a8d6-ed1c43f06e95
+
+    measure LongDayNames = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "LongDayNames")
+        lineageTag: 800bd76f-ee32-4c16-89f7-f57717edc09e
+
+    measure NumericalAbbreviation = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "NumericalAbbreviation")
+        lineageTag: 914cf689-35f8-4291-bed9-51341eee95b7
+
+    measure i = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "i")), 10)
+        lineageTag: 1c5d853b-1ecf-47eb-bb8d-ad08ab251195
+
+    measure vCode = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vCode")
+        lineageTag: 034be66c-9d56-489e-bb6c-24ca32189e36
+
+    measure vMinYear = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vMinYear")), 1990)
+        lineageTag: 32e6a9e1-bf54-48fd-9ab0-a2f2f688ff8d
+
+    measure vMaxYear = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vMaxYear")), 2024)
+        lineageTag: f00244b0-37fd-4324-87e2-c0bf006c7a13
+
+    measure vLoadTime = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vLoadTime")
+        lineageTag: 180f7fd9-cd74-4922-8ef0-b9cd987f1cee
+
+    measure vColorPrimary = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vColorPrimary")
+        lineageTag: a82ee465-2982-4010-b193-6f0c2a6ae9be
+
+    measure vColorAccent = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vColorAccent")
+        lineageTag: 476dad04-b1f2-48bd-9479-fac3ade0bed8
+
+    measure vColorWarning = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vColorWarning")
+        lineageTag: 4e17601c-d565-44a5-977e-a0bde938a14b
+
+    measure vColorBad = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vColorBad")
+        lineageTag: 2526785f-913f-4bd1-be88-5d21f55d0f6c
+
+    measure vColorNeutral = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vColorNeutral")
+        lineageTag: 4cda6595-9f17-4e00-b94e-bae8cc252fac
+
+    measure vBase = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vBase")
+        lineageTag: 6046823a-fc3a-4e97-a8c1-53f5ee55ce82
+
+    measure vGDP = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGDP")
+        lineageTag: e554cbf2-1f6a-45eb-b296-b56dc56cc98a
+
+    measure vGDPGrowth = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGDPGrowth")
+        lineageTag: cedbdabf-d0ef-4eb9-a28a-a588caa3af61
+
+    measure vPopulation = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vPopulation")
+        lineageTag: 24614b7a-e8ac-4a1f-baaf-bc2d23508cfb
+
+    measure vGDPPerCapita = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGDPPerCapita")
+        lineageTag: 087d9d58-810d-40ba-a0d8-f21731dab572
+
+    measure vInflation = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vInflation")
+        lineageTag: 2209f70e-55e6-4686-8963-8d03b4ba4d25
+
+    measure vUnemployment = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vUnemployment")
+        lineageTag: 75c78b0a-4dac-4e40-a53d-e8bf3b72c661
+
+    measure vLifeExpectancy = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vLifeExpectancy")
+        lineageTag: 6245767e-b196-4809-9004-ccdd0b02ce5b
+
+    measure vExports = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vExports")
+        lineageTag: 14c1b0f7-d972-49f5-9d2d-178508312fa9
+
+    measure vImports = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vImports")
+        lineageTag: 10a3991d-eee0-4093-b0bd-3af31d560973
+
+    measure vTradeBalance = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vTradeBalance")
+        lineageTag: 90720136-0466-420a-970e-62d308b8dfba
+
+    measure vFDI = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vFDI")
+        lineageTag: 85cd723e-3512-4ee7-a938-4d9dcfbf6ca2
+
+    measure vInflationWeighted = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vInflationWeighted")
+        lineageTag: 54363494-cb51-4308-9d4d-f816c2ff47ff
+
+    measure vGDPLY = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGDPLY")
+        lineageTag: f5dea81f-57bd-4021-ad59-fd1c6e0c64e0
+
+    measure vGDPYoY = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGDPYoY")
+        lineageTag: 0441c931-717c-4ba3-97ba-70cab6aa54e3
+
+    measure vGDPLatest = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGDPLatest")
+        lineageTag: d1068cbb-6d6f-4b60-a2c2-fcf9b2514edd
+
+    measure vGDP10YrAgo = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGDP10YrAgo")
+        lineageTag: 8603e9a9-0f6b-4213-913d-ac82c220a0c2
+
+    measure vGDPCAGR10 = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGDPCAGR10")
+        lineageTag: 438deb3a-9df9-4121-b44c-e39c8a6b4086
+
+    measure vIndicatorFor = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vIndicatorFor")
+        lineageTag: eb9a1921-a463-4037-aa80-5f447d681bf6
+
+    measure vGDPForRegion = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGDPForRegion")
+        lineageTag: b9da9fb0-c4d9-4901-b516-3febc08e7ef2
+
+    measure vTopNEconomies = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vTopNEconomies")
+        lineageTag: 771e106e-a59b-4d99-8228-c0bc890f1e0d
+
+    measure vGrowthScenarioPct = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vGrowthScenarioPct")), 0)
+        lineageTag: f46d19c9-52e9-48ed-b769-c8dbc50a11d8
+
+    measure vInflationScenarioPct = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vInflationScenarioPct")), 0)
+        lineageTag: f79577cf-f57f-4dad-8dab-ca485549c772
+
+    measure vProjectionYears = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vProjectionYears")), 5)
+        lineageTag: c5591070-f624-47fc-b8f3-8a4500d98192
+
+    measure vTargetGrowthPct = COALESCE(VALUE(LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vTargetGrowthPct")), 3)
+        lineageTag: cbcd13df-1977-48fb-8bd8-1c658a262a15
+
+    measure vSelectedIndicator = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vSelectedIndicator")
+        lineageTag: 868f648f-cc9e-43bb-8087-43e03df28a9e
+
+    measure vDynamicMeasure = LOOKUPVALUE('Parameters'[Value], 'Parameters'[Parameter], "vDynamicMeasure")
+        lineageTag: 82c3f47a-8510-4474-9736-cf59bbd9da44
+
+    partition Parameters = calculated
+        mode: import
+        source =
+            DATATABLE (
+                "Parameter", STRING, "Value", STRING,
+                {
+                    { "ErrorMode", "1" },
+                    { "StripComments", "1" },
+                    { "OpenUrlTimeout", "86400" },
+                    { "ScriptError", "1" },
+                    { "ScriptErrorCount", "0" },
+                    { "ScriptErrorList", "1" },
+                    { "ThousandSep", "," },
+                    { "DecimalSep", "." },
+                    { "MoneyThousandSep", "," },
+                    { "MoneyDecimalSep", "." },
+                    { "MoneyFormat", "$ ###0.00;-$ ###0.00" },
+                    { "TimeFormat", "h:mm:ss TT" },
+                    { "DateFormat", "M/D/YYYY" },
+                    { "TimestampFormat", "M/D/YYYY h:mm:ss[.fff] TT" },
+                    { "FirstWeekDay", "6" },
+                    { "BrokenWeeks", "1" },
+                    { "ReferenceDay", "0" },
+                    { "FirstMonthOfYear", "1" },
+                    { "CollationLocale", "en-US" },
+                    { "CreateSearchIndexOnReload", "1" },
+                    { "MonthNames", "Jan;Feb;Mar;Apr;May;Jun;Jul;Aug;Sep;Oct;Nov;Dec" },
+                    { "LongMonthNames", "January;February;March;April;May;June;July;August;September;October;November;December" },
+                    { "DayNames", "Mon;Tue;Wed;Thu;Fri;Sat;Sun" },
+                    { "LongDayNames", "Monday;Tuesday;Wednesday;Thursday;Friday;Saturday;Sunday" },
+                    { "NumericalAbbreviation", "3:k;6:M;9:B;12:T;15:P;18:E" },
+                    { "i", "10" },
+                    { "vCode", "BX.KLT.DINV.CD.WD" },
+                    { "vMinYear", "1990" },
+                    { "vMaxYear", "2024" },
+                    { "vLoadTime", "31 Aug 2026 03:07 AM" },
+                    { "vColorPrimary", "#1F4E79" },
+                    { "vColorAccent", "#2E9E5B" },
+                    { "vColorWarning", "#E8A33D" },
+                    { "vColorBad", "#D64550" },
+                    { "vColorNeutral", "#8C99A6" },
+                    { "vBase", "CountryType={'Country'}" },
+                    { "vGDP", "Sum({<$(vBase), IndicatorCode={'NY.GDP.MKTP.CD'}>} IndicatorValue)" },
+                    { "vGDPGrowth", "Avg({<$(vBase), IndicatorCode={'NY.GDP.MKTP.KD.ZG'}>} IndicatorValue)" },
+                    { "vPopulation", "Sum({<$(vBase), IndicatorCode={'SP.POP.TOTL'}>} IndicatorValue)" },
+                    { "vGDPPerCapita", "$(vGDP) / $(vPopulation)" },
+                    { "vInflation", "Avg({<$(vBase), IndicatorCode={'FP.CPI.TOTL.ZG'}>} IndicatorValue)" },
+                    { "vUnemployment", "Avg({<$(vBase), IndicatorCode={'SL.UEM.TOTL.ZS'}>} IndicatorValue)" },
+                    { "vLifeExpectancy", "Avg({<$(vBase), IndicatorCode={'SP.DYN.LE00.IN'}>} IndicatorValue)" },
+                    { "vExports", "Sum({<$(vBase), IndicatorCode={'NE.EXP.GNFS.CD'}>} IndicatorValue)" },
+                    { "vImports", "Sum({<$(vBase), IndicatorCode={'NE.IMP.GNFS.CD'}>} IndicatorValue)" },
+                    { "vTradeBalance", "$(vExports) - $(vImports)" },
+                    { "vFDI", "Sum({<$(vBase), IndicatorCode={'BX.KLT.DINV.CD.WD'}>} IndicatorValue)" },
+                    { "vInflationWeighted", "Sum(Aggr(Avg({<$(vBase), IndicatorCode={'FP.CPI.TOTL.ZG'}>} IndicatorValue) * $(vGDP), Country, Year)) / Sum(Aggr($(vGDP), Country, Year))" },
+                    { "vGDPLY", "Sum({<$(vBase), IndicatorCode={'NY.GDP.MKTP.CD'}, Year={""$(=Max(Year)-1)""}>} IndicatorValue)" },
+                    { "vGDPYoY", "($(vGDP) - $(vGDPLY)) / $(vGDPLY)" },
+                    { "vGDPLatest", "Sum({<$(vBase), IndicatorCode={'NY.GDP.MKTP.CD'}, IsLatestYear={1}>} IndicatorValue)" },
+                    { "vGDP10YrAgo", "Sum({<$(vBase), IndicatorCode={'NY.GDP.MKTP.CD'}, Year={""$(=Max(Year)-10)""}>} IndicatorValue)" },
+                    { "vGDPCAGR10", "Pow($(vGDPLatest) / $(vGDP10YrAgo), 1/10) - 1" },
+                    { "vIndicatorFor", "Sum({<$(vBase), IndicatorCode={'$1'}>} IndicatorValue)" },
+                    { "vGDPForRegion", "Sum({<$(vBase), IndicatorCode={'NY.GDP.MKTP.CD'}, Region={'$1'}>} IndicatorValue)" },
+                    { "vTopNEconomies", "Sum({<$(vBase), IndicatorCode={'NY.GDP.MKTP.CD'}, Country={""=Rank(Sum(IndicatorValue))<=$1""}>} IndicatorValue)" },
+                    { "vGrowthScenarioPct", "0" },
+                    { "vInflationScenarioPct", "0" },
+                    { "vProjectionYears", "5" },
+                    { "vTargetGrowthPct", "3" },
+                    { "vSelectedIndicator", "NY.GDP.MKTP.CD" },
+                    { "vDynamicMeasure", "Sum({<$(vBase), IndicatorCode={'$(vSelectedIndicator)'}>} IndicatorValue)" }
+                }
+            )
+
+    annotation PBI_Id = beb01470-08dc-401a-b265-e183d113bec2

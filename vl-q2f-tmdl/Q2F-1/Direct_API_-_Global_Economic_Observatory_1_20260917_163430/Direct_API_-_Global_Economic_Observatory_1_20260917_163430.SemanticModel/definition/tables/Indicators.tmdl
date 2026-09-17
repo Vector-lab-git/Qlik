@@ -1,0 +1,97 @@
+table Indicators
+    lineageTag: af0891d5-0531-4905-b901-f07fbd6102c3
+    annotation PBI_ResultType = Table
+    column IndicatorCode
+        sourceColumn: IndicatorCode
+        dataType: string
+        lineageTag: 5385a61b-53a6-401b-a4af-c05cd42e3b98
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column IndicatorName
+        sourceColumn: IndicatorName
+        dataType: string
+        lineageTag: 3e1e2761-81fc-4978-a956-816062677902
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column IndicatorGroup
+        sourceColumn: IndicatorGroup
+        dataType: string
+        lineageTag: 631ce0e2-307c-467b-9099-abd2fa37e37c
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column IndicatorUnit
+        sourceColumn: IndicatorUnit
+        dataType: string
+        lineageTag: b7ec564c-fa13-410a-a905-5e4824cae824
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column IndicatorPolarity
+        sourceColumn: IndicatorPolarity
+        dataType: string
+        lineageTag: 2b7c794d-a9e1-45c9-ba97-b2488735a2b8
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column AggregationType
+        sourceColumn: AggregationType
+        dataType: string
+        lineageTag: 47fcf80f-159a-4c6b-ac0a-5471d35d97ee
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column Indicator = 'Indicators'[IndicatorName]
+        type: calculated
+        dataType: string
+        lineageTag: 8c5f5643-5b28-41d1-a7c9-2356a1acb709
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Indicator Group' = 'Indicators'[IndicatorGroup]
+        type: calculated
+        dataType: string
+        lineageTag: 50084b86-df6c-43b1-a798-d5bf93caba2a
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Indicator Drill' = 'Indicators'[IndicatorGroup]
+        type: calculated
+        dataType: string
+        lineageTag: a9bd7324-772c-417f-8c1c-4e1a7b481c9a
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Top 10 Economies + Rest of World' = VAR Top10Countries = CALCULATETABLE( TOPN(10, FILTER( 'Fact', 'Indicators'[IndicatorCode] = "NY.GDP.MKTP.CD" ), RELATED('Fact'[IndicatorValue]), DESC ), ALL(RELATED('Fact'[CountryISO3])) ) VAR CountryName = RELATED('Countries'[Country]) RETURN SWITCH( TRUE(), CONTAINS(Top10Countries, RELATED('Countries'[CountryISO3]), RELATED('Fact'[CountryISO3])), CountryName, "Rest of World" )
+        type: calculated
+        dataType: string
+        lineageTag: 2dd90a84-f1b6-4ab4-91e1-38386c179145
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Growth Classification' = VAR avg_growth = CALCULATE(AVERAGE(RELATED('Fact'[IndicatorValue])), 'Indicators'[IndicatorCode] = "NY.GDP.MKTP.KD.ZG") RETURN SWITCH(TRUE(), avg_growth >= 6, "1. High Growth (6%+)", avg_growth >= 3, "2. Solid Growth (3-6%)", avg_growth >= 0, "3. Slow Growth (0-3%)", "4. Contraction" )
+        type: calculated
+        dataType: string
+        lineageTag: abf0462e-57a3-4cb9-af0b-9de48448f0be
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    partition Indicators = m
+        mode: import
+        source =
+            let
+                            Source = #table(type table [IndicatorCode = text, IndicatorName = text, IndicatorGroup = text, IndicatorUnit = text, IndicatorPolarity = text, AggregationType = text], {{"NY.GDP.MKTP.CD", "GDP (current US$)", "Economy", "USD", "Higher is better", "Sum"},
+                                {"NY.GDP.MKTP.KD.ZG", "GDP growth (annual %)", "Economy", "Percent", "Higher is better", "Average"},
+                                {"NY.GDP.PCAP.CD", "GDP per capita (current US$)", "Economy", "USD", "Higher is better", "Average"},
+                                {"FP.CPI.TOTL.ZG", "Inflation consumer prices (annual %)", "Economy", "Percent", "Lower is better", "Average"},
+                                {"SL.UEM.TOTL.ZS", "Unemployment rate (% labour force)", "Labour", "Percent", "Lower is better", "Average"},
+                                {"SP.POP.TOTL", "Population total", "Demographics", "People", "Neutral", "Sum"},
+                                {"SP.DYN.LE00.IN", "Life expectancy at birth (years)", "Demographics", "Years", "Higher is better", "Average"},
+                                {"NE.EXP.GNFS.CD", "Exports of goods and services (current US$)", "Trade", "USD", "Higher is better", "Sum"},
+                                {"NE.IMP.GNFS.CD", "Imports of goods and services (current US$)", "Trade", "USD", "Higher is better", "Sum"},
+                                {"BX.KLT.DINV.CD.WD", "Foreign direct investment net inflows (current US$)", "Investment", "USD", "Higher is better", "Sum"}
+                            })
+                        in
+                            Source

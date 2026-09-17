@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "962622FEA4E3",
+  "position": {
+    "x": 1519,
+    "y": 0,
+    "z": 11,
+    "width": 400,
+    "height": 320,
+    "tabOrder": 11
+  },
+  "visual": {
+    "visualType": "image",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "imageUrl": {
+              "expr": {
+                "Literal": {
+                  "Value": "'/api/v1/apps/a1ecca64-4a0a-4854-b7f1-a1d63e6d9708/media/files/geo-logo-mark.png'"
+                }
+              }
+            },
+            "imageScaling": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Fit'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

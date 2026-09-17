@@ -1,0 +1,237 @@
+table Countries
+    lineageTag: 38b343fd-9c17-426e-b3e9-3321ed32ec2f
+    annotation PBI_ResultType = Table
+    column CountryISO3
+        sourceColumn: CountryISO3
+        dataType: string
+        lineageTag: 458a33f7-8aba-4522-8a02-6bbb4e1f158f
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column CountryISO2
+        sourceColumn: CountryISO2
+        dataType: string
+        lineageTag: 7e46aee7-f55d-499b-b356-68c5a758e939
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column Country
+        sourceColumn: Country
+        dataType: string
+        lineageTag: 12f17ee5-2a96-4822-bd47-7b7a5bb0f71c
+        dataCategory: Country
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column CapitalCity
+        sourceColumn: CapitalCity
+        dataType: string
+        lineageTag: 34725030-3bbb-40dc-af24-5acaaeadd757
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column CountryLong
+        sourceColumn: CountryLong
+        dataType: double
+        lineageTag: bc3bde45-198b-43cd-bf6c-30f5a331bc9d
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column CountryLat
+        sourceColumn: CountryLat
+        dataType: double
+        lineageTag: 9cee6a22-8243-4f5a-91a3-710cf5606eb5
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column Region
+        sourceColumn: Region
+        dataType: string
+        lineageTag: 1d742956-c137-4031-afa6-501f94d8b92f
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column IncomeGroup
+        sourceColumn: IncomeGroup
+        dataType: string
+        lineageTag: 8a1e9757-507b-4abf-85e4-a1b11c444c7a
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column LendingType
+        sourceColumn: LendingType
+        dataType: string
+        lineageTag: d6ee63c2-7224-4c6b-9d00-fc8df4c7c505
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column CountryType
+        sourceColumn: CountryType
+        dataType: string
+        lineageTag: 57e13591-c8f1-4841-91bc-6f22df66ca81
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column CountryPoint
+        sourceColumn: CountryPoint
+        dataType: string
+        lineageTag: 45e025d5-0011-40c9-a424-68a113b6fd21
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column '%REGION_ACCESS'
+        sourceColumn: '%REGION_ACCESS'
+        dataType: string
+        lineageTag: c89a9ecf-9165-42bf-a665-decff12d6ef4
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column IncomeRank
+        sourceColumn: IncomeRank
+        dataType: string
+        lineageTag: 44be85ac-e6fe-479a-9a6c-651c49639b9e
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Income Group' = SWITCH(TRUE(), 'Countries'[CountryType] = "Country", 'Countries'[IncomeGroup], BLANK())
+        type: calculated
+        dataType: string
+        lineageTag: 6c637bf1-19c3-48d2-98cc-e5b159bf3745
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Geography Drill' = 'Countries'[Region]
+        type: calculated
+        dataType: string
+        lineageTag: 176ed7c9-4a5b-4704-85e6-b7f1186620a0
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Region (Countries Only)' = SWITCH(TRUE(), 'Countries'[CountryType] = "Country", 'Countries'[Region], BLANK())
+        type: calculated
+        dataType: string
+        lineageTag: 374b560c-09b1-4e87-95ea-d58cd8fe5e7f
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Lending Type' = 'Countries'[LendingType]
+        type: calculated
+        dataType: string
+        lineageTag: da933a9d-40c0-47ca-8448-934e20f8070b
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Development Drill' = 'Countries'[IncomeGroup]
+        type: calculated
+        dataType: string
+        lineageTag: 62326e53-1126-4039-ae1a-35ecb65b0245
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Economy Size Band' = VAR gdp_value = RELATED('Fact'[IndicatorValue]) VAR gdp_band = FLOOR(gdp_value / 1000000000, 500) RETURN IF(ISBLANK(gdp_band), BLANK(), gdp_band & " bn USD")
+        type: calculated
+        dataType: string
+        lineageTag: 473e0085-3741-4e64-84e8-5229555023fe
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column 'Trade Position' = VAR Exports = CALCULATE(SUM(RELATED('Fact'[IndicatorValue])), RELATED('Fact'[IndicatorCode]) = "EXPORTS") VAR Imports = CALCULATE(SUM(RELATED('Fact'[IndicatorValue])), RELATED('Fact'[IndicatorCode]) = "IMPORTS") RETURN SWITCH(TRUE(), Exports > Imports * 1.1, "Strong Surplus", Exports > Imports, "Surplus", Imports > Exports * 1.1, "Strong Deficit", "Deficit" )
+        type: calculated
+        dataType: string
+        lineageTag: 55f944ff-3f93-4713-9328-fb21a44ebcd9
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    measure 'Projected GDP' = [vGDPLatest] * POWER(1 + ([vGDPCAGR10] + DIVIDE([vGrowthScenarioPct], 100, BLANK())),[vProjectionYears])
+        lineageTag: a8878ead-bff5-4d8e-ac05-09b0a56f63e5
+        dataType: double
+
+    measure 'GDP Growth %' = DIVIDE([vGDPGrowth], 100, BLANK())
+        lineageTag: fd4cbf63-d4c6-4ca6-8abd-720832614903
+        dataType: double
+        formatString: 0.0%
+
+    measure 'Inflation % (GDP-weighted)' = DIVIDE([InflationWeighted], 100, BLANK())
+        lineageTag: 429bb927-7ccb-40b7-8366-a13e3ac0d146
+        dataType: double
+        formatString: 0.0%
+
+    measure 'Unemployment %' = DIVIDE([vUnemployment], 100, BLANK())
+        lineageTag: d28cfa04-18fa-4556-9275-aa60041c3db9
+        dataType: double
+        formatString: 0.0%
+
+    measure 'Trade Balance' = [vTradeBalance]
+        lineageTag: 61e855a6-9ca3-4c0b-bd4c-1db3c8a5f983
+        dataType: double
+
+    measure 'GDP Latest Year in US$ trillions' = ROUND(DIVIDE([vGDPLatest], 1000000000000, BLANK()), 2)
+        lineageTag: 45ad448b-194d-417e-a023-4e1057fda019
+        dataType: double
+
+    measure 'Inflation %' = DIVIDE([vInflation], 100, BLANK())
+        lineageTag: 2ec48690-598e-4f53-a5fe-ad86dd1926ff
+        dataType: double
+        formatString: 0.0%
+
+    partition Countries = m
+        mode: import
+        source =
+            let
+                            // Base URL and endpoint for World Bank Countries API
+                BaseUrl = "https://api.worldbank.org",
+                            RelPath = "v2/country",
+                            QueryParams = [format = "json", per_page = "1000"],
+                            // Helper to fetch a single page
+                GetPage = (Page as number) =>
+                                let
+                                    PageQuery = Record.Combine({QueryParams, [page = Number.ToText(Page)]}),
+                                    Response = Web.Contents(BaseUrl, [RelativePath = RelPath, Query = PageQuery]),
+                                    Json = Json.Document(Response),
+                                    Meta = if List.Count(Json) > 0 then Json{0} else [],
+                                    Data = if List.Count(Json) > 1 then (try Json{1} otherwise {}) else {},
+                                    Result = [Meta = Meta, Data = Data]
+                                in
+                                    Result,
+                            // Fetch first page to get total pages
+                FirstPage = GetPage(1),
+                            TotalPages = try FirstPage[Meta][pages] otherwise 1,
+                            Pages = List.Generate(() => 1, each _ <= TotalPages, each _ + 1),
+                            AllPages = List.Transform(Pages, each GetPage(_)[Data]),
+                            AllRecords = (try List.Combine(AllPages) otherwise Table.Combine(AllPages)),
+                            CountriesRaw = (if Value.Is(AllRecords, type table) then AllRecords else Table.FromRecords(AllRecords)),
+                            // Expand nested fields and select/rename columns
+                ExpandRegion = (try Table.ExpandRecordColumn(CountriesRaw, "region", {"value"}, {"Region"}) otherwise Table.AddColumn(Table.RemoveColumns(CountriesRaw, {"Region"}, MissingField.Ignore), "Region", each null)),
+                            ExpandAdminRegion = (try Table.ExpandRecordColumn(ExpandRegion, "adminregion", {"value"}, {"AdminRegion"}) otherwise Table.AddColumn(Table.RemoveColumns(ExpandRegion, {"AdminRegion"}, MissingField.Ignore), "AdminRegion", each null)),
+                            ExpandIncomeLevel = (try Table.ExpandRecordColumn(ExpandAdminRegion, "incomeLevel", {"value"}, {"IncomeGroup"}) otherwise Table.AddColumn(Table.RemoveColumns(ExpandAdminRegion, {"IncomeGroup"}, MissingField.Ignore), "IncomeGroup", each null)),
+                            ExpandLendingType = (try Table.ExpandRecordColumn(ExpandIncomeLevel, "lendingType", {"value"}, {"LendingType"}) otherwise Table.AddColumn(Table.RemoveColumns(ExpandIncomeLevel, {"LendingType"}, MissingField.Ignore), "LendingType", each null)),
+                            // Rename and select columns to match Qlik output
+                Renamed = Table.RenameColumns(ExpandLendingType, {{"id", "CountryISO3"}, {"iso2Code", "CountryISO2"}, {"name", "Country"}, {"capitalCity", "CapitalCity"}, {"longitude", "CountryLong"}, {"latitude", "CountryLat"}}),
+                            Selected = Table.SelectColumns(Renamed, {"CountryISO3", "CountryISO2", "Country", "CapitalCity", "CountryLong", "CountryLat", "Region", "AdminRegion", "IncomeGroup", "LendingType"}, MissingField.Ignore),
+                            // Add CountryType (Aggregate/Country) as in Qlik
+                AddCountryType = Table.AddColumn(Table.RemoveColumns(Selected, {"CountryType"}, MissingField.Ignore), "CountryType", each if Text.Length(Text.Trim([Region])) = 0 or [Region] = "Aggregates" then "Aggregate" else "Country"),
+                            // Add CountryPoint (WKT) if lat/long are numbers
+                AddCountryPoint = Table.AddColumn(Table.RemoveColumns(AddCountryType, {"CountryPoint"}, MissingField.Ignore), "CountryPoint", each if Value.Is([CountryLat], type number) and Value.Is([CountryLong], type number) then "POINT(" & Number.ToText([CountryLong]) & " " & Number.ToText([CountryLat]) & ")" else null),
+                            // Add %REGION_ACCESS (uppercase region)
+                AddRegionAccess = Table.AddColumn(Table.RemoveColumns(AddCountryPoint, {"%REGION_ACCESS"}, MissingField.Ignore), "%REGION_ACCESS", each Text.Upper([Region])),
+                            // Add IncomeRank as in Qlik
+                AddIncomeRank = Table.AddColumn(Table.RemoveColumns(AddRegionAccess, {"IncomeRank"}, MissingField.Ignore), "IncomeRank", each if [CountryType] = "Aggregate" then "Aggregate" else if [IncomeGroup] = "High income" then "1. High" else if [IncomeGroup] = "Upper middle income" then "2. Upper Middle" else if [IncomeGroup] = "Lower middle income" then "3. Lower Middle" else if [IncomeGroup] = "Low income" then "4. Low" else "5. Unclassified"),
+                            // Final column selection and types
+                Final = Table.SelectColumns(AddIncomeRank, {"CountryISO3", "CountryISO2", "Country", "CapitalCity", "CountryLong", "CountryLat", "Region", "IncomeGroup", "LendingType", "CountryType", "CountryPoint", "%REGION_ACCESS", "IncomeRank"}, MissingField.Ignore),
+                            Typed = Table.TransformColumnTypes(List.Accumulate({"CountryISO3", "CountryISO2", "Country", "CapitalCity", "CountryLong", "CountryLat", "Region", "IncomeGroup", "LendingType", "CountryType", "CountryPoint", "%REGION_ACCESS", "IncomeRank"}, Final, (state, col) => if Table.HasColumns(state, col) then state else Table.AddColumn(state, col, each null)), {
+                                {"CountryISO3", type text},
+                                {"CountryISO2", type text},
+                                {"Country", type text},
+                                {"CapitalCity", type text},
+                                {"CountryLong", type number},
+                                {"CountryLat", type number},
+                                {"Region", type text},
+                                {"IncomeGroup", type text},
+                                {"LendingType", type text},
+                                {"CountryType", type text},
+                                {"CountryPoint", type text},
+                                {"%REGION_ACCESS", type text},
+                                {"IncomeRank", type text}
+                            })
+                        in
+                            Typed

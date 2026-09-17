@@ -1,0 +1,50 @@
+table Targets
+    lineageTag: a4625d60-e47f-42e4-b8c6-57dfe483eeed
+    annotation PBI_ResultType = Table
+    column '%RegionYearKey'
+        sourceColumn: '%RegionYearKey'
+        dataType: string
+        lineageTag: cb85d78e-3f26-4bf1-9c53-95bab84fd297
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column TargetGDPGrowth
+        sourceColumn: TargetGDPGrowth
+        dataType: double
+        lineageTag: 016f34f1-274c-48a8-9abc-c83c35e0f9f2
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column TargetInflation
+        sourceColumn: TargetInflation
+        dataType: double
+        lineageTag: b82e2c24-d4bb-404a-a57e-e9e3bf7f0b0d
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    column TargetUnemployment
+        sourceColumn: TargetUnemployment
+        dataType: double
+        lineageTag: ec1dc095-54cf-4142-8de8-7f5f8e3290e2
+        summarizeBy: none
+        annotation SummarizationSetBy = Automatic
+
+    measure 'Inflation vs Target' = DIVIDE([vInflation] - AVERAGE('Targets'[TargetInflation]), 100, BLANK())
+        lineageTag: f7381ad6-5a45-41dc-8c40-1d0a8e9fb580
+        dataType: double
+
+    measure 'Growth vs Target' = DIVIDE([vGDPGrowth] - AVERAGE('Targets'[TargetGDPGrowth]), 100, BLANK())
+        lineageTag: 856a3a0a-5dc5-4e20-9309-49ddd78f708b
+        dataType: double
+
+    partition Targets = m
+        mode: import
+        source =
+            let
+                            Source = Countries,
+                            #"Added %RegionYearKey" = Table.AddColumn(Source, "%RegionYearKey", each [TargetRegion] & "|" & null, type text),
+                            #"Added TargetGDPGrowth" = Table.AddColumn(#"Added %RegionYearKey", "TargetGDPGrowth", each null, type number),
+                            #"Added TargetInflation" = Table.AddColumn(#"Added TargetGDPGrowth", "TargetInflation", each null, type number),
+                            #"Added TargetUnemployment" = Table.AddColumn(#"Added TargetInflation", "TargetUnemployment", each null, type number)
+                        in
+                            #"Added TargetUnemployment"

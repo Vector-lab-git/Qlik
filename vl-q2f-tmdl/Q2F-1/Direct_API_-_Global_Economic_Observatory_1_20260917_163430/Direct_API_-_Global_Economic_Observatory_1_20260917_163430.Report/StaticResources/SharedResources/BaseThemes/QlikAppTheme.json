@@ -1,0 +1,20 @@
+{
+  "name": "QlikAppTheme",
+  "dataColors": [
+    "#00657E",
+    "#C2B892",
+    "#A63A48",
+    "#C49E69",
+    "#7BA8A9",
+    "#777777",
+    "#4477AA",
+    "#CC6677",
+    "#DDCC77",
+    "#117733",
+    "#882255",
+    "#88CCEE"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#333333",
+  "tableAccent": "#00657E"
+}
